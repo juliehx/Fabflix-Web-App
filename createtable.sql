@@ -1,15 +1,6 @@
-DROP DATABASE IF EXISTS cs122b_w19;
-CREATE DATABASE cs122b_w19;
-USE cs122b_w19;
-
-/*
-CREATE TABLE People(
-   id	VARCHAR(20),
-   first_name	VARCHAR(20),
-   last_name	VARCHAR(20),
-   PRIMARY KEY (id)
-  );
-*/
+DROP DATABASE IF EXISTS moviedb;
+CREATE DATABASE moviedb;
+USE moviedb;
 
 CREATE TABLE movies(
 	id VARCHAR(10) NOT NULL,
