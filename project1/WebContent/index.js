@@ -11,6 +11,7 @@ function handleResult(data) {
 
         movieTableElement.append(rowHTML);
     }
+    console.log(data);
 }
 
 jQuery.ajax({
