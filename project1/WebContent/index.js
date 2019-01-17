@@ -5,7 +5,7 @@ function handleResult(data) {
 
         let rowHTML = "";
         rowHTML += "<tr>";
-        rowHTML += "<td>" + data[i]['title'] + "</td>";
+        rowHTML += "<td><a href=\"single-movie.html?id=" + data[i]['id'] + "\">" + data[i]['title'] + "</a></td>";
         rowHTML += "<td>" + data[i]["rating"] + "</td>";
         rowHTML += "</tr>";
 

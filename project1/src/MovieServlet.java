@@ -36,7 +36,7 @@ public class MovieServlet extends HttpServlet{
 			
 			// Query used to get list of all movies and its attributes
 			// such as title,year,director,listOfGenres,listOfStars,rating
-			String query = "select title,rating from movies,ratings where movies.id = ratings.movieID order by rating desc";
+			String query = "select id,title,rating from movies,ratings where movies.id = ratings.movieID order by rating desc";
 			
 			
 			ResultSet rs = statement.executeQuery(query);
@@ -44,10 +44,12 @@ public class MovieServlet extends HttpServlet{
 			JsonArray jsonArray = new JsonArray();
 			
 			while(rs.next()){
+				String id = rs.getString("id");
 				String title = rs.getString("title");
 				String rating = rs.getString("rating");
 				
 				JsonObject jsonObject = new JsonObject();
+				jsonObject.addProperty("id", id);
 				jsonObject.addProperty("title", title);
 				jsonObject.addProperty("rating", rating);
 				
