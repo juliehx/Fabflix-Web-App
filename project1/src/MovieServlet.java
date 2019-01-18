@@ -38,7 +38,7 @@ public class MovieServlet extends HttpServlet{
 			// such as title,year,director,listOfGenres,listOfStars,rating
 			//String query = "select id,title,rating from movies,ratings where movies.id = ratings.movieID order by rating desc";
 			
-			String query = "select movies.id,title,group_concat(distinct genres.name) as genres, group_concat(stars.id, ',' , stars.name separator ';') as stars,year,director,rating\n" + 
+			String query = "select movies.id,title,group_concat(distinct genres.name) as genres, group_concat(distinct stars.id, ',' , stars.name separator ';') as stars,year,director,rating\n" + 
 					"from movies,ratings, genres_in_movies, genres, stars, stars_in_movies\n" + 
 					"where ratings.movieID = movies.id and genres_in_movies.movieId = movies.id\n" +
 					"and genres_in_movies.genreId = genres.id\n" +

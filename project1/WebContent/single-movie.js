@@ -25,7 +25,7 @@ function parseListHtml(arr) {
 function parsestarListHtml(arr) {
 	var listHtml = "";
 	for(let i = 0; i < arr.length; i++) {
-		listHtml += "<tr><td><a href='single-star.html'>" + arr[i] + "</a></td></tr>";
+		listHtml += "<tr><td><a href='single-star.html?id="+ arr[i]["star_id"] + "'>" + arr[i]["star_name"] + "</a></td></tr>";
 	}
 	return listHtml;
 }

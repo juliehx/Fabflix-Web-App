@@ -41,14 +41,14 @@ public class SingleMovieServlet extends HttpServlet {
 		
 		try{
 			Connection dbcon = dataSource.getConnection();
-			String query = "select id,title,year,genreslist.genres,director,starlist.stars,rating\r\n" + 
-					"from movies,ratings,(select group_concat(name) as stars\r\n" + 
-					"from stars s,stars_in_movies sim\r\n" + 
-					"where sim.movieId = ? and sim.starId = s.id) starlist,\r\n" + 
-					"(select group_concat(name) as genres\r\n" + 
-					"from genres g,genres_in_movies gim\r\n" + 
-					"where gim.movieID = ? and gim.genreID = g.id) genreslist\r\n" + 
-					"where ratings.movieID = ? and movies.id = ?";
+			String query = "select id,title,year,genreslist.genres,director,starlist.stargroup,rating " + 
+							"from movies,ratings,(select group_concat(s.id, ',' , s.name separator ';') as stargroup "+
+							"from stars s,stars_in_movies sim " +
+							"where sim.movieId = ? and sim.starId = s.id) as starlist, " +
+							"(select group_concat(name) as genres "  +
+							"from genres g,genres_in_movies gim " +
+							"where gim.movieID = ? and gim.genreID = g.id) as genreslist " +
+							"where ratings.movieID = ? and movies.id = ?";
 					
 			PreparedStatement statement = dbcon.prepareStatement(query);
 			statement.setString(1, id);
@@ -66,7 +66,7 @@ public class SingleMovieServlet extends HttpServlet {
 			String year = rs.getString("year");
 			String director = rs.getString("director");
 			String[] genreStringList = rs.getString("genres").split(",");
-			String[] starStringList = rs.getString("stars").split(",");
+			String[] starStringList = rs.getString("stargroup").split(";");
 			String rating = rs.getString("rating");
 			
 			JsonArray genreList = new JsonArray();
@@ -77,7 +77,11 @@ public class SingleMovieServlet extends HttpServlet {
 			}
 			
 			for(int i = 0; i < starStringList.length; i++) {
-				starList.add(starStringList[i]);
+				JsonObject starObj = new JsonObject();
+				String[] star_info = starStringList[i].split(",");
+				starObj.addProperty("star_id", star_info[0]);
+				starObj.addProperty("star_name", star_info[1]);
+				starList.add(starObj);
 			}
 			
 			JsonObject jsonObject = new JsonObject(); 
