@@ -7,7 +7,7 @@ function getParameterByName(name) {
 
 function parseMovieInfoHtml(data) {
 	return "<tr>" +
-				"<td>" + data["id"] + "</td>" +
+				"<td>" + data["id"] + "</td>" + 
 				"<td>" + data["year"] + "</td>" +
 				"<td>" + data["director"] + "</td>" +
 				"<td>" + data["rating"] + "</td>" +
@@ -22,6 +22,14 @@ function parseListHtml(arr) {
 	return listHtml;
 }
 
+function parsestarListHtml(arr) {
+	var listHtml = "";
+	for(let i = 0; i < arr.length; i++) {
+		listHtml += "<tr><td><a href='single-star.html'>" + arr[i] + "</a></td></tr>";
+	}
+	return listHtml;
+}
+
 function handleResults(data) {
 	let movieTitleElement = jQuery("#movie-title");
 	let movieInfoElement = jQuery("#movie-info");
@@ -30,7 +38,7 @@ function handleResults(data) {
 	
 	let movieInfoHtml = parseMovieInfoHtml(data[0]);
 	let genresHtml = parseListHtml(data[0]["genres"]);
-	let starsHtml = parseListHtml(data[0]["stars"]);
+	let starsHtml = parsestarListHtml(data[0]["stars"]);
 	
 	movieTitleElement.append(data[0]["title"]);
 	movieInfoElement.append(movieInfoHtml);
