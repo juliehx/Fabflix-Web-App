@@ -7,6 +7,7 @@ function getParameterByName(name) {
 
 function parseMovieInfoHtml(data) {
 	return "<tr>" +
+				"<td>" + data["id"] + "</td>" +
 				"<td>" + data["year"] + "</td>" +
 				"<td>" + data["director"] + "</td>" +
 				"<td>" + data["rating"] + "</td>" +
