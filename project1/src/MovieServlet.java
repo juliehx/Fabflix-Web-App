@@ -38,7 +38,7 @@ public class MovieServlet extends HttpServlet{
 			// such as title,year,director,listOfGenres,listOfStars,rating
 			//String query = "select id,title,rating from movies,ratings where movies.id = ratings.movieID order by rating desc";
 			
-			String query = "select movies.id,title,group_concat(distinct genres.name) as genres, group_concat(distinct stars.name) as stars,year,director,rating\n" + 
+			String query = "select movies.id,title,group_concat(distinct genres.name) as genres, group_concat(stars.id, ',' , stars.name separator ';') as stars,year,director,rating\n" + 
 					"from movies,ratings, genres_in_movies, genres, stars, stars_in_movies\n" + 
 					"where ratings.movieID = movies.id and genres_in_movies.movieId = movies.id\n" +
 					"and genres_in_movies.genreId = genres.id\n" +
@@ -58,8 +58,8 @@ public class MovieServlet extends HttpServlet{
 				String year = rs.getString("year");
 				String director = rs.getString("director");
 				String[] genres = rs.getString("genres").split(",");
-				String[] stars = rs.getString("stars").split(",");
-				
+				String[] stars = rs.getString("stars").split(";");
+				System.out.println(stars.length);
 				JsonObject jsonObject = new JsonObject();
 				jsonObject.addProperty("id", id);
 				jsonObject.addProperty("title", title);
@@ -74,9 +74,16 @@ public class MovieServlet extends HttpServlet{
 					genreList.add(genres[i]);
 				}
 				
+				
+				
 				for(int i = 0; i < stars.length; i++) {
-					starList.add(stars[i]);
+					JsonObject starObj = new JsonObject();
+					String[] star_info = stars[i].split(",");
+					starObj.addProperty("star_id", star_info[0]);
+					starObj.addProperty("star_name", star_info[1]);
+					starList.add(starObj);
 				}
+				
 				
 				jsonObject.add("genres", genreList);
 				jsonObject.add("stars", starList);

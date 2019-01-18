@@ -10,7 +10,7 @@ function parseGenreListHtml(arr) {
 function parseStarsListHtml(arr) {
 	htmlElem = "<ul style='list-style-type:none; padding-left:0;'>";
 	for(let i = 0; i < arr.length; i++) {
-		htmlElem += "<li><a href='single-star.html'>" + arr[i] + "</a></li>";
+		htmlElem += "<li><a href='single-star.html'>" + arr[i]["star_name"] + "</a></li>";
 	}
 	htmlElem += "</ul>";
 	return htmlElem;
