@@ -42,7 +42,7 @@ public class SingleMovieServlet extends HttpServlet {
 		try{
 			Connection dbcon = dataSource.getConnection();
 			String query = "select id,title,year,genreslist.genres,director,starlist.stargroup,rating " + 
-							"from movies,ratings,(select group_concat(s.id, ',' , s.name separator ';') as stargroup "+
+							"from movies,ratings,(select group_concat(distinct s.id, ',' , s.name separator ';') as stargroup "+
 							"from stars s,stars_in_movies sim " +
 							"where sim.movieId = ? and sim.starId = s.id) as starlist, " +
 							"(select group_concat(name) as genres "  +
