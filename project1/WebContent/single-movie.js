@@ -10,7 +10,7 @@ function parseMovieInfoHtml(data) {
 				"<td>" + data["id"] + "</td>" + 
 				"<td>" + data["year"] + "</td>" +
 				"<td>" + data["director"] + "</td>" +
-				"<td>" + data["rating"] + "</td>" +
+//				"<td>" + data["rating"] + "</td>" +
 			"</tr>";
 }
 
