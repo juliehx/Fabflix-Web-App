@@ -41,19 +41,21 @@ public class SingleMovieServlet extends HttpServlet {
 		
 		try{
 			Connection dbcon = dataSource.getConnection();
-			String query = "select id,title,year,genreslist.genres,director,starlist.stargroup " + 
-							"from movies,(select group_concat(distinct s.id, ',' , s.name separator ';') as stargroup "+
-							"from stars s,stars_in_movies sim " +
-							"where sim.movieId = ? and sim.starId = s.id) as starlist, " +
-							"(select group_concat(name) as genres "  +
-							"from genres g,genres_in_movies gim " +
-							"where gim.movieID = ? and gim.genreID = g.id) as genreslist " +
-							"where movies.id = ?";
+			String query = "select movies.id, movies.title, movies.year, movies.director, r.rating, \r\n" + 
+					"		group_concat(distinct g.name) as genres, group_concat(distinct s.id, ',', s.name separator ';') as stars\r\n" + 
+					"from movies\r\n" + 
+					"left join genres_in_movies gim on gim.movieId = movies.id\r\n" + 
+					"left join genres g on g.id = gim.genreId\r\n" + 
+					"left join stars_in_movies sim on sim.movieId = movies.id\r\n" + 
+					"left join stars s on s.id = sim.starId\r\n" + 
+					"left join ratings r on r.movieID = movies.id\r\n" + 
+					"where movies.id = ?\r\n" + 
+					"group by movies.id, movies.title, movies.year, movies.director, r.rating";
 					
 			PreparedStatement statement = dbcon.prepareStatement(query);
 			statement.setString(1, id);
-			statement.setString(2, id);
-			statement.setString(3, id);
+//			statement.setString(2, id);
+//			statement.setString(3, id);
 //			statement.setString(4, id);
 			ResultSet rs = statement.executeQuery();
 			
@@ -66,8 +68,8 @@ public class SingleMovieServlet extends HttpServlet {
 			String year = rs.getString("year");
 			String director = rs.getString("director");
 			String[] genreStringList = rs.getString("genres").split(",");
-			String[] starStringList = rs.getString("stargroup").split(";");
-//			String rating = rs.getString("rating");
+			String[] starStringList = rs.getString("stars").split(";");
+			String rating = rs.getString("rating");
 			
 			JsonArray genreList = new JsonArray();
 			JsonArray starList = new JsonArray();
@@ -91,7 +93,7 @@ public class SingleMovieServlet extends HttpServlet {
 			jsonObject.addProperty("director", director);
 			jsonObject.add("genres", genreList);
 			jsonObject.add("stars", starList);
-//			jsonObject.addProperty("rating", rating);
+			jsonObject.addProperty("rating", rating);
 			
 			jsonArray.add(jsonObject);
 			
