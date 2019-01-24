@@ -7,8 +7,7 @@ function handleLogin(result) {
 	}
 	else {
 		console.log(resultDataJson["message"]);
-		var messageHtml = '<input class="form-control" type="text" placeholder="'+ resultDataJson["message"] + 'readonly>'
-		$("#login_form").append(messageHtml);
+		alert(resultDataJson["message"]);
 	}
 }
 
