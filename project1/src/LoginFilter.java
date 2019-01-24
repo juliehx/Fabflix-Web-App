@@ -38,7 +38,8 @@ public class LoginFilter implements Filter {
 		System.out.println("LoginFilter: " + httpRequest.getRequestURI());
 		
 		if(this.isUrlAllowedWithoutLogin(httpRequest.getRequestURI())) {
-			httpResponse.sendRedirect("login.html");
+			chain.doFilter(request, response);
+			return;
 		}
 		
 		if (httpRequest.getSession().getAttribute("user") == null) {
