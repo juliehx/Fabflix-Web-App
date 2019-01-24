@@ -60,6 +60,9 @@ public class LoginServlet extends HttpServlet {
 				JsonObject responseJsonObject = new JsonObject();
 				responseJsonObject.addProperty("status", "success");
 				responseJsonObject.addProperty("message", "success");
+				responseJsonObject.addProperty("sessionId", sessionId);
+				responseJsonObject.addProperty("lastAccessTime", lastAccessTime);
+				
 				
 				response.getWriter().write(responseJsonObject.toString());
 			}
