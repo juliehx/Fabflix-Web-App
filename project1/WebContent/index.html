@@ -6,58 +6,66 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 	</head>
 	<body>
-		<nav class="navbar navbar-expand bg-light">
-			<h1 class="navbar-brand"><a href="#">Fablix</a></h1>
-			<ul class="navbar-nav">
-				<li class="nav-item">
-					<button type="button" class="btn btn-dark mr-sm-2" data-toggle="modal" data-target="#advSearchModal">
-						Advanced Search
-					</button>
-					<div class="modal fade in" id="advSearchModal" tabindex="-1" role="dialog" aria-labelledby="advSearch" aria-hidden="true">
-						<div class="modal-dialog" role="document">
-							<div class="modal-content">
-								<div class="modal-header">
-									<h5 class="modal-title">Advanced Search</h5>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-								</div>
-								<div class="modal-body">
-									<form id="advSearch-form">
-										<div class="form-group">
-											<label for="movie-title">Movie title:</label>
-											<input type="text" class="form-control" placeholder="Movie title" name="title" id="movie-title">										
-										</div>
-										<div class="form-group">
-											<label for="star-name">Star:</label>
-											<input type="text" class="form-control" placeholder="Star" name="star" id="star-name">
-										</div>
-										<div class="form-group">
-											<label for="director-name">Director:</label>
-											<input type="text" class="form-control" placeholder="Director" name="director" id="director-name">
-										</div>
-										<div class="form-group">
-											<label for="release-year">Release year:</label>
-											<input type="number" class="form-control" min="0000" max="9999" name="year" id="release-year" placeholder="year (ex. 2000)">
-										</div>
-										<input type="submit" class="btn btn-dark" value="Search">
-									</form>
-								</div>
-							</div>
-						</div>
-					</div>
-				</li>
-				<li class="nav-item">
-					<form id="searchbar" class="form-inline">
-						<input type="text" class="form-control mr-sm-2" placeholder="Search for a movie">
-						<input type="submit" class="btn btn-outline-success my-2 my-sm-0" value="Search">
-					</form>
-				</li>
-			</ul>
-		</nav>
 		<div class="container" style="margin-top:100px;">
 			<h2>Welcome to Fablix</h2>
-			
+			<div class="row">
+				<div class="col-md-12">
+					<form id="searchbar">
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Search for a movie" name="title"required>
+							<div class="input-group-append">
+								<input type="submit" class="btn btn-outline-dark" value="Search">
+								<input type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#advSearchModal" value="Advanced Search">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<h3>Browse by Genre</h3>
+					<ul class="list-group" id="genre-list">
+					</ul>
+				</div>
+				<div class="col-md-6">
+					<h3>Browse by Letter</h3>
+					<div class="btn-group" role="group" aria-label="button group" id="alpha-buttons">
+					</div>
+				</div>
+			</div>
+			<div class="modal fade in" id="advSearchModal" tabindex="-1" role="dialog" aria-labelledby="advSearch" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Advanced Search</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form id="advSearch-form">
+								<div class="form-group">
+									<label for="movie-title">Movie title:</label>
+									<input type="text" class="form-control" placeholder="Movie title" name="title" id="movie-title">																			
+								</div>
+								<div class="form-group">
+									<label for="star-name">Star:</label>
+									<input type="text" class="form-control" placeholder="Star" name="star" id="star-name">
+								</div>
+								<div class="form-group">
+									<label for="director-name">Director:</label>
+									<input type="text" class="form-control" placeholder="Director" name="director" id="director-name">
+								</div>
+								<div class="form-group">
+									<label for="release-year">Release year:</label>
+									<input type="number" class="form-control" min="0000" max="9999" name="year" id="release-year" placeholder="year (ex. 2000)">
+								</div>
+								<input type="submit" class="btn btn-dark" value="Search">
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
