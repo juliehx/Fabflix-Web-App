@@ -28,7 +28,6 @@ function handleResult(data) {
         rowHTML += "<td>" + data[i]["rating"] + "</td>";
         rowHTML += "<td>" + parseGenreListHtml(data[i]["genres"]) + "</td>";
         rowHTML += "<td>" + parseStarsListHtml(data[i]["stars"]) + "</td>";
-        rowHTML += "<td>" + data[i]["director"] + "</td>";
         rowHTML += "</tr>";
 
         movieTableElement.append(rowHTML);
