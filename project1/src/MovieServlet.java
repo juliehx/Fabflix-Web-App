@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Statement;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 @WebServlet(name = "MovieServlet", urlPatterns = "/api/movies")
@@ -70,22 +69,15 @@ public class MovieServlet extends HttpServlet{
 							" 								limit 20 ";
 				}
 			}
+			//uses title star director year and page
+			// the getParameters will always be present in the url
+			//returns an empty string from the getParameter
+			// 
 			//do search later
 			
-//			PreparedStatement statement = dbcon.prepareStatement(query);
-
+			
 			Statement statement = dbcon.createStatement();
-			
-//			String query = "select movies.id,title,group_concat(distinct genres.name) as genres, group_concat(distinct stars.id, ',' , stars.name separator ';') as stars,year,director,rating\n" + 
-//					"from movies,ratings, genres_in_movies, genres, stars, stars_in_movies\n" + 
-//					"where ratings.movieID = movies.id and genres_in_movies.movieId = movies.id\n" +
-//					"and genres_in_movies.genreId = genres.id\n" +
-//					"and stars_in_movies.movieId = movies.id and stars.id = stars_in_movies.starId\n" + 
-//					"group by movies.id, title, year, director, rating\n" +
-//					"order by rating desc";
-			
-//			Statement statement = dbcon.createStatement();
-			
+						
 			ResultSet rs = statement.executeQuery(query);
 			
 			JsonArray jsonArray = new JsonArray();
