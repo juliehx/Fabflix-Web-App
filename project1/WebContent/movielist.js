@@ -19,7 +19,7 @@ function parseStarsListHtml(arr) {
 function handleResult(data) {
     let movieTableElement = jQuery("#movie_table");
 
-    for (let i = 0; i < Math.min(20, data.length); i++) {
+    for (let i = 0; i < data.length; i++) {
 
         let rowHTML = "";
         rowHTML += "<tr>";
@@ -38,6 +38,6 @@ function handleResult(data) {
 jQuery.ajax({
     dataType: "json",
     method: "GET",
-    url: "api/movies",
+    url: "api/movies"+ window.location.search,
     success: (data) => handleResult(data)
 });

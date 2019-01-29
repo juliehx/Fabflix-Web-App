@@ -12,7 +12,7 @@ function handleAlphaNum() {
 		alphaListElement.append("<a href='movielist.html?search=" + i + "&mode=browse&page=1'>" + "<input type='button' class='btn btn-outline-dark' value='" + i + "'></a>");
 	}
 	for(let i = 65; i <= 90; i++) {
-		alphaListElement.append("<a href='movielist.html?search=&#" + i + "&mode=search&page=1'>" + "<input type='button' class='btn btn-outline-dark' value='&#" + i + "'></a>");
+		alphaListElement.append("<a href='movielist.html?search=&#" + i + "&mode=browse&page=1'>" + "<input type='button' class='btn btn-outline-dark' value='&#" + i + "'></a>");
 	}
 }
 
