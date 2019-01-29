@@ -39,15 +39,14 @@ public class MovieServlet extends HttpServlet{
 			// such as title,year,director,listOfGenres,listOfStars,rating
 			//String query = "select id,title,rating from movies,ratings where movies.id = ratings.movieID order by rating desc";
 			
-			String query = "";
+			String query = "select movies.id,title,group_concat(distinct genres.name) as genres, group_concat(distinct stars.id, ',' , stars.name separator ';') as stars,year,director,rating \r\n" + 
+					"								from movies,ratings, genres_in_movies, genres, stars, stars_in_movies\r\n";
 			
 			if(mode.equals("browse")) {
 				String genre_id = request.getParameter("id");
 				System.out.println("Genre Id: " + genre_id);
 				if(genre_id != null) {//means that there is an id
-					query += "select movies.id,title,group_concat(distinct genres.name) as genres, group_concat(distinct stars.id, ',' , stars.name separator ';') as stars,year,director,rating \r\n" + 
-							"								from movies,ratings, genres_in_movies, genres, stars, stars_in_movies\r\n" + 
-							"								where ratings.movieID = movies.id and genres_in_movies.movieId = movies.id\r\n" + 
+					query +="								where ratings.movieID = movies.id and genres_in_movies.movieId = movies.id\r\n" + 
 							"								and genres_in_movies.genreId = genres.id\r\n" + 
 							"								and stars_in_movies.movieId = movies.id and stars.id = stars_in_movies.starId \r\n" + 
 							"								group by movies.id, title, year, director, rating \r\n" + 
@@ -59,9 +58,7 @@ public class MovieServlet extends HttpServlet{
 				else {//means that they have selected browsing by letter
 					String first_letter = request.getParameter("search");
 					System.out.println(first_letter);
-					query += "select movies.id,title,group_concat(distinct genres.name) as genres, group_concat(distinct stars.id, ',' , stars.name separator ';') as stars,year,director,rating \r\n" + 
-							"								from movies,ratings, genres_in_movies, genres, stars, stars_in_movies\r\n" + 
-							"								where title LIKE '"+  first_letter + "%'" + "and ratings.movieID = movies.id and genres_in_movies.movieId = movies.id\r\n" + 
+					query +="								where title LIKE '"+  first_letter + "%'" + "and ratings.movieID = movies.id and genres_in_movies.movieId = movies.id\r\n" + 
 							"								and genres_in_movies.genreId = genres.id\r\n" + 
 							"								and stars_in_movies.movieId = movies.id and stars.id = stars_in_movies.starId \r\n" + 
 							"								group by movies.id, title, year, director, rating \r\n" + 
