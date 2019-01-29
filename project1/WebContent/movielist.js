@@ -1,7 +1,7 @@
 function parseGenreListHtml(arr) {
 	htmlElem = "<ul style='list-style-type:none; padding-left:0;'>";
 	for(let i = 0; i < arr.length; i++) {
-		htmlElem += "<li>" + arr[i] + "</li>";
+		htmlElem += "<li><a href='movielist.html?id=" + arr[i]["genre_id"] + "&mode=browse&page=1'>" + arr[i]["genre_name"] + "</a></li>";
 	}
 	htmlElem += "</ul>";
 	return htmlElem;
@@ -17,6 +17,7 @@ function parseStarsListHtml(arr) {
 }
 
 function handleResult(data) {
+	console.log(data);
     let movieTableElement = jQuery("#movie_table");
 
     for (let i = 0; i < data.length; i++) {

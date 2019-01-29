@@ -42,7 +42,7 @@ public class MovieServlet extends HttpServlet{
 			// such as title,year,director,listOfGenres,listOfStars,rating
 			//String query = "select id,title,rating from movies,ratings where movies.id = ratings.movieID order by rating desc";
 			
-			String query = "select movies.id,title,group_concat(distinct genres.name) as genres, group_concat(distinct stars.id, ',' , stars.name separator ';') as stars,year,director,rating \r\n" + 
+			String query = "select movies.id,title,group_concat(distinct genres.id, ',', genres.name separator ';') as genres, group_concat(distinct stars.id, ',' , stars.name separator ';') as stars,year,director,rating \r\n" + 
 					"								from movies,ratings, genres_in_movies, genres, stars, stars_in_movies\r\n";
 			
 			if(mode.equals("browse")) {
@@ -53,7 +53,7 @@ public class MovieServlet extends HttpServlet{
 							"								and genres_in_movies.genreId = genres.id\r\n" + 
 							"								and stars_in_movies.movieId = movies.id and stars.id = stars_in_movies.starId \r\n" + 
 							"								group by movies.id, title, year, director, rating \r\n" + 
-							"                                having find_in_set( (select g.name from genres g where g.id = " + genre_id + ") , genres)\r\n" + 
+							"                                having find_in_set("+ genre_id + " , genres)\r\n" + 
 							"								order by rating desc" +
 							" 								limit " + itemLimit + " offset " + page;
 					
@@ -86,10 +86,6 @@ public class MovieServlet extends HttpServlet{
 				String search_year = request.getParameter("year");
 				String search_star = request.getParameter("star");
 				
-//				System.out.println(search_title);
-//				System.out.println("searchdirector: " + search_director);
-//				System.out.println("searchyear: " + search_year);
-//				System.out.println("search_star: " + search_star);
 				
 				if(search_title != null && !search_title.isEmpty()) {
 					inner_query_where += " and movies.title LIKE '%"+ search_title +"%' \r\n";
@@ -130,7 +126,7 @@ public class MovieServlet extends HttpServlet{
 				String rating = rs.getString("rating");
 				String year = rs.getString("year");
 				String director = rs.getString("director");
-				String[] genres = rs.getString("genres").split(",");
+				String[] genres = rs.getString("genres").split(";");
 				String[] stars = rs.getString("stars").split(";");
 				JsonObject jsonObject = new JsonObject();
 				jsonObject.addProperty("id", id);
@@ -143,7 +139,11 @@ public class MovieServlet extends HttpServlet{
 				JsonArray starList = new JsonArray();
 				
 				for(int i = 0; i < genres.length; i++) {
-					genreList.add(genres[i]);
+					JsonObject genreObj = new JsonObject();
+					String[] genre_info = genres[i].split(",");
+					genreObj.addProperty("genre_id", genre_info[0]);
+					genreObj.addProperty("genre_name", genre_info[1]);
+					genreList.add(genreObj);
 				}
 				
 				
@@ -162,6 +162,7 @@ public class MovieServlet extends HttpServlet{
 				
 				jsonArray.add(jsonObject);
 			}
+			
 			out.write(jsonArray.toString());
 			response.setStatus(200);
 			rs.close();
