@@ -26,6 +26,8 @@ public class MovieServlet extends HttpServlet{
 		
 		response.setContentType("application/json");
 		
+		int itemLimit = 20;
+		
 		PrintWriter out = response.getWriter();
 		
 		try {
@@ -34,6 +36,7 @@ public class MovieServlet extends HttpServlet{
 			
 			
 			String mode = request.getParameter("mode");
+			int page = (Integer.parseInt(request.getParameter("page")) - 1) * itemLimit;
 			
 			// Query used to get list of all movies and its attributes
 			// such as title,year,director,listOfGenres,listOfStars,rating
@@ -52,7 +55,7 @@ public class MovieServlet extends HttpServlet{
 							"								group by movies.id, title, year, director, rating \r\n" + 
 							"                                having find_in_set( (select g.name from genres g where g.id = " + genre_id + ") , genres)\r\n" + 
 							"								order by rating desc" +
-							" 								limit 20";
+							" 								limit " + itemLimit + " offset " + page;
 					
 				}
 				else {//means that they have selected browsing by letter
@@ -63,7 +66,7 @@ public class MovieServlet extends HttpServlet{
 							"								and stars_in_movies.movieId = movies.id and stars.id = stars_in_movies.starId \r\n" + 
 							"								group by movies.id, title, year, director, rating \r\n" + 
 							"								order by rating desc"+
-							" 								limit 20 ";
+							" 								limit " + itemLimit + " offset " + page;
 				}
 			}
 			else if(mode.equals("search")) {
@@ -110,7 +113,7 @@ public class MovieServlet extends HttpServlet{
 				query += inner_query_where;
 				outer_query += query;
 				query = outer_query;
-				query += "limit 20";
+				query += "limit " + itemLimit + " offset " + page;
 				
 				System.out.println(query);
 			}
