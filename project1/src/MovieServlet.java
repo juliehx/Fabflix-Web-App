@@ -66,13 +66,55 @@ public class MovieServlet extends HttpServlet{
 							" 								limit 20 ";
 				}
 			}
-			//uses title star director year and page
-			// the getParameters will always be present in the url
-			//returns an empty string from the getParameter
-			// 
-			//do search later
-			
-			
+			else if(mode.equals("search")) {
+				//can be empty or null
+				
+				String outer_query = "select d.id,d.title,d.genres,d.stars,d.year,d.director,d.rating\r\n" + 
+						"from (";
+				
+				String inner_query_where = "where ratings.movieID = movies.id \r\n" + 
+						"                                and genres_in_movies.movieId = movies.id\r\n" + 
+						"								and genres_in_movies.genreId = genres.id\r\n" + 
+						"								and stars_in_movies.movieId = movies.id \r\n" + 
+						"                                and stars.id = stars_in_movies.starId \r\n";
+				
+				String search_title = request.getParameter("title");
+				String search_director = request.getParameter("director");
+				String search_year = request.getParameter("year");
+				String search_star = request.getParameter("star");
+				
+//				System.out.println(search_title);
+//				System.out.println("searchdirector: " + search_director);
+//				System.out.println("searchyear: " + search_year);
+//				System.out.println("search_star: " + search_star);
+				
+				if(search_title != null && !search_title.isEmpty()) {
+					inner_query_where += " and movies.title LIKE '%"+ search_title +"%' \r\n";
+				}
+				if( search_director != null && !search_director.isEmpty()) {
+					inner_query_where += " and movies.director LIKE '%" + search_director + "%' \r\n";
+				}
+				if(search_year != null && !search_year.isEmpty()  ) {
+					inner_query_where += " and movies.year = " + search_year + " \r\n" ;
+				}
+				//doesn't matter as we just add the last parts to the query
+				
+				inner_query_where += "group by movies.id, movies.title, movies.year, movies.director, ratings.rating \r\n" + 
+						"                                order by rating desc \r\n" + 
+						"                                limit 20) as d \r\n";
+				
+				//special case to handle the list of stars we have
+				if(search_star != null && !search_star.isEmpty() ) {
+					inner_query_where += "where d.stars LIKE '%" + search_star 	+ "%'";
+				}
+				//add to the base query
+				query += inner_query_where;
+				outer_query += query;
+				query = outer_query;
+				
+//				System.out.println(query);
+			}
+					
 			Statement statement = dbcon.createStatement();
 						
 			ResultSet rs = statement.executeQuery(query);
@@ -87,7 +129,6 @@ public class MovieServlet extends HttpServlet{
 				String director = rs.getString("director");
 				String[] genres = rs.getString("genres").split(",");
 				String[] stars = rs.getString("stars").split(";");
-//				System.out.println(stars.length);
 				JsonObject jsonObject = new JsonObject();
 				jsonObject.addProperty("id", id);
 				jsonObject.addProperty("title", title);
