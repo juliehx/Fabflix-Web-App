@@ -100,8 +100,7 @@ public class MovieServlet extends HttpServlet{
 				//doesn't matter as we just add the last parts to the query
 				
 				inner_query_where += "group by movies.id, movies.title, movies.year, movies.director, ratings.rating \r\n" + 
-						"                                order by rating desc \r\n" + 
-						"                                limit 20) as d \r\n";
+						"                                order by rating desc ) as d \r\n";
 				
 				//special case to handle the list of stars we have
 				if(search_star != null && !search_star.isEmpty() ) {
@@ -111,8 +110,9 @@ public class MovieServlet extends HttpServlet{
 				query += inner_query_where;
 				outer_query += query;
 				query = outer_query;
+				query += "limit 20";
 				
-//				System.out.println(query);
+				System.out.println(query);
 			}
 					
 			Statement statement = dbcon.createStatement();
