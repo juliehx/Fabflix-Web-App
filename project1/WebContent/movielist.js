@@ -1,3 +1,38 @@
+function parseUrl() {
+	let url = window.location.search.replace("?", "");
+	let parseArgs = url.split("&");
+	let paramObj = {};
+	for(let i = 0; i < parseArgs.length; i++) {
+		let keyArg = parseArgs[i].split("=");
+		paramObj[keyArg[0]] = keyArg[1];
+	}
+	return paramObj;
+}
+
+function getUrl(paramObj, step) {
+	let newUrl = "?";
+	for(var key in paramObj) {
+		if(key == "page") {
+			newUrl += key + "=" + (parseInt(paramObj[key]) + step) + "&";
+		} else {
+			newUrl += key + "=" + paramObj[key] + "&";
+		}
+	}
+	return newUrl;
+}
+
+
+function handlePagination() {
+	let paramObj = parseUrl();
+	let pageElem = $("#pag");
+	if(paramObj["page"] == "1") {
+		pageElem.append("<li class='page-item' disabled><span class='page-link'>Previous</span></li>");
+	} else {
+		pageElem.append("<li class='page-item'><a class='page-link' href='movielist.html" + getUrl(paramObj, -1) + "'>Previous</a></li>");
+	}
+	pageElem.append("<li class='page-item'><a class='page-link' href='movielist.html" + getUrl(paramObj, 1) + "'>Next</a></li>");
+}
+
 function parseGenreListHtml(arr) {
 	htmlElem = "<ul style='list-style-type:none; padding-left:0;'>";
 	for(let i = 0; i < arr.length; i++) {
@@ -43,3 +78,5 @@ jQuery.ajax({
     url: "api/movies"+ window.location.search,
     success: (data) => handleResult(data)
 });
+
+$(handlePagination());
