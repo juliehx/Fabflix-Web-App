@@ -61,7 +61,11 @@ function handleResult(data) {
         rowHTML += "<tr>";
         rowHTML += "<td><a href=\"single-movie.html?id=" + data[i]['id'] + "\">" + data[i]['title'] + "</a></td>";
         rowHTML += "<td>" + data[i]["year"] + "</td>";
-        rowHTML += "<td>" + data[i]["rating"] + "</td>";
+        if(data[i]["rating"] == null) {
+        	rowHTML += "<td>" + 0 + "</td>";
+        } else {
+        	rowHTML += "<td>" + data[i]["rating"] + "</td>";
+        }
         rowHTML += "<td>" + parseGenreListHtml(data[i]["genres"]) + "</td>";
         rowHTML += "<td>" + data[i]["director"] + "</td>";
         rowHTML += "<td>" + parseStarsListHtml(data[i]["stars"]) + "</td>";
