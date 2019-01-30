@@ -34,16 +34,21 @@ public class MovieServlet extends HttpServlet{
 			//create a connection type to the database
 			Connection dbcon = dataSource.getConnection();
 			
-			
+			//gets us the string mode 
 			String mode = request.getParameter("mode");
 			int page = (Integer.parseInt(request.getParameter("page")) - 1) * itemLimit;
 			
-			// Query used to get list of all movies and its attributes
-			// such as title,year,director,listOfGenres,listOfStars,rating
-			//String query = "select id,title,rating from movies,ratings where movies.id = ratings.movieID order by rating desc";
+			String outer_query = "select d.id,d.title,d.genres,d.stars,d.year,d.director,d.rating\r\n" + 
+					"from (";
 			
+			//base string query for all searches/browsing
 			String query = "select movies.id,title,group_concat(distinct genres.id, ',', genres.name separator ';') as genres, group_concat(distinct stars.id, ',' , stars.name separator ';') as stars,year,director,rating \r\n" + 
 					"								from movies,ratings, genres_in_movies, genres, stars, stars_in_movies\r\n";
+			
+			//gets information on what the user wants to sort and order by
+//			String orderBy = request.getParameter("orderBy");
+//			String sortingAttribute = request.getParameter("sortAttribute");
+
 			
 			if(mode.equals("browse")) {
 				String genre_id = request.getParameter("id");
@@ -53,9 +58,11 @@ public class MovieServlet extends HttpServlet{
 							"								and genres_in_movies.genreId = genres.id\r\n" + 
 							"								and stars_in_movies.movieId = movies.id and stars.id = stars_in_movies.starId \r\n" + 
 							"								group by movies.id, title, year, director, rating \r\n" + 
-							"                                having find_in_set("+ genre_id + " , genres)\r\n" + 
-							"								order by rating desc" +
+							"								order by rating desc) as d \r\n" + 
+							"where genres LIKE concat('%', (select g.name from genres g where g.id = " + genre_id + "), '%') \r\n" +
 							" 								limit " + itemLimit + " offset " + page;
+					outer_query += query;
+					query = outer_query;
 					
 				}
 				else {//means that they have selected browsing by letter
@@ -72,8 +79,7 @@ public class MovieServlet extends HttpServlet{
 			else if(mode.equals("search")) {
 				//can be empty or null
 				
-				String outer_query = "select d.id,d.title,d.genres,d.stars,d.year,d.director,d.rating\r\n" + 
-						"from (";
+				
 				
 				String inner_query_where = "where ratings.movieID = movies.id \r\n" + 
 						"                                and genres_in_movies.movieId = movies.id\r\n" + 
@@ -111,7 +117,7 @@ public class MovieServlet extends HttpServlet{
 				query = outer_query;
 				query += "limit " + itemLimit + " offset " + page;
 				
-				System.out.println(query);
+//				System.out.println(query);
 			}
 					
 			Statement statement = dbcon.createStatement();
