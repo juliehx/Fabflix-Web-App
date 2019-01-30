@@ -35,6 +35,8 @@ public class MovieServlet extends HttpServlet{
 			//create a connection type to the database
 			Connection dbcon = dataSource.getConnection();
 			
+			String order = request.getParameter("order");
+			
 			//gets us the string mode 
 			String mode = request.getParameter("mode");
 			int page = (Integer.parseInt(request.getParameter("page")) - 1) * itemLimit;
@@ -173,8 +175,14 @@ public class MovieServlet extends HttpServlet{
 ////				System.out.println(query);
 			}
 			
-			base_query += "order by rating desc\n" +
-						  "limit " + itemLimit + " offset " + page;
+			base_query += "order by " + order;
+			
+			if(order.equals("title"))
+				base_query += " asc\n";
+			else if(order.equals("rating"))
+				base_query += " desc\n";
+				
+			base_query += "limit " + itemLimit + " offset " + page;
 			
 			System.out.println(base_query);
 					

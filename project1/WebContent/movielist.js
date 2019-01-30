@@ -6,14 +6,17 @@ function parseUrl() {
 		let keyArg = parseArgs[i].split("=");
 		paramObj[keyArg[0]] = keyArg[1];
 	}
+	console.log(paramObj);
 	return paramObj;
 }
 
-function getUrl(paramObj, step) {
+function getUrl(paramObj, step, newOrder) {
 	let newUrl = "?";
 	for(var key in paramObj) {
 		if(key == "page") {
 			newUrl += key + "=" + (parseInt(paramObj[key]) + step) + "&";
+		} else if(key == "order") {
+			newUrl += key + "=" + newOrder + "&";
 		} else {
 			newUrl += key + "=" + paramObj[key] + "&";
 		}
@@ -28,9 +31,9 @@ function handlePagination() {
 	if(paramObj["page"] == "1") {
 		pageElem.append("<li class='page-item' disabled><span class='page-link'>Previous</span></li>");
 	} else {
-		pageElem.append("<li class='page-item'><a class='page-link' href='movielist.html" + getUrl(paramObj, -1) + "'>Previous</a></li>");
+		pageElem.append("<li class='page-item'><a class='page-link' href='movielist.html" + getUrl(paramObj, -1, paramObj["order"]) + "'>Previous</a></li>");
 	}
-	pageElem.append("<li class='page-item'><a class='page-link' href='movielist.html" + getUrl(paramObj, 1) + "'>Next</a></li>");
+	pageElem.append("<li class='page-item'><a class='page-link' href='movielist.html" + getUrl(paramObj, 1, paramObj["order"]) + "'>Next</a></li>");
 }
 
 function parseGenreListHtml(arr) {
@@ -81,6 +84,11 @@ jQuery.ajax({
     method: "GET",
     url: "api/movies"+ window.location.search,
     success: (data) => handleResult(data)
+});
+
+$("#orderFormControl").on("change", function(event) {
+	let paramObj = parseUrl();
+	window.location.replace("movielist.html" + getUrl(paramObj, 0, $(this).val()));
 });
 
 $(handlePagination());
