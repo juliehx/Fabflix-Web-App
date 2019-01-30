@@ -27,7 +27,9 @@ public class MovieServlet extends HttpServlet{
 		
 		response.setContentType("application/json");
 		
-		int itemLimit = 20;
+		//gets number of results to display per page
+		String itemLimit = request.getParameter("limit");
+//		int itemLimit = 20;
 		
 		PrintWriter out = response.getWriter();
 		
@@ -39,7 +41,7 @@ public class MovieServlet extends HttpServlet{
 			
 			//gets us the string mode 
 			String mode = request.getParameter("mode");
-			int page = (Integer.parseInt(request.getParameter("page")) - 1) * itemLimit;
+			int page = (Integer.parseInt(request.getParameter("page")) - 1) * Integer.parseInt(itemLimit);
 			
 			String base_query = "select movies.id, movies.title, movies.year, movies.director, r.rating,\n" + 
 					"					group_concat(distinct g.name) as genre_name, \n" + 

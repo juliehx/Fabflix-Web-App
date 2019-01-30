@@ -10,14 +10,17 @@ function parseUrl() {
 	return paramObj;
 }
 
-function getUrl(paramObj, step, newOrder) {
+function getUrl(paramObj, step, newOrder,newLimit) {
 	let newUrl = "?";
 	for(var key in paramObj) {
 		if(key == "page") {
 			newUrl += key + "=" + (parseInt(paramObj[key]) + step) + "&";
 		} else if(key == "order") {
-			newUrl += key + "=" + newOrder + "&";
-		} else {
+			newUrl += key + "=" + newOrder + "&";		
+		} else if(key == "limit"){
+			newUrl += key + "=" + newLimit + "&";
+		} 
+		else {
 			newUrl += key + "=" + paramObj[key] + "&";
 		}
 	}
@@ -31,15 +34,15 @@ function handlePagination() {
 	if(paramObj["page"] == "1") {
 		pageElem.append("<li class='page-item' disabled><span class='page-link'>Previous</span></li>");
 	} else {
-		pageElem.append("<li class='page-item'><a class='page-link' href='movielist.html" + getUrl(paramObj, -1, paramObj["order"]) + "'>Previous</a></li>");
+		pageElem.append("<li class='page-item'><a class='page-link' href='movielist.html" + getUrl(paramObj, -1, paramObj["order"],paramObj["limit"]) + "'>Previous</a></li>");
 	}
-	pageElem.append("<li class='page-item'><a class='page-link' href='movielist.html" + getUrl(paramObj, 1, paramObj["order"]) + "'>Next</a></li>");
+	pageElem.append("<li class='page-item'><a class='page-link' href='movielist.html" + getUrl(paramObj, 1, paramObj["order"],paramObj["limit"]) + "'>Next</a></li>");
 }
 
 function parseGenreListHtml(arr) {
 	htmlElem = "<ul style='list-style-type:none; padding-left:0;'>";
 	for(let i = 0; i < arr.length; i++) {
-		htmlElem += "<li><a href='movielist.html?id=" + arr[i]["genre_id"] + "&mode=browse&page=1'>" + arr[i]["genre_name"] + "</a></li>";
+		htmlElem += "<li><a href='movielist.html?id=" + arr[i]["genre_id"] + "&mode=browse&order=rating&limit=10&page=1'>" + arr[i]["genre_name"] + "</a></li>";
 	}
 	htmlElem += "</ul>";
 	return htmlElem;
@@ -88,7 +91,12 @@ jQuery.ajax({
 
 $("#orderFormControl").on("change", function(event) {
 	let paramObj = parseUrl();
-	window.location.replace("movielist.html" + getUrl(paramObj, 0, $(this).val()));
+	window.location.replace("movielist.html" + getUrl(paramObj, 0, $(this).val(),paramObj["limit"]));
+});
+
+$("#limitFormControl").on("change", function(event) {
+	let paramObj = parseUrl();
+	window.location.replace("movielist.html" + getUrl(paramObj,0,paramObj["order"],$(this).val()))
 });
 
 $(handlePagination());
