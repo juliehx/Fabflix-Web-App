@@ -176,15 +176,25 @@ public class MovieServlet extends HttpServlet{
 //				
 ////				System.out.println(query);
 			}
-			
-			base_query += "order by " + order;
-			
-			if(order.equals("title"))
-				base_query += " asc\n";
-			else if(order.equals("rating"))
-				base_query += " desc\n";
+			String[] determine_sort = order.split(" ");
+			base_query += "order by " + determine_sort[0];
+			if(determine_sort.length > 1) {
+				if(determine_sort[1].equals("Highest") || determine_sort[1].equals("Z-0")) {
+					base_query += " desc\n";
+				}
+				else if(determine_sort[1].equals("Lowest") || determine_sort[1].equals("0-Z")) {
+					base_query += " asc \n";
+				}
+			}
+			else {
+				base_query += " desc \n";
+			}
+//			if(order.equals("title"))
+//				base_query += " asc\n";
+//			else if(order.equals("rating"))
+//				base_query += " desc\n";
 				
-			base_query += "limit " + itemLimit + " offset " + page;
+			base_query += " limit " + itemLimit + " offset " + page;
 			
 			System.out.println(base_query);
 					
