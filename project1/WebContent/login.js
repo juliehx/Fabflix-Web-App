@@ -7,7 +7,7 @@ function handleLogin(result) {
 	}
 	else {
 		console.log(resultDataJson["message"]);
-		alert(resultDataJson["message"]);
+		$(".error-msg").text(resultDataJson["message"]);
 	}
 }
 

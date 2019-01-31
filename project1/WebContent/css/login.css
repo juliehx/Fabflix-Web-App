@@ -71,6 +71,12 @@ input[type=text]:focus, input[type=password]:focus {
 	transition: all 0.3s ease;
 }
 
+.error-msg {
+	color: #F6D169;
+	font-family: 'Roboto Mono', monospace;
+	padding: 5px;
+}
+
 @media only screen and (min-width: 640px) {
 	.login {
 		width: 450px;
