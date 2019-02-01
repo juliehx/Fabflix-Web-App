@@ -1,0 +1,65 @@
+body {
+	margin: 0;
+	padding: 0;
+	background-image: linear-gradient(#3F264D, #5D2747);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	color: white;
+}
+
+h1 {
+	text-align: center!important;
+	font-family: 'Major Mono Display', monospace!important;
+	color: white!important;
+	padding: 10px!important;
+	text-align: center!important;
+}
+
+
+.navbar {
+	padding: 30px!important;
+}
+
+.gen-search {
+	background-color: transparent!important;
+}
+
+.adv-search {
+	border-radius: 0px!important;
+	font-family: 'Roboto Mono', monospace;
+	-webkit-transition: all 0.3s ease;
+	-moz-transisition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+
+.adv-search:hover {
+	background-color: #F6D169;
+	-webkit-transition: all 0.3s ease;
+	-moz-transisition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+
+input[type=text] {
+	width: 200px;
+	background-color: transparent;
+	border-top: none;
+	border-bottom: 1px solid white;
+	border-left: none;
+	border-right: none;
+	padding: 0px 10px 5px 10px;
+	color: white;
+	font-family: 'Roboto Mono', monospace;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+	background-color: transparent;
+	border-bottom: 1px solid #F6D169;
+	outline: none;
+	color: white;
+}
+
+.modal-content {
+	background-color: #5D2747!important;
+}
