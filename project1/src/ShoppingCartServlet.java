@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Map;
 import java.sql.ResultSet;
 /**
  * Servlet implementation class ShoppingCartServlet
@@ -47,6 +48,7 @@ public class ShoppingCartServlet extends HttpServlet {
 		String action = request.getParameter("action");
 		String movie_id = request.getParameter("id");
 		System.out.println(movie_id);
+		System.out.println(action);
 		HttpSession session = request.getSession();
 
 		try {
@@ -61,12 +63,7 @@ public class ShoppingCartServlet extends HttpServlet {
 //			String movie_id = rs.getString("id");
 			String title = rs.getString("title");
 			
-//			JsonArray jsonArray = new JsonArray();			
-//			JsonObject jsonObject = new JsonObject();
-//			jsonObject.addProperty("id", movie_id);
-//			jsonObject.addProperty("title", title);
-//			jsonArray.add(jsonObject);
-			
+//			Map<String,Integer> cart = (Map<String,Integer>) session.getAttribute("cart");
 			ArrayList<String> cart = (ArrayList<String>) session.getAttribute("cart"); 
 //			if(action.equals("add")) {
 				if (cart == null) {
