@@ -62,11 +62,11 @@ public class ShoppingCartServlet extends HttpServlet {
 			String id = rs.getString("id");
 			String title = rs.getString("title");
 			
-			JsonArray jsonArray = new JsonArray();
-			ArrayList<JsonObject> cart = (ArrayList<JsonObject>) session.getAttribute("cart"); 
+//			JsonArray jsonArray = new JsonArray();
+			JsonArray cart = (JsonArray) session.getAttribute("cart"); 
 //			if(action.equals("add")) {
 				if (cart == null) {
-					cart = new ArrayList<>();
+					cart = new JsonArray();
 					JsonObject jsonObject = new JsonObject();
 					jsonObject.addProperty("id", id);
 					jsonObject.addProperty("title", title);
@@ -81,6 +81,7 @@ public class ShoppingCartServlet extends HttpServlet {
 						JsonObject jsonObject = new JsonObject();
 						jsonObject.addProperty("id", id);
 						jsonObject.addProperty("title", title);
+//						jsonArray.addAll(cart);
 //						jsonArray.add(jsonObject);
 						cart.add(jsonObject);
 					}
@@ -89,12 +90,9 @@ public class ShoppingCartServlet extends HttpServlet {
 //				synchronized(cart) {
 //					cart.remove(title);
 //				}
-//			}	
+//			}
 				
-			for(int i=0; i < cart.size();i++) {
-				jsonArray.add(cart.get(i));
-			}
-			out.write(jsonArray.toString());
+			out.write(cart.toString());
 			
 			response.setStatus(200);
 			rs.close();

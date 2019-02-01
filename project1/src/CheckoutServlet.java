@@ -16,8 +16,9 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.sql.PreparedStatement;
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.sql.ResultSet;
 /**
  * Servlet implementation class CheckoutServlet
@@ -68,8 +69,6 @@ public class CheckoutServlet extends HttpServlet {
 			ResultSet rs = statement.executeQuery();
 			
 			
-
-			
 			if(rs.next()) {//means that there is valid information in the database about the customer
 				
 				String cust_id = rs.getString("id");
@@ -81,18 +80,19 @@ public class CheckoutServlet extends HttpServlet {
 				JsonObject responseJsonObject = new JsonObject();
 				responseJsonObject.addProperty("status", "success");
 				responseJsonObject.addProperty("message", "Successful Purchase! Thank You, " + first_name + " " + last_name);
-//				responseJsonObject.addProperty("sessionId", sessionId);
-//				responseJsonObject.addProperty("lastAccessTime", lastAccessTime);
+				responseJsonObject.addProperty("sessionId", sessionId);
+				responseJsonObject.addProperty("lastAccessTime", lastAccessTime);
 				
 				ArrayList<JsonObject> cart = (ArrayList<JsonObject>) session.getAttribute("cart");
+
+				Date date = new Date();
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(date);
+				int year = cal.get(Calendar.YEAR);
+				int month =cal.get(Calendar.MONTH);
+				int day = cal.get(Calendar.DAY_OF_MONTH);
 				
-				Date date = new Date(lastAccessTime);
-				LocalDate currentDay = date.toLocalDate();
-				int year = currentDay.getYear();
-				int month =currentDay.getMonthValue();
-				int day = currentDay.getDayOfMonth();
-				
-				String fullDate = String.format("%1$-%02d$-%03d$",year,month,day);
+				String fullDate = String.format("%1d-%02d-%02d",year,month,day);
 				
 				String insert_query = "insert into sales(customerId,movieId,saleDate)\r\n" + 
 						"VALUES(?,?,?)";
@@ -101,6 +101,8 @@ public class CheckoutServlet extends HttpServlet {
 				
 				JsonArray jsonArray = new JsonArray();
 				
+				//loops through the cart to insert movies into the sales table
+				//and gets sale id with the title
 				for(int i = 0; i < cart.size(); i++) {
 					JsonObject jsonObject = cart.get(i);
 					String id = jsonObject.get("id").toString();
