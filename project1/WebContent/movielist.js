@@ -75,7 +75,10 @@ function handleResult(data) {
         rowHTML += "<td>" + parseGenreListHtml(data[i]["genres"]) + "</td>";
         rowHTML += "<td>" + data[i]["director"] + "</td>";
         rowHTML += "<td>" + parseStarsListHtml(data[i]["stars"]) + "</td>";
-        rowHTML += "<td><button type=\"button\" class=\"btn btn-primary\"> Add to Cart</button></td>";
+        //rowHTML += "<td><a href=\"?id=" + data[i]["id"] + "&action=add\"class=\"btn btn-primary\" id=\"add-cart\">Add to Cart</a></td>"; 
+        rowHTML += "<td><form id='add-cart'>" +
+        		"<input type='hidden' name='id' value='" + data[i]['id'] + "'><input type='submit' value='Add to Cart'>" +
+        		"</form></td>";
         rowHTML += "</tr>";
 
         movieTableElement.append(rowHTML);
@@ -83,12 +86,22 @@ function handleResult(data) {
     console.log(data);
 }
 
+//function handleCartInfo(cartEvent){
+//	cartEvent.preventDefault();
+//	$.get("api/cart", window.location.search, function(data){console.log(data);})
+//}
+
 jQuery.ajax({
     dataType: "json",
     method: "GET",
     url: "api/movies"+ window.location.search,
     success: (data) => handleResult(data)
 });
+
+function handleCartInfo(event) {
+	event.preventDefault();
+	console.log("working");
+}
 
 $("#orderFormControl").on("change", function(event) {
 	let paramObj = parseUrl();
@@ -101,3 +114,5 @@ $("#limitFormControl").on("change", function(event) {
 });
 
 $(handlePagination());
+
+$("#add-cart").on("submit", (event) => handleCartInfo(event));
