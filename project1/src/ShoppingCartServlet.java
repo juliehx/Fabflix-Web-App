@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Map;
 import java.sql.ResultSet;
 /**
  * Servlet implementation class ShoppingCartServlet
@@ -46,11 +47,14 @@ public class ShoppingCartServlet extends HttpServlet {
 		String action = request.getParameter("action");
 		String movie_id = request.getParameter("id");
 		System.out.println(movie_id);
+		System.out.println(action);
 		HttpSession session = request.getSession();
 
 		try {
 			Connection dbcon = dataSource.getConnection();
-			String query = "select id, title from movies where id = " + movie_id;
+			String query ="select id, title \r\n" + 
+					"from movies\r\n" + 
+					"where id = '"+ movie_id + "' ";
 			
 			Statement statement = dbcon.createStatement();
 			ResultSet rs = statement.executeQuery(query);
@@ -59,14 +63,9 @@ public class ShoppingCartServlet extends HttpServlet {
 //			String movie_id = rs.getString("id");
 			String title = rs.getString("title");
 			
-//			JsonArray jsonArray = new JsonArray();			
-//			JsonObject jsonObject = new JsonObject();
-//			jsonObject.addProperty("id", movie_id);
-//			jsonObject.addProperty("title", title);
-//			jsonArray.add(jsonObject);
-			
+//			Map<String,Integer> cart = (Map<String,Integer>) session.getAttribute("cart");
 			ArrayList<String> cart = (ArrayList<String>) session.getAttribute("cart"); 
-			if(action.equals("add")) {
+//			if(action.equals("add")) {
 				if (cart == null) {
 					cart = new ArrayList<>();
 					cart.add(title);
@@ -76,13 +75,18 @@ public class ShoppingCartServlet extends HttpServlet {
 						cart.add(title);
 					}
 				}
-			}else if(action.equals("delete")) {
-				synchronized(cart) {
-					cart.remove(title);
-				}
-			}	
+//			}else if(action.equals("delete")) {
+//				synchronized(cart) {
+//					cart.remove(title);
+//				}
+//			}	
+			JsonArray jsonArray = new JsonArray();			
+			JsonObject jsonObject = new JsonObject();
 			
-			response.getWriter().write(String.join(",", cart));
+			jsonObject.addProperty("titles", String.join(";", cart));
+			jsonArray.add(jsonObject);
+			
+			out.write(jsonArray.toString());
 			
 			response.setStatus(200);
 			rs.close();
