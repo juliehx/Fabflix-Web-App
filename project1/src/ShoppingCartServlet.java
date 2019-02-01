@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.sql.ResultSet;
@@ -39,7 +40,7 @@ public class ShoppingCartServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.setContentType("application/json");
+		//response.setContentType("application/json");
 		
 		PrintWriter out = response.getWriter();
 		
@@ -50,9 +51,10 @@ public class ShoppingCartServlet extends HttpServlet {
 
 		try {
 			Connection dbcon = dataSource.getConnection();
-			String query = "select id, title from movies where id = " + movie_id;
+			String query = "select id, title from movies where id = '" + movie_id + "'";
 			
 			Statement statement = dbcon.createStatement();
+			
 			ResultSet rs = statement.executeQuery(query);
 			
 			rs.next();
@@ -66,7 +68,7 @@ public class ShoppingCartServlet extends HttpServlet {
 //			jsonArray.add(jsonObject);
 			
 			ArrayList<String> cart = (ArrayList<String>) session.getAttribute("cart"); 
-			if(action.equals("add")) {
+//			if(action.equals("add")) {
 				if (cart == null) {
 					cart = new ArrayList<>();
 					cart.add(title);
@@ -76,13 +78,13 @@ public class ShoppingCartServlet extends HttpServlet {
 						cart.add(title);
 					}
 				}
-			}else if(action.equals("delete")) {
-				synchronized(cart) {
-					cart.remove(title);
-				}
-			}	
+//			}else if(action.equals("delete")) {
+//				synchronized(cart) {
+//					cart.remove(title);
+//				}
+//			}	
 			
-			response.getWriter().write(String.join(",", cart));
+			out.write(String.join(",", cart));
 			
 			response.setStatus(200);
 			rs.close();

@@ -75,7 +75,7 @@ function handleResult(data) {
         rowHTML += "<td>" + parseGenreListHtml(data[i]["genres"]) + "</td>";
         rowHTML += "<td>" + data[i]["director"] + "</td>";
         rowHTML += "<td>" + parseStarsListHtml(data[i]["stars"]) + "</td>";
-        rowHTML += "<td><form id='addCartForm' action='api/cart' method='get'>" +
+        rowHTML += "<td><form id='addCartForm' action='#' method='get'>" +
         		"		<input type='hidden' name='id' value='" + data[i]['id'] + "'>" +
         		"		<input type='submit' value='Add to Cart' id='submit-form'>" +
         		"</form></td>";
@@ -94,7 +94,7 @@ jQuery.ajax({
 });
 
 function handleCartInfo(data) {
-	console.log(data);
+	console.log(data.split(","));
 }
 
 $("#orderFormControl").on("change", function(event) {
@@ -113,5 +113,12 @@ function submitCartForm() {
 	$.get('api/cart', $("#addCartForm").serialize(), (data)=>handleCartInfo(data));
 }
 
-$("#submitForm").onsubmit = function() {submitCartForm()};
+$(document).on("submit", "#addCartForm", function(event) {
+	event.preventDefault();
+	console.log($(this).serialize());
+	
+	$.get('api/cart', $(this).serialize(), (data)=>handleCartInfo(data));
+	
+	return false;
+});
 
