@@ -94,7 +94,7 @@ jQuery.ajax({
 });
 
 function handleCartInfo(data) {
-	console.log(data.split(","));
+	console.log(data);
 }
 
 $("#orderFormControl").on("change", function(event) {

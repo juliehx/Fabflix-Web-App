@@ -1,3 +1,4 @@
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -12,10 +13,8 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Map;
 import java.sql.ResultSet;
 /**
  * Servlet implementation class ShoppingCartServlet
@@ -41,7 +40,7 @@ public class ShoppingCartServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//response.setContentType("application/json");
+		response.setContentType("application/json");
 		
 		PrintWriter out = response.getWriter();
 		
@@ -60,19 +59,30 @@ public class ShoppingCartServlet extends HttpServlet {
 			ResultSet rs = statement.executeQuery(query);
 			
 			rs.next();
-//			String movie_id = rs.getString("id");
+			String id = rs.getString("id");
 			String title = rs.getString("title");
 			
-//			Map<String,Integer> cart = (Map<String,Integer>) session.getAttribute("cart");
-			ArrayList<String> cart = (ArrayList<String>) session.getAttribute("cart"); 
+			JsonArray jsonArray = new JsonArray();
+			ArrayList<JsonObject> cart = (ArrayList<JsonObject>) session.getAttribute("cart"); 
 //			if(action.equals("add")) {
 				if (cart == null) {
 					cart = new ArrayList<>();
-					cart.add(title);
+					JsonObject jsonObject = new JsonObject();
+					jsonObject.addProperty("id", id);
+					jsonObject.addProperty("title", title);
+//					jsonArray.add(jsonObject);
+					
+					cart.add(jsonObject);
+				
 					session.setAttribute("cart", cart);
+//					System.out.println(cart);
 				} else {
 					synchronized(cart) {
-						cart.add(title);
+						JsonObject jsonObject = new JsonObject();
+						jsonObject.addProperty("id", id);
+						jsonObject.addProperty("title", title);
+//						jsonArray.add(jsonObject);
+						cart.add(jsonObject);
 					}
 				}
 //			}else if(action.equals("delete")) {
@@ -80,8 +90,11 @@ public class ShoppingCartServlet extends HttpServlet {
 //					cart.remove(title);
 //				}
 //			}	
-			
-			out.write(String.join(",", cart));
+				
+			for(int i=0; i < cart.size();i++) {
+				jsonArray.add(cart.get(i));
+			}
+			out.write(jsonArray.toString());
 			
 			response.setStatus(200);
 			rs.close();
