@@ -44,12 +44,13 @@ public class ShoppingCartServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		String action = request.getParameter("action");
-		String id = request.getParameter("id");
+		String movie_id = request.getParameter("id");
+		System.out.println(movie_id);
 		HttpSession session = request.getSession();
 
 		try {
 			Connection dbcon = dataSource.getConnection();
-			String query = "select m.id,m.title from movies m where m.id = " + id;
+			String query = "select id, title from movies where id = " + movie_id;
 			
 			Statement statement = dbcon.createStatement();
 			ResultSet rs = statement.executeQuery(query);

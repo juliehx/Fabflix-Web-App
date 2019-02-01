@@ -75,9 +75,9 @@ function handleResult(data) {
         rowHTML += "<td>" + parseGenreListHtml(data[i]["genres"]) + "</td>";
         rowHTML += "<td>" + data[i]["director"] + "</td>";
         rowHTML += "<td>" + parseStarsListHtml(data[i]["stars"]) + "</td>";
-        //rowHTML += "<td><a href=\"?id=" + data[i]["id"] + "&action=add\"class=\"btn btn-primary\" id=\"add-cart\">Add to Cart</a></td>"; 
-        rowHTML += "<td><form id='add-cart'>" +
-        		"<input type='hidden' name='id' value='" + data[i]['id'] + "'><input type='submit' value='Add to Cart'>" +
+        rowHTML += "<td><form id='addCartForm' action='api/cart' method='get'>" +
+        		"		<input type='hidden' name='id' value='" + data[i]['id'] + "'>" +
+        		"		<input type='submit' value='Add to Cart' id='submit-form'>" +
         		"</form></td>";
         rowHTML += "</tr>";
 
@@ -86,11 +86,6 @@ function handleResult(data) {
     console.log(data);
 }
 
-//function handleCartInfo(cartEvent){
-//	cartEvent.preventDefault();
-//	$.get("api/cart", window.location.search, function(data){console.log(data);})
-//}
-
 jQuery.ajax({
     dataType: "json",
     method: "GET",
@@ -98,9 +93,8 @@ jQuery.ajax({
     success: (data) => handleResult(data)
 });
 
-function handleCartInfo(event) {
-	event.preventDefault();
-	console.log("working");
+function handleCartInfo(data) {
+	console.log(data);
 }
 
 $("#orderFormControl").on("change", function(event) {
@@ -115,4 +109,9 @@ $("#limitFormControl").on("change", function(event) {
 
 $(handlePagination());
 
-$("#add-cart").on("submit", (event) => handleCartInfo(event));
+function submitCartForm() {
+	$.get('api/cart', $("#addCartForm").serialize(), (data)=>handleCartInfo(data));
+}
+
+$("#submitForm").onsubmit = function() {submitCartForm()};
+
