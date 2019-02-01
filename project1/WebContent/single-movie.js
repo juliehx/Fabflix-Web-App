@@ -11,6 +11,7 @@ function parseMovieInfoHtml(data) {
 				"<td>" + data["year"] + "</td>" +
 				"<td>" + data["director"] + "</td>" +
 				"<td>" + data["rating"] + "</td>" +
+				"<td><button type=\"button\" class=\"btn btn-primary\"> Add to Cart</button></td>" +
 			"</tr>";
 }
 

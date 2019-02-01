@@ -75,6 +75,7 @@ function handleResult(data) {
         rowHTML += "<td>" + parseGenreListHtml(data[i]["genres"]) + "</td>";
         rowHTML += "<td>" + data[i]["director"] + "</td>";
         rowHTML += "<td>" + parseStarsListHtml(data[i]["stars"]) + "</td>";
+        rowHTML += "<td><button type=\"button\" class=\"btn btn-primary\"> Add to Cart</button></td>";
         rowHTML += "</tr>";
 
         movieTableElement.append(rowHTML);
