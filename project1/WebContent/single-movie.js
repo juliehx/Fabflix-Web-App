@@ -11,7 +11,10 @@ function parseMovieInfoHtml(data) {
 				"<td>" + data["year"] + "</td>" +
 				"<td>" + data["director"] + "</td>" +
 				"<td>" + data["rating"] + "</td>" +
-				"<td><button type=\"button\" class=\"btn btn-primary\"> Add to Cart</button></td>" +
+				"<td><form id='addCartForm' action='#' method='get'>" +
+        		"		<input type='hidden' name='id' value='" + data['id'] + "'>" +
+        		"		<input type='submit' value='Add to Cart' id='submit-form'>" +
+        		"</form></td>" +
 			"</tr>";
 }
 
@@ -49,6 +52,10 @@ function handleResults(data) {
 	starsListElement.append(starsHtml);
 }
 
+function handleCartInfo(data) {
+	console.log(data);
+}
+
 let movieId = getParameterByName("id");
 
 jQuery.ajax({
@@ -56,4 +63,13 @@ jQuery.ajax({
 	method: "GET",
 	url: "api/single-movie?id=" + movieId,
 	success: (data) => handleResults(data)
+});
+
+$(document).on("submit", "#addCartForm", function(event) {
+	event.preventDefault();
+	console.log($(this).serialize());
+	
+	$.get('api/add-cart', $(this).serialize(), (data)=>handleCartInfo(data));
+	
+	return false;
 });
