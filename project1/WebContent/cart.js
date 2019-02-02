@@ -1,26 +1,23 @@
 function handleResult(data){
 	console.log(data);
-	let cartContentElement = jQuery("#cart-content");
-	
-	for(let i = 0; i < data.length; i++){
-		let movieIdElement = data[i]; //should contain movieID
-		let rowHTML = "";
-		rowHTML += "<tr>";
-		rowHTML += "<td>" + movieIdElement["title"]  + "</td>";
-		rowHTML += "<td><input type='number' name= 'quantity' value='" + movieIdElement["quantity"] + "'min='0' max='10'></td>";
-		rowHTML += "</tr>";
-		
-		cartContentElement.append(rowHTML);
+	let cartContentElement = $("#cart-content");
+	let htmlElem = "";
+	for(var key in data) {
+		htmlElem += "<tr>"
+		htmlElem += "<td><a href='single-movie.html?id=" + key + "'>" + data[key]["title"] +"</a></td>";
+		htmlElem += "<td>" + data[key]["quantity"] + "</td>";
+		htmlElem += "<td><input type='hidden' name='id' value='" + key + "'>" +
+		"		<input type='submit' value='Delete' id='submit-form'>" +
+		"</form></td>";
 	}
-	console.log(data);
-	
+	cartContentElement.append(htmlElem);
 	
 }
 
 jQuery.ajax({
 	datatype: "json",
 	method: "GET",
-	url: "api/cart",
+	url: "api/view-cart",
 	success: (result) => handleResult(result)
 });
 

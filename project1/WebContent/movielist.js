@@ -110,14 +110,14 @@ $("#limitFormControl").on("change", function(event) {
 $(handlePagination());
 
 function submitCartForm() {
-	$.get('api/cart', $("#addCartForm").serialize(), (data)=>handleCartInfo(data));
+	$.get('api/add-cart', $("#addCartForm").serialize(), (data)=>handleCartInfo(data));
 }
 
 $(document).on("submit", "#addCartForm", function(event) {
 	event.preventDefault();
 	console.log($(this).serialize());
 	
-	$.get('api/cart', $(this).serialize(), (data)=>handleCartInfo(data));
+	$.get('api/add-cart', $(this).serialize(), (data)=>handleCartInfo(data));
 	
 	return false;
 });

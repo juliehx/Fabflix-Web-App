@@ -21,8 +21,8 @@ import java.sql.ResultSet;
 /**
  * Servlet implementation class ShoppingCartServlet
  */
-@WebServlet(name = "ShoppingCartServlet", urlPatterns = "/api/cart")
-public class ShoppingCartServlet extends HttpServlet {
+@WebServlet(name = "AddToCartServlet", urlPatterns = "/api/add-cart")
+public class AddToCartServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	
@@ -32,7 +32,7 @@ public class ShoppingCartServlet extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ShoppingCartServlet() {
+    public AddToCartServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -65,14 +65,12 @@ public class ShoppingCartServlet extends HttpServlet {
 			String title = rs.getString("title");
 			
 			HashMap<String, HashMap<String, Object>> cart = (HashMap) session.getAttribute("cart");
-//			if(action.equals("add")) {
 				if (cart == null) {
 					cart = new HashMap<String, HashMap<String, Object>>();
 					HashMap<String, Object> product_info = new HashMap<String, Object>();
 					product_info.put("title", title);
 					product_info.put("quantity", 1);
 					cart.put(id, product_info);
-				
 					session.setAttribute("cart", cart);
 				} else {
 					synchronized(cart) {
@@ -90,10 +88,6 @@ public class ShoppingCartServlet extends HttpServlet {
 						}
 					}
 				}
-//			} else if(action.equals("delete")) {
-//				if(cart != null) {
-//					cart.remove(id);
-//				}
 //			}
 			
 			Gson gson = new Gson();
