@@ -21,6 +21,7 @@ function handleResults(data){
 	stardobElement.append(data[0]["birthYear"]);
 	movieListElement.append(parseMovieListHtml(data[0]["movies"]));
 	
+	$("title").append(" | " + data[0]["name"]);
 }
 
 

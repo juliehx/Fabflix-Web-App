@@ -41,6 +41,8 @@ function handleResults(data) {
 	let genresHtml = parseListHtml(data[0]["genres"]);
 	let starsHtml = parsestarListHtml(data[0]["stars"]);
 	
+	$("title").append(" | " + data[0]["title"]);
+	
 	movieTitleElement.append(data[0]["title"]);
 	movieInfoElement.append(movieInfoHtml);
 	genreListElement.append(genresHtml);
