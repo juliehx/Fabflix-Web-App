@@ -4,15 +4,15 @@
 		<meta charset="UTF-8">
 		<title>Fablix</title>
 		<link rel="stylesheet" type="text/css" href="css/index.css">
-		<link href="https://fonts.googleapis.com/css?family=Major+Mono+Display|Roboto+Mono:300" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Major+Mono+Display|Roboto+Mono:400" rel="stylesheet">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 	</head>
 	<body>
-	<!--<nav class="navbar">
+	<nav class="navbar">
 		<h1>fablix</h1>
 		<form id="searchbar">
 			<div class="input-group">
-				<input type="text" placeholder="Search for a movie" name="title"required>
+				<input type="text" class="gen-search-bar" placeholder="Search for a movie" name="title"required>
 				<button type="submit" class="btn gen-search"><img src="images/search.svg"></button>
 				<input type="button" class="btn adv-search" data-toggle="modal" data-target="#advSearchModal" value="Advanced Search">
 				</div>
@@ -23,7 +23,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">Advanced Search</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<button type="button" class="close close-light" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
@@ -31,28 +31,64 @@
 						<form id="advSearch-form">
 							<div class="form-group">
 								<label for="movie-title">Movie title:</label>
-								<input type="text" class="form-control" placeholder="Movie title" name="title" id="movie-title">																			
+								<input type="text" placeholder="ex. Big Hero 6" name="title" id="movie-title">																			
 							</div>
 							<div class="form-group">
 								<label for="star-name">Star:</label>
-								<input type="text" class="form-control" placeholder="Star" name="star" id="star-name">
+								<input type="text" placeholder="ex. Tom Hanks" name="star" id="star-name">
 							</div>
 							<div class="form-group">
 								<label for="director-name">Director:</label>
-								<input type="text" class="form-control" placeholder="Director" name="director" id="director-name">
+								<input type="text" placeholder="ex. Steven Spielberg" name="director" id="director-name">
 							</div>
 							<div class="form-group">
 								<label for="release-year">Release year:</label>
-								<input type="number" class="form-control" min="0000" max="9999" name="year" id="release-year" placeholder="year (ex. 2000)">
+								<input type="number" min="0000" max="9999" name="year" id="release-year" placeholder="ex. 1986">
 							</div>
-							<input type="submit" class="btn btn-dark" value="Search">
+							<input type="submit" class="btn" value="Search">
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
-	</nav>-->
-	<nav class="navbar bg-light">
+	</nav>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<div id="carouselCon" class="carousel slide" data-ride="carousel">
+  					<div class="carousel-inner">
+    					<div class="carousel-item active">
+      						<img class="d-block w-100" src="images/cinema.jpg" alt="First slide">
+    					</div>
+    					<div class="carousel-item">
+      						<img class="d-block w-100" src="images/cinema-2.jpg" alt="Second slide">
+    					</div>
+    					<div class="carousel-item">
+      						<img class="d-block w-100" src="images/cinema-3.jpg" alt="Second slide">
+    					</div>
+  					</div>
+  					<a class="carousel-control-prev" href="#carouselCon" role="button" data-slide="prev">
+    					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    					<span class="sr-only">Previous</span>
+  					</a>
+  					<a class="carousel-control-next" href="#carouselCon" role="button" data-slide="next">
+    					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+    					<span class="sr-only">Next</span>
+  					</a>
+				</div>
+			</div>
+			<div class="col">
+				<div class="welcome">
+					<h4>browse by genre</h4>
+					<div class="browse-genre" id="genre-list">
+					</div>
+					<h4>browse by alphabet</h4>
+					<div class="browse-alpha" id="alpha-buttons"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--<nav class="navbar bg-light">
 	<button type="button" class="btn btn-primary">Checkout</button></nav>
 		<div class="container" style="margin-top:100px;">
 			<h2>Welcome to Fablix</h2>
@@ -114,7 +150,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div>-->
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>

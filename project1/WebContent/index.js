@@ -9,10 +9,10 @@ function handleResult(result) {
 function handleAlphaNum() {
 	let alphaListElement = $("#alpha-buttons");
 	for(let i = 0; i <= 9; i++) {
-		alphaListElement.append("<a href='movielist.html?search=" + i + "&mode=browse&order=rating&limit=10&page=1'>" + "<input type='button' class='btn btn-outline-dark' value='" + i + "'></a>");
+		alphaListElement.append("<a href='movielist.html?search=" + i + "&mode=browse&order=rating&limit=10&page=1'>" + "<input type='button' class='btn' value='" + i + "'></a>");
 	}
 	for(let i = 65; i <= 90; i++) {
-		alphaListElement.append("<a href='movielist.html?search=&#" + i + "&mode=browse&order=rating&limit=10&page=1'>" + "<input type='button' class='btn btn-outline-dark' value='&#" + i + "'></a>");
+		alphaListElement.append("<a href='movielist.html?search=&#" + i + "&mode=browse&order=rating&limit=10&page=1'>" + "<input type='button' class='btn' value='&#" + i + "'></a>");
 	}
 }
 
