@@ -12,6 +12,7 @@ function handleResult(data){
 		
 		cartContentElement.append(rowHTML);
 	}
+	console.log(data);
 	
 	
 }
@@ -22,3 +23,4 @@ jQuery.ajax({
 	url: "api/cart",
 	success: (result) => handleResult(result)
 });
+
