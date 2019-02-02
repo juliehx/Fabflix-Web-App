@@ -2,7 +2,7 @@ function handleResult(result) {
 	console.log(result);
 	let genreListElement = $("#genre-list");
 	for(let i = 0; i < result.length; i++) {
-		genreListElement.append("<a href='movielist.html?id=" + result[i]["id"] + "&mode=browse&order=rating&limit=10&page=1'><li class='list-group-item'>" + result[i]["genre"] + "</li></a>");
+		genreListElement.append("<a href='movielist.html?id=" + result[i]["id"] + "&mode=browse&order=rating&limit=10&page=1'><input type='button' class='btn' value='" + result[i]["genre"] + "'></a>");
 	}
 }
 
