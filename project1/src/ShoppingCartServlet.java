@@ -15,6 +15,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.sql.ResultSet;
 /**
  * Servlet implementation class ShoppingCartServlet
@@ -62,37 +64,41 @@ public class ShoppingCartServlet extends HttpServlet {
 			String id = rs.getString("id");
 			String title = rs.getString("title");
 			
-//			JsonArray jsonArray = new JsonArray();
-			JsonArray cart = (JsonArray) session.getAttribute("cart"); 
+			HashMap<String, HashMap<String, Object>> cart = (HashMap) session.getAttribute("cart");
 //			if(action.equals("add")) {
 				if (cart == null) {
-					cart = new JsonArray();
-					JsonObject jsonObject = new JsonObject();
-					jsonObject.addProperty("id", id);
-					jsonObject.addProperty("title", title);
-//					jsonArray.add(jsonObject);
-					
-					cart.add(jsonObject);
+					cart = new HashMap<String, HashMap<String, Object>>();
+					HashMap<String, Object> product_info = new HashMap<String, Object>();
+					product_info.put("title", title);
+					product_info.put("quantity", 1);
+					cart.put(id, product_info);
 				
 					session.setAttribute("cart", cart);
-//					System.out.println(cart);
 				} else {
 					synchronized(cart) {
-						JsonObject jsonObject = new JsonObject();
-						jsonObject.addProperty("id", id);
-						jsonObject.addProperty("title", title);
-//						jsonArray.addAll(cart);
-//						jsonArray.add(jsonObject);
-						cart.add(jsonObject);
+						if(!cart.containsKey(id)) {
+							HashMap<String, Object> product_info = new HashMap<String, Object>();
+							product_info.put("title", title);
+							product_info.put("quantity", 1);
+							cart.put(id, product_info);
+						} else {
+							int value = (Integer) cart.get(id).get("quantity");
+							HashMap<String, Object> updated_product = new HashMap<String, Object>();
+							updated_product.put("title", cart.get(id).get("title"));
+							updated_product.put("quantity", value+1);
+							cart.put(id, updated_product);
+						}
 					}
 				}
-//			}else if(action.equals("delete")) {
-//				synchronized(cart) {
-//					cart.remove(title);
+//			} else if(action.equals("delete")) {
+//				if(cart != null) {
+//					cart.remove(id);
 //				}
 //			}
-				
-			out.write(cart.toString());
+			
+			Gson gson = new Gson();
+			String cartItems = gson.toJson(cart);
+			out.write(cartItems.toString());
 			
 			response.setStatus(200);
 			rs.close();
