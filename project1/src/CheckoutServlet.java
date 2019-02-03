@@ -99,7 +99,7 @@ public class CheckoutServlet extends HttpServlet {
 					String insert_query = "insert into sales(customerId,movieId,saleDate)\r\n" + 
 										"VALUES(?,?,?)";
 			
-					PreparedStatement insert_statement = dbcon.prepareStatement(insert_query);
+					PreparedStatement insert_statement = dbcon.prepareStatement(insert_query, Statement.RETURN_GENERATED_KEYS);
 			
 					JsonArray jsonArray = new JsonArray();
 			
@@ -115,15 +115,28 @@ public class CheckoutServlet extends HttpServlet {
 							insert_statement.setString(2, key);//movie id 
 							insert_statement.setString(3, todayDate);
 					
-							ResultSet rs2 = insert_statement.executeQuery("select max(id) as id from sales");//to get sale ID
-							if(rs2.next()) {
-								String sale_id = rs2.getString("id");
-								JsonObject rs2JsonObject = new JsonObject();
-								rs2JsonObject.addProperty("sale_id", sale_id);
-								rs2JsonObject.addProperty("title", cart.get(key).get("title").toString());
-								jsonArray.add(rs2JsonObject);
+							int rows = insert_statement.executeUpdate();//to get sale ID
+							
+							if(rows == 1) {
+								ResultSet rs2 = insert_statement.getGeneratedKeys();
+								if(rs2.next()) {
+									int sale_id = rs2.getInt(1);
+									JsonObject rs2JsonObject = new JsonObject();
+									rs2JsonObject.addProperty("sale_id", sale_id);
+									rs2JsonObject.addProperty("title", cart.get(key).get("title").toString());
+									jsonArray.add(rs2JsonObject);
+								}
+								rs2.close();
 							}
-							rs2.close();
+							
+//							if(rs2.next()) {
+//								String sale_id = rs2.getString("id");
+//								JsonObject rs2JsonObject = new JsonObject();
+//								rs2JsonObject.addProperty("sale_id", sale_id);
+//								rs2JsonObject.addProperty("title", cart.get(key).get("title").toString());
+//								jsonArray.add(rs2JsonObject);
+//							}
+//							rs2.close();
 						}
 					}
 					responseJsonObject.add("sales", jsonArray);
