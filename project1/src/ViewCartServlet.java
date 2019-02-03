@@ -47,14 +47,15 @@ public class ViewCartServlet extends HttpServlet {
 		
 		try {
 			HashMap <String, HashMap<String, Object>> cart = (HashMap) session.getAttribute("cart");
-			if(cart.isEmpty() || cart == null) {
-				JsonObject emptyMsg = new JsonObject();
-				emptyMsg.addProperty("message", "Your cart is empty.");
-				out.write(emptyMsg.toString());
-			} else {
+			if(cart != null && !cart.isEmpty()) {
 				Gson gson = new Gson();
 				String cartItems = gson.toJson(cart);
 				out.write(cartItems.toString());
+				
+			} else {
+				JsonObject emptyMsg = new JsonObject();
+				emptyMsg.addProperty("message", "Your cart is empty.");
+				out.write(emptyMsg.toString());
 			}
 			
 			response.setStatus(200);
