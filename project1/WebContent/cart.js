@@ -16,12 +16,12 @@ function handleResult(data){
 			
 			htmlElem += "<td>" + data[key]["quantity"] + "</td>";
 			
-			htmlElem += "<td><form id = 'addForm' action='#' method='get'>" +
+			htmlElem += "<td><form id = 'addForm' action='#' method='get' onSubmit='window.location.reload()'>" +
 						"<input type='hidden' name='id' value='" + key + "'>" +
 						"<input type='hidden' name='action' value='add'>" + 
 						"<input type='submit' class='btn btn-primary' value='+'></form></td>";
 			
-			htmlElem += "<td><form id='deleteCartForm' action='#' method='get' onSubmit='window.location.reload()'>" +
+			htmlElem += "<td><form id='deleteCartForm' action='#' method='get'>" +
 						"<input type='hidden' name='id' value='" + key + "'>" +
 						"<input type='submit' class='btn btn-primary' value='Delete'></form></td></tr>";
 		}
