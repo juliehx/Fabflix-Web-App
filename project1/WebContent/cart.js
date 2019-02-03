@@ -8,8 +8,20 @@ function handleResult(data){
 		for(var key in data) {
 			htmlElem += "<tr>"
 			htmlElem += "<td><a href='single-movie.html?id=" + key + "'>" + data[key]["title"] +"</a></td>";
+			
+			htmlElem += "<td><form id = 'subtractForm' action='#' method='get' onSubmit='window.location.reload()'>" +
+			"<input type='hidden' name='id' value='" + key + "'>" +
+			"<input type='hidden' name='action' value='subtract'>" +
+			"<input type='submit' class='btn btn-primary' value='-'></form></td>";
+			
 			htmlElem += "<td>" + data[key]["quantity"] + "</td>";
-			htmlElem += "<td><form id='deleteCartForm' action='#' method='get'>" +
+			
+			htmlElem += "<td><form id = 'addForm' action='#' method='get'>" +
+						"<input type='hidden' name='id' value='" + key + "'>" +
+						"<input type='hidden' name='action' value='add'>" + 
+						"<input type='submit' class='btn btn-primary' value='+'></form></td>";
+			
+			htmlElem += "<td><form id='deleteCartForm' action='#' method='get' onSubmit='window.location.reload()'>" +
 						"<input type='hidden' name='id' value='" + key + "'>" +
 						"<input type='submit' class='btn btn-primary' value='Delete'></form></td></tr>";
 		}
@@ -28,6 +40,18 @@ jQuery.ajax({
 	method: "GET",
 	url: "api/view-cart",
 	success: (result) => handleResult(result)
+});
+
+$(document).on("submit","#subtractForm",function(event){
+	event.preventDefault();
+	$.get("api/adjust-cart", $(this).serialize(), (data)=> handleCartInfo(data));
+//	return false;
+});
+
+$(document).on("submit","#addForm",function(event){
+	event.preventDefault();
+	$.get("api/adjust-cart", $(this).serialize(), (data)=> handleCartInfo(data));
+//	return false;
 });
 
 $(document).on("submit", "#deleteCartForm", function(event) {
