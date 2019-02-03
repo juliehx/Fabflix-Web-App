@@ -85,7 +85,7 @@ public class CheckoutServlet extends HttpServlet {
 				HashMap<String, HashMap<String, Object>> cart = (HashMap) session.getAttribute("cart");
 				JsonObject responseJsonObject = new JsonObject();
 				
-				if(!cart.isEmpty()) {
+				if(cart!= null && !cart.isEmpty()) {
 					responseJsonObject.addProperty("status", "success");
 					responseJsonObject.addProperty("message", "Successful Purchase! Thank You, " + first_name + " " + last_name);
 					responseJsonObject.addProperty("sessionId", sessionId);
@@ -143,7 +143,7 @@ public class CheckoutServlet extends HttpServlet {
 					
 					cart.clear();
 					
-				} else {
+				} else{
 					responseJsonObject.addProperty("message", "Your cart is empty.");
 				}
 				
