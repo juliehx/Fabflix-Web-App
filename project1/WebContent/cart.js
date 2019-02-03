@@ -2,14 +2,19 @@ function handleResult(data){
 	console.log(data);
 	let cartContentElement = $("#cart-content");
 	let htmlElem = "";
-	for(var key in data) {
-		htmlElem += "<tr>"
-		htmlElem += "<td><a href='single-movie.html?id=" + key + "'>" + data[key]["title"] +"</a></td>";
-		htmlElem += "<td>" + data[key]["quantity"] + "</td>";
-		htmlElem += "<td><form id='deleteCartForm' action='#' method='get'>" +
-					"<input type='hidden' name='id' value='" + key + "'>" +
-					"<input type='submit' class='btn btn-primary' value='Delete'></form></td></tr>";
+	if('message' in data) {
+		htmlElem += "<tr><td>" + data["message"] + "</td></tr>";
+	} else { 
+		for(var key in data) {
+			htmlElem += "<tr>"
+			htmlElem += "<td><a href='single-movie.html?id=" + key + "'>" + data[key]["title"] +"</a></td>";
+			htmlElem += "<td>" + data[key]["quantity"] + "</td>";
+			htmlElem += "<td><form id='deleteCartForm' action='#' method='get'>" +
+						"<input type='hidden' name='id' value='" + key + "'>" +
+						"<input type='submit' class='btn btn-primary' value='Delete'></form></td></tr>";
+		}
 	}
+	
 	cartContentElement.append(htmlElem);
 	
 }

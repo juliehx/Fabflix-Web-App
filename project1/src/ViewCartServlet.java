@@ -47,7 +47,7 @@ public class ViewCartServlet extends HttpServlet {
 		
 		try {
 			HashMap <String, HashMap<String, Object>> cart = (HashMap) session.getAttribute("cart");
-			if(cart == null) {
+			if(cart.isEmpty() || cart == null) {
 				JsonObject emptyMsg = new JsonObject();
 				emptyMsg.addProperty("message", "Your cart is empty.");
 				out.write(emptyMsg.toString());

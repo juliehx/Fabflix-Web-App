@@ -53,6 +53,7 @@ h2, h3, h4 {
 	border-radius: 0px!important;
 	margin: 3px;
 	font-family: 'Roboto Mono', monospace;
+	background-color: white;
 	-webkit-transition: all 0.3s ease;
 	-moz-transisition: all 0.3s ease;
 	-o-transition: all 0.3s ease;

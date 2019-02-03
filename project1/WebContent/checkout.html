@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+	</head>
+	<body>
+		<form id="checkout-form" action="#" method="post">
+			<label>Customer Information</label>
+			<div class="form-group">
+				<input type="text" placeholder="First Name" name="first-name">
+				<input type="text" placeholder="Last Name" name="last-name">
+				<input type="text" placeholder="Address" name="address">
+				<input type="text" placeholder="City" name="city">
+				<input type="text" placeholder="State" name="state">
+				<input type="text" placeholder="Zip Code" name="zip">
+			</div>
+			<label>Payment Information</label>
+			<div class="form-group">
+				<input type="text" placeholder="Credit Card Number" name="cc-id">
+				<label for="exp"><input type="date" value="2019-02-02" name="exp"></label>
+			</div>
+			<input type="submit" class="btn" value="Place Purchase">
+			<div class="message"></div>
+		</form>
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+		<script src="checkout.js"></script>
+	</body>
+</html>
