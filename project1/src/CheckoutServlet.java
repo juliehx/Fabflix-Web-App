@@ -127,6 +127,9 @@ public class CheckoutServlet extends HttpServlet {
 						}
 					}
 					responseJsonObject.add("sales", jsonArray);
+					
+					cart.clear();
+					
 				} else {
 					responseJsonObject.addProperty("message", "Your cart is empty.");
 				}
