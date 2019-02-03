@@ -12,18 +12,18 @@ function handleResult(data){
 			htmlElem += "<td><form id = 'subtractForm' action='#' method='get' onSubmit='window.location.reload()'>" +
 			"<input type='hidden' name='id' value='" + key + "'>" +
 			"<input type='hidden' name='action' value='subtract'>" +
-			"<input type='submit' class='btn btn-primary' value='-'></form></td>";
+			"<input type='submit' class='btn btn-light' value='-'></form></td>";
 			
 			htmlElem += "<td>" + data[key]["quantity"] + "</td>";
 			
 			htmlElem += "<td><form id = 'addForm' action='#' method='get' onSubmit='window.location.reload()'>" +
 						"<input type='hidden' name='id' value='" + key + "'>" +
 						"<input type='hidden' name='action' value='add'>" + 
-						"<input type='submit' class='btn btn-primary' value='+'></form></td>";
+						"<input type='submit' class='btn btn-light' value='+'></form></td>";
 			
 			htmlElem += "<td><form id='deleteCartForm' action='#' method='get'>" +
 						"<input type='hidden' name='id' value='" + key + "'>" +
-						"<input type='submit' class='btn btn-primary' value='Delete'></form></td></tr>";
+						"<input type='submit' class='btn btn-danger' value='Delete'></form></td></tr>";
 		}
 	}
 	
@@ -45,13 +45,13 @@ jQuery.ajax({
 $(document).on("submit","#subtractForm",function(event){
 	event.preventDefault();
 	$.get("api/adjust-cart", $(this).serialize(), (data)=> handleCartInfo(data));
-//	return false;
+	return false;
 });
 
 $(document).on("submit","#addForm",function(event){
 	event.preventDefault();
 	$.get("api/adjust-cart", $(this).serialize(), (data)=> handleCartInfo(data));
-//	return false;
+	return false;
 });
 
 $(document).on("submit", "#deleteCartForm", function(event) {
