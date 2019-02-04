@@ -1,0 +1,15 @@
+We used the LIKE predicate in two separate cases:
+
+1)When the user is browsing by letter (0-9,A-Z)
+	-The selected letter will be sent to the backend
+	-backend will use request.getParameter() to retrieve letter
+	- used in the following condition:
+		- where movies.title LIKE '(Letter)%'
+		- this predicate will look for all titles that BEGIN with that letter followed by 0 or more characters
+
+2)When the user is using the search bar or Advanced Search
+	-the advanced search options, if submitted with information, will be sent to backend
+	- the condition would be:
+		- where 'insert_searched_attribute' LIKE '%(substring)%'
+		-this predicate will search for all occurrences of that substring within the searched attributes
+		-defined by : there are 0 or more characters before the substring and 0 or more characters after the substring
