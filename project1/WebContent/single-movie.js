@@ -50,6 +50,10 @@ function handleResults(data) {
 	movieInfoElement.append(movieInfoHtml);
 	genreListElement.append(genresHtml);
 	starsListElement.append(starsHtml);
+	
+	document.getElementById("mainResultPage").href = data[0]["url"];
+	
+
 }
 
 function handleCartInfo(data) {
@@ -64,6 +68,8 @@ jQuery.ajax({
 	url: "api/single-movie?id=" + movieId,
 	success: (data) => handleResults(data)
 });
+
+
 
 $(document).on("submit", "#addCartForm", function(event) {
 	event.preventDefault();

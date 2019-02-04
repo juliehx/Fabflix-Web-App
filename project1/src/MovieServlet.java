@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,6 +27,10 @@ public class MovieServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		response.setContentType("application/json");
+		
+		
+//		
+//		System.out.println(request.getHeader("referer"));
 		
 		//gets number of results to display per page
 		String itemLimit = request.getParameter("limit");
@@ -113,7 +118,7 @@ public class MovieServlet extends HttpServlet{
 				String search_year = request.getParameter("year");
 				String search_star = request.getParameter("star");
 				
-				System.out.println(search_star);
+//				System.out.println(search_star);
 				
 				boolean searchTitleExist = search_title != null && !search_title.isEmpty();
 				boolean searchDirectorExist = search_director != null && !search_director.isEmpty();
@@ -122,10 +127,10 @@ public class MovieServlet extends HttpServlet{
 				
 				ArrayList<String> queryList = new ArrayList<String>();
 				
-				System.out.println(searchTitleExist);
-				System.out.println(searchDirectorExist);
-				System.out.println(searchYearExist);
-				System.out.println(searchStarExist);
+//				System.out.println(searchTitleExist);
+//				System.out.println(searchDirectorExist);
+//				System.out.println(searchYearExist);
+//				System.out.println(searchStarExist);
 				
 				if(searchTitleExist || searchDirectorExist || searchYearExist || searchStarExist) {
 					search_query += "where ";
@@ -196,7 +201,7 @@ public class MovieServlet extends HttpServlet{
 				
 			base_query += " limit " + itemLimit + " offset " + page;
 			
-			System.out.println(base_query);
+//			System.out.println(base_query);
 					
 			Statement statement = dbcon.createStatement();
 						
@@ -245,7 +250,26 @@ public class MovieServlet extends HttpServlet{
 				jsonObject.add("stars", starList);
 				
 				jsonArray.add(jsonObject);
+				
+//				HttpSession session = request.getSession();
+//				session.setAttribute("title",title);
+//				session.setAttribute("order",order);
+//				session.setAttribute("limit",itemLimit);
+//				session.setAttribute("page",page);
+//				session.setAttribute("mode", mode);
+				
+				
+//				System.out.println(sTitle);
+//				System.out.println(sOrder);
+//				System.out.println(sLimit);
+//				System.out.println(sPage);
 			}
+			String url = request.getHeader("referer");
+			
+			HttpSession session = request.getSession();
+			session.setAttribute("url", url);
+			
+			
 			out.write(jsonArray.toString());
 			response.setStatus(200);
 			rs.close();

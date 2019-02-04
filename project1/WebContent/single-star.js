@@ -22,6 +22,9 @@ function handleResults(data){
 	movieListElement.append(parseMovieListHtml(data[0]["movies"]));
 	
 	$("title").append(" | " + data[0]["name"]);
+	
+	document.getElementById("mainResultPage").href = data[0]["url"];
+
 }
 
 
