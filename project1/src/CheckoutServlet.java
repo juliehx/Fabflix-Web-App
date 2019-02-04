@@ -123,6 +123,7 @@ public class CheckoutServlet extends HttpServlet {
 									int sale_id = rs2.getInt(1);
 									JsonObject rs2JsonObject = new JsonObject();
 									rs2JsonObject.addProperty("sale_id", sale_id);
+									rs2JsonObject.addProperty("movie_id", key);
 									rs2JsonObject.addProperty("title", cart.get(key).get("title").toString());
 									jsonArray.add(rs2JsonObject);
 								}

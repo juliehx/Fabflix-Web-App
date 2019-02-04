@@ -9,17 +9,17 @@ function handleResult(data){
 			htmlElem += "<tr>"
 			htmlElem += "<td><a href='single-movie.html?id=" + key + "'>" + data[key]["title"] +"</a></td>";
 			
-			htmlElem += "<td><form id = 'subtractForm' action='#' method='get' onSubmit='window.location.reload()'>" +
+			htmlElem += "<td id='qty'><form id = 'subtractForm' action='#' method='get'>" +
 			"<input type='hidden' name='id' value='" + key + "'>" +
 			"<input type='hidden' name='action' value='subtract'>" +
-			"<input type='submit' class='btn btn-light' value='-'></form></td>";
+			"<input type='submit' class='btn btn-light subtract' value='-'></form><span id='qty-text'>" +data[key]["quantity"];
 			
-			htmlElem += "<td>" + data[key]["quantity"] + "</td>";
+//			htmlElem += "<td id='qty'>" + data[key]["quantity"] + "</td>";
 			
-			htmlElem += "<td><form id = 'addForm' action='#' method='get' onSubmit='window.location.reload()'>" +
+			htmlElem += "</span><form id = 'addForm' action='#' method='get'>" +
 						"<input type='hidden' name='id' value='" + key + "'>" +
 						"<input type='hidden' name='action' value='add'>" + 
-						"<input type='submit' class='btn btn-light' value='+'></form></td>";
+						"<input type='submit' class='btn btn-light add' value='+'></form></td>";
 			
 			htmlElem += "<td><form id='deleteCartForm' action='#' method='get'>" +
 						"<input type='hidden' name='id' value='" + key + "'>" +
@@ -44,13 +44,22 @@ jQuery.ajax({
 
 $(document).on("submit","#subtractForm",function(event){
 	event.preventDefault();
+	var qty = $(this).parent().find("span");
+	var newQty = parseInt(qty.text()) - 1;
+	if(newQty <= 0) {
+		$(this).parent().parent().remove();
+	}
 	$.get("api/adjust-cart", $(this).serialize(), (data)=> handleCartInfo(data));
+	qty.text(newQty);
 	return false;
 });
 
 $(document).on("submit","#addForm",function(event){
 	event.preventDefault();
+	var qty = $(this).parent().find("span");
 	$.get("api/adjust-cart", $(this).serialize(), (data)=> handleCartInfo(data));
+	var newQty = parseInt(qty.text()) + 1;
+	qty.text(newQty);
 	return false;
 });
 
