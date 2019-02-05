@@ -7,6 +7,7 @@ function handleResult(data) {
 			$('.message ul').append("<li>" + data["sales"][i]["sale_id"] + ": <a href='single-movie.html?id=" + data["sales"][i]["movie_id"] + "'> "+ data["sales"][i]["title"] + "</a></li>");
 		}
 	}
+	
 }
 
 function handleSubmitEvent(event) {

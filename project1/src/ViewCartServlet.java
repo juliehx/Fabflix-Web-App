@@ -44,12 +44,15 @@ public class ViewCartServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		HttpSession session = request.getSession();
+	
 		
 		try {
 			HashMap <String, HashMap<String, Object>> cart = (HashMap) session.getAttribute("cart");
 			if(cart != null && !cart.isEmpty()) {
 				Gson gson = new Gson();
 				String cartItems = gson.toJson(cart);
+				System.out.println(cartItems);
+				
 				out.write(cartItems.toString());
 				
 			} else {

@@ -48,6 +48,7 @@ public class AdjustCartServlet extends HttpServlet {
 		
 		PrintWriter out = response.getWriter();
 		HttpSession session = request.getSession();
+		
 		try {
 			HashMap<String, HashMap<String, Object>> cart = (HashMap) session.getAttribute("cart");
 			synchronized(cart) {
