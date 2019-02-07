@@ -40,20 +40,22 @@ function handlePagination() {
 }
 
 function parseGenreListHtml(arr) {
-	htmlElem = "<ul style='list-style-type:none; padding-left:0;'>";
+//	htmlElem = "<ul style='list-style-type:none; padding-left:0;'>";
+	htmlElem = "";
 	for(let i = 0; i < arr.length; i++) {
-		htmlElem += "<li><a href='movielist.html?id=" + arr[i]["genre_id"] + "&mode=browse&order=rating&limit=10&page=1'>" + arr[i]["genre_name"] + "</a></li>";
+		htmlElem += "<a href='movielist.html?id=" + arr[i]["genre_id"] + "&mode=browse&order=rating&limit=10&page=1'>" + arr[i]["genre_name"] + "</a>&nbsp;";
 	}
-	htmlElem += "</ul>";
+//	htmlElem += "</ul>";
 	return htmlElem;
 }
 
 function parseStarsListHtml(arr) {
-	htmlElem = "<ul style='list-style-type:none; padding-left:0;'>";
+//	htmlElem = "<ul style='list-style-type:none; padding-left:0;'>";
+	htmlElem = "";
 	for(let i = 0; i < arr.length; i++) {
-		htmlElem += "<li><a href='single-star.html?id="+ arr[i]["star_id"] + "'>" + arr[i]["star_name"] + "</a></li>";
+		htmlElem += "&nbsp;<a href='single-star.html?id="+ arr[i]["star_id"] + "'>" + arr[i]["star_name"] + "</a>&nbsp;";
 	}
-	htmlElem += "</ul>";
+//	htmlElem += "</ul>";
 	return htmlElem;
 }
 
@@ -62,24 +64,35 @@ function handleResult(data) {
     let movieTableElement = jQuery("#movie_table");
 
     for (let i = 0; i < data.length; i++) {
+    	
+    	let rowHTML = '<div class="movie">\n' +
+    				'<img src="images/jakob-owens-231036-unsplash.jpg" alt="movie poster"><h6 class="movie-title">' +
+    				'<a href="single-movie.html?id=' + data[i]['id'] + '">' + data[i]['title'] + '</a></h6>' + 
+    				'<u>Director</u>: ' + data[i]["director"] + '<br/>'+
+    				'<u>Release year</u>: ' + data[i]["year"] + '<br/>' +
+    				'<u>Rating</u>: ' + data[i]["rating"] + '<br/><br/>' +
+    				parseGenreListHtml(data[i]["genres"]) + "<form id='addCartForm' action='#' method='get' class='cartForm'>" +
+    				"<input type='hidden' name='id' value='" + data[i]['id'] + "'>" + 
+    				"<input type='submit' class='btn' value='Add to Cart' id='submit-form'></form></div>";
+    				'</div>';
 
-        let rowHTML = "";
-        rowHTML += "<tr>";
-        rowHTML += "<td><a href=\"single-movie.html?id=" + data[i]['id'] + "\">" + data[i]['title'] + "</a></td>";
-        rowHTML += "<td>" + data[i]["year"] + "</td>";
-        if(data[i]["rating"] == null) {
-        	rowHTML += "<td>" + 0 + "</td>";
-        } else {
-        	rowHTML += "<td>" + data[i]["rating"] + "</td>";
-        }
-        rowHTML += "<td>" + parseGenreListHtml(data[i]["genres"]) + "</td>";
-        rowHTML += "<td>" + data[i]["director"] + "</td>";
-        rowHTML += "<td>" + parseStarsListHtml(data[i]["stars"]) + "</td>";
-        rowHTML += "<td><form id='addCartForm' action='#' method='get'>" +
-        		"		<input type='hidden' name='id' value='" + data[i]['id'] + "'>" +
-        		"		<input type='submit' value='Add to Cart' id='submit-form'>" +
-        		"</form></td>";
-        rowHTML += "</tr>";
+//        let rowHTML = "";
+//        rowHTML += "<tr>";
+//        rowHTML += "<td><a href=\"single-movie.html?id=" + data[i]['id'] + "\">" + data[i]['title'] + "</a></td>";
+//        rowHTML += "<td>" + data[i]["year"] + "</td>";
+//        if(data[i]["rating"] == null) {
+//        	rowHTML += "<td>" + 0 + "</td>";
+//        } else {
+//        	rowHTML += "<td>" + data[i]["rating"] + "</td>";
+//        }
+//        rowHTML += "<td>" + parseGenreListHtml(data[i]["genres"]) + "</td>";
+//        rowHTML += "<td>" + data[i]["director"] + "</td>";
+//        rowHTML += "<td>" + parseStarsListHtml(data[i]["stars"]) + "</td>";
+//        rowHTML += "<td><form id='addCartForm' action='#' method='get'>" +
+//        		"		<input type='hidden' name='id' value='" + data[i]['id'] + "'>" +
+//        		"		<input type='submit' value='Add to Cart' id='submit-form'>" +
+//        		"</form></td>";
+//        rowHTML += "</tr>";
 
         movieTableElement.append(rowHTML);
     }
