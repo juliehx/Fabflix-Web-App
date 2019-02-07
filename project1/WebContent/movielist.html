@@ -12,13 +12,14 @@
 <body>
 	<nav class="navbar">
 		<h1>fabflix</h1>
-		<form id="searchbar">
+		<form id="searchbar" class="form-inline">
 			<div class="input-group">
 				<input type="text" class="gen-search-bar" placeholder="Search for a movie" name="title"required>
 				<button type="submit" class="btn gen-search"><img src="images/search.svg"></button>
 				<input type="button" class="btn adv-search" data-toggle="modal" data-target="#advSearchModal" value="Advanced Search">
 				</div>
 			</div>
+			<a href= "/project1/cart.html" class="btn"><img src="images/shopping-cart.svg"></a>
 		</form>
 		<div class="modal fade in" id="advSearchModal" tabindex="-1" role="dialog" aria-labelledby="advSearch" aria-hidden="true">
 			<div class="modal-dialog" role="document">
@@ -54,11 +55,35 @@
 			</div>
 		</div>
 	</nav>
+	<div class="filters">
+		<form class="form-inline">
+			<select id="orderFormControl">
+				<option disabled selected id="order-label">sort by</option>
+				<option>rating Highest</option>
+				<option>rating Lowest </option>
+				<option>title 0-Z</option>
+				<option>title Z-0</option>
+			</select>
+			<select id="limitFormControl">
+				<option disabled selected id="limit-label">results per page</option>
+				<option>10</option>
+				<option>25</option>
+				<option>50</option>
+				<option>100</option>
+			</select>
+			<select id="genreFormControl">
+				<option disabled selected id="genre-label">browse by genre</option>
+			</select>
+			<select id="alphaFormControl">
+				<option disabled selected id="alpha-label">browse by alphabet</option>
+			</select>
+		</form>
+	</div>
 	<!--<nav class="navbar bg-light"><h1>Movies</h1>
 	<a href="/project1">Index</a>
 	<a href= "/project1/cart.html">Checkout</a>
 	
-	</nav>	-->
+	</nav>
 	<select class="form-control" id="orderFormControl">
 		<option disabled selected id="order-label">sort by</option>
 		<option>rating Highest</option>
@@ -72,7 +97,7 @@
 		<option>25</option>
 		<option>50</option>
 		<option>100</option>
-	</select>
+	</select>-->
 	<table id="movie_table" class="table table-striped">
 		<thead>
 			<tr>
@@ -91,10 +116,13 @@
 	<ul class="pagination" id="pag">
 	</ul>
 	
+	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-	<script src="index.js"></script>
 	<script src="movielist.js"></script>
+	<script src="search.js"></script>
+	
+	
 </body>
 </html>

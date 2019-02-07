@@ -122,3 +122,37 @@ $(document).on("submit", "#addCartForm", function(event) {
 	return false;
 });
 
+function handleGenres(result) {
+	console.log(result);
+	let genreListElement = $("#genreFormControl");
+	for(let i = 0; i < result.length; i++) {
+		genreListElement.append("<option value='" + result[i]["id"] + "'>" + result[i]["genre"] + "</option>");
+	}
+}
+
+function handleAlphaNum() {
+	let alphaListElement = $("#alphaFormControl");
+	for(let i = 0; i <= 9; i++) {
+		alphaListElement.append("<option value='" + i + "'>" + i + "</option>");
+	}
+	for(let i = 65; i <= 90; i++) {
+		alphaListElement.append("<option value='&#" + i + "'>&#" + i + "</option>");
+	}
+}
+
+$.ajax({
+	dataType: 'json',
+	method: 'GET',
+	url: 'api/index',
+	success: (result) => handleGenres(result)
+});
+
+$(handleAlphaNum());
+
+$("#genreFormControl").on("change", function(event) {
+	window.location.replace("movielist.html?id=" + $(this).val() + "&mode=browse&order=rating&limit=10&page=1");
+});
+
+$("#alphaFormControl").on("change", function(event) {
+	window.location.replace("movielist.html?search=" + $(this).val() + "&mode=browse&order=rating&limit=10&page=1");
+});
