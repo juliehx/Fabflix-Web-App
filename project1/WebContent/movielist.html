@@ -4,16 +4,61 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Fabflix | Movies</title>
-	
+	<link rel="stylesheet" type="text/css" href="css/index.css">
 	<link rel="shortcut icon" type="image/png" href="images/movie.png"/>
+	<link href="https://fonts.googleapis.com/css?family=Major+Mono+Display|Roboto+Mono:400" rel="stylesheet">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body>
-	<nav class="navbar bg-light"><h1>Movies</h1>
+	<nav class="navbar">
+		<h1>fabflix</h1>
+		<form id="searchbar">
+			<div class="input-group">
+				<input type="text" class="gen-search-bar" placeholder="Search for a movie" name="title"required>
+				<button type="submit" class="btn gen-search"><img src="images/search.svg"></button>
+				<input type="button" class="btn adv-search" data-toggle="modal" data-target="#advSearchModal" value="Advanced Search">
+				</div>
+			</div>
+		</form>
+		<div class="modal fade in" id="advSearchModal" tabindex="-1" role="dialog" aria-labelledby="advSearch" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Advanced Search</h5>
+						<button type="button" class="close close-light" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form id="advSearch-form">
+							<div class="form-group">
+								<label for="movie-title">Movie title:</label>
+								<input type="text" placeholder="ex. Big Hero 6" name="title" id="movie-title">																			
+							</div>
+							<div class="form-group">
+								<label for="star-name">Star:</label>
+								<input type="text" placeholder="ex. Tom Hanks" name="star" id="star-name">
+							</div>
+							<div class="form-group">
+								<label for="director-name">Director:</label>
+								<input type="text" placeholder="ex. Steven Spielberg" name="director" id="director-name">
+							</div>
+							<div class="form-group">
+								<label for="release-year">Release year:</label>
+								<input type="number" min="0000" max="9999" name="year" id="release-year" placeholder="ex. 1986">
+							</div>
+							<input type="submit" class="btn" value="Search">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<!--<nav class="navbar bg-light"><h1>Movies</h1>
 	<a href="/project1">Index</a>
 	<a href= "/project1/cart.html">Checkout</a>
 	
-<!-- <button type="button" class="btn btn-primary" value="checkout">Checkout</button>--></nav>	
+	</nav>	-->
 	<select class="form-control" id="orderFormControl">
 		<option disabled selected id="order-label">sort by</option>
 		<option>rating Highest</option>
@@ -49,6 +94,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script src="index.js"></script>
 	<script src="movielist.js"></script>
 </body>
 </html>
