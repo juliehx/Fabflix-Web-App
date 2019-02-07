@@ -38,7 +38,8 @@ public class LoginServlet extends HttpServlet {
 		//Create username/password objects that can be sent to mysql database
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		
+        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+
 		//get information from mysql database
 		//use query to get information 
 		
@@ -52,26 +53,39 @@ public class LoginServlet extends HttpServlet {
 			
 			ResultSet rs = statement.executeQuery(query);
 			
-			if(rs.next()) {
-				String sessionId = ((HttpServletRequest) request).getSession().getId();
-				Long lastAccessTime = ((HttpServletRequest) request).getSession().getLastAccessedTime();
-				request.getSession().setAttribute("user", username);
-				
+			//COMMENTED CODE FOR INSERTING THE CAPTCHA 
+			try {
+				RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+//				*******INSERT CODE BLOCK HERE*******
+				if(rs.next()) {
+					String sessionId = ((HttpServletRequest) request).getSession().getId();
+					Long lastAccessTime = ((HttpServletRequest) request).getSession().getLastAccessedTime();
+					request.getSession().setAttribute("user", username);
+					
+					JsonObject responseJsonObject = new JsonObject();
+					responseJsonObject.addProperty("status", "success");
+					responseJsonObject.addProperty("message", "success");
+					responseJsonObject.addProperty("sessionId", sessionId);
+					responseJsonObject.addProperty("lastAccessTime", lastAccessTime);
+					
+					
+					response.getWriter().write(responseJsonObject.toString());
+				}
+				else {
+					JsonObject responseJsonObject = new JsonObject();
+		            responseJsonObject.addProperty("status", "fail");
+		            responseJsonObject.addProperty("message", "username and password do not match");
+		            response.getWriter().write(responseJsonObject.toString());
+				}
+			}catch(Exception e) {
 				JsonObject responseJsonObject = new JsonObject();
-				responseJsonObject.addProperty("status", "success");
-				responseJsonObject.addProperty("message", "success");
-				responseJsonObject.addProperty("sessionId", sessionId);
-				responseJsonObject.addProperty("lastAccessTime", lastAccessTime);
-				
-				
+				responseJsonObject.addProperty("status", "fail");
+				responseJsonObject.addProperty("message","failed recaptcha verification");
 				response.getWriter().write(responseJsonObject.toString());
 			}
-			else {
-				JsonObject responseJsonObject = new JsonObject();
-	            responseJsonObject.addProperty("status", "fail");
-	            responseJsonObject.addProperty("message", "username and password do not match");
-	            response.getWriter().write(responseJsonObject.toString());
-			}
+			
+			//****CODE BLOCK TO BE INSERTED******
+			
 			
 			response.setStatus(200);
 			rs.close();
