@@ -69,18 +69,22 @@ h2, h3, h4, h6 {
 	margin: 3px;
 	font-family: 'Roboto Mono', monospace;
 	background-color: white;
-	-webkit-transition: all 0.3s ease;
-	-moz-transisition: all 0.3s ease;
-	-o-transition: all 0.3s ease;
-	transition: all 0.3s ease;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transisition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
 }
 
 .btn:hover {
 	background-color: #F6D169;
-	-webkit-transition: all 0.3s ease;
-	-moz-transisition: all 0.3s ease;
-	-o-transition: all 0.3s ease;
-	transition: all 0.3s ease;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transisition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
+}
+
+.btn img {
+	width: 100%!important;
 }
 
 input[type=text], input[type=number] {
@@ -157,6 +161,7 @@ select:focus {
 #movie_table {
 	width: 100%;
 	padding: 50px;
+	text-align: center;
 }
 
 .movie {
@@ -171,6 +176,7 @@ select:focus {
 	font-family: 'Roboto Mono', monospace!important;
 	font-size: 12px;
 	line-height: 1.5;
+	position: relative;
 }
 
 .movie img {
@@ -178,11 +184,36 @@ select:focus {
 	float: left;
 }
 
-/* .cartForm {
+.cart-submit {
+	width: 50px;
 	position: absolute;
-	margin-right: 0;
 	bottom: 0;
-} */
+	right: 0;
+	margin-left: 0;
+	background-color: transparent!important;
+	color: transparent;
+	font-size: 12px!important;
+	line-height: 2;
+	text-transform: uppercase;
+	overflow: hidden;
+	-webkit-transition: all 0.5s ease!important;
+	-moz-transition: all 0.5s ease!important;
+	-o-transition: all 0.5s ease!important;
+	transition: all 0.5s ease!important;
+}
+
+.cart-submit:hover {
+	width: 150px;
+	color: #F6D169;
+	-webkit-transition: all 0.5s ease!important;
+	-moz-transition: all 0.5s ease!important;
+	-o-transition: all 0.5s ease!important;
+	transition: all 0.5s ease!important;
+}
+
+.cart-submit img {
+	width: 24px!important;
+}
 
 /* .detail {
 	text-align: left!important;

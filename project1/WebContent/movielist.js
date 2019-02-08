@@ -73,7 +73,8 @@ function handleResult(data) {
     				'<u>Rating</u>: ' + data[i]["rating"] + '<br/><br/>' +
     				parseGenreListHtml(data[i]["genres"]) + "<form id='addCartForm' action='#' method='get' class='cartForm'>" +
     				"<input type='hidden' name='id' value='" + data[i]['id'] + "'>" + 
-    				"<input type='submit' class='btn' value='Add to Cart' id='submit-form'></form></div>";
+    				"<button type='submit' class='btn cart-submit' id='submit-form' data-toggle='popover' data-content='Item is now added to the cart' data-trigger='focus'><img src='images/plus.svg'> Add to cart</button>" +
+//    				"<input type='submit' class='btn' value='images/plus.svg' id='submit-form'></form></div>";
     				'</div>';
 
 //        let rowHTML = "";
@@ -131,6 +132,8 @@ $(document).on("submit", "#addCartForm", function(event) {
 	console.log($(this).serialize());
 	
 	$.get('api/add-cart', $(this).serialize(), (data)=>handleCartInfo(data));
+	
+	$(this).find('.cart-submit').popover('show');
 	
 	return false;
 });
