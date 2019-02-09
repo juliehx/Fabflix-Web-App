@@ -14,6 +14,9 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 
+import org.jasypt.util.password.StrongPasswordEncryptor;
+
+
 /**
  * Servlet implementation class LoginServlet
  */
@@ -49,17 +52,29 @@ public class LoginServlet extends HttpServlet {
 			
 //			Statement statement = dbcon.createStatement();
 			
-			String query = "select email,password from customers where email = ? and password = ?";
+			String query = "select email,password from customers where email = ? ";//and password = ?";
 			
 			PreparedStatement statement = dbcon.prepareStatement(query);
 			statement.setString(1, username);
-			statement.setString(2, password);
+//			statement.setString(2, password);
 			
 			ResultSet rs = statement.executeQuery();
 			
 			try {
-				RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+				
+				boolean success = false;
 				if(rs.next()) {
+					String encryptedPassword = rs.getString("password");
+					success = new StrongPasswordEncryptor().checkPassword(password,encryptedPassword);
+				}
+				else {
+					JsonObject responseJsonObject = new JsonObject();
+		            responseJsonObject.addProperty("status", "fail");
+		            responseJsonObject.addProperty("message", "username and password do not match");
+		            response.getWriter().write(responseJsonObject.toString());
+				}
+				
+				if(success) {
 					String sessionId = ((HttpServletRequest) request).getSession().getId();
 					Long lastAccessTime = ((HttpServletRequest) request).getSession().getLastAccessedTime();
 					request.getSession().setAttribute("user", username);
@@ -70,15 +85,9 @@ public class LoginServlet extends HttpServlet {
 					responseJsonObject.addProperty("sessionId", sessionId);
 					responseJsonObject.addProperty("lastAccessTime", lastAccessTime);
 					
-					
 					response.getWriter().write(responseJsonObject.toString());
 				}
-				else {
-					JsonObject responseJsonObject = new JsonObject();
-		            responseJsonObject.addProperty("status", "fail");
-		            responseJsonObject.addProperty("message", "username and password do not match");
-		            response.getWriter().write(responseJsonObject.toString());
-				}
+				RecaptchaVerifyUtils.verify(gRecaptchaResponse);
 			}catch(Exception e) {
 				JsonObject responseJsonObject = new JsonObject();
 				responseJsonObject.addProperty("status", "fail");
