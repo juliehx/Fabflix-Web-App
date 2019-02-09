@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.sql.ResultSet;
@@ -60,65 +61,31 @@ public class MovieServlet extends HttpServlet{
 					"            left join ratings r on r.movieID = movies.id\n";
 
 			
-//			String outer_query = "select d.id,d.title,d.genres,d.stars,d.year,d.director,d.rating\r\n" + 
-//					"from (";
-//			
-//			//base string query for all searches/browsing
-//			String query = "select movies.id,title,group_concat(distinct genres.id, ',', genres.name separator ';') as genres, group_concat(distinct stars.id, ',' , stars.name separator ';') as stars,year,director,rating \r\n" + 
-//					"								from movies,ratings, genres_in_movies, genres, stars, stars_in_movies\r\n";
-			
-			//gets information on what the user wants to sort and order by
-//			String orderBy = request.getParameter("orderBy");
-//			String sortingAttribute = request.getParameter("sortAttribute");
-
-			
 			if(mode.equals("browse")) {
 				String genre_id = request.getParameter("id");
 				//System.out.println("Genre Id: " + genre_id);
 				if(genre_id != null) {//means that there is an id
 					base_query += "group by movies.id, movies.title, movies.year, movies.director, r.rating\n" + 
 								  "having find_in_set(" + genre_id + ", genre_id)\n";
-//					query +="								where ratings.movieID = movies.id and genres_in_movies.movieId = movies.id\r\n" + 
-//							"								and genres_in_movies.genreId = genres.id\r\n" + 
-//							"								and stars_in_movies.movieId = movies.id and stars.id = stars_in_movies.starId \r\n" + 
-//							"								group by movies.id, title, year, director, rating \r\n" + 
-//							"								order by rating desc) as d \r\n" + 
-//							"where genres LIKE concat('%', (select g.name from genres g where g.id = " + genre_id + "), '%') \r\n" +
-//							" 								limit " + itemLimit + " offset " + page;
-//					outer_query += query;
-//					query = outer_query;
-					
+
 				}
 				else {//means that they have selected browsing by letter
 					String first_letter = request.getParameter("search");
 					//System.out.println(first_letter);
 					base_query += "where movies.title like '" + first_letter + "%'\n" + 
 								  "group by movies.id, movies.title, movies.year, movies.director, r.rating\n";
-//					query +="								where title LIKE '"+  first_letter + "%'" + "and ratings.movieID = movies.id and genres_in_movies.movieId = movies.id\r\n" + 
-//							"								and genres_in_movies.genreId = genres.id\r\n" + 
-//							"								and stars_in_movies.movieId = movies.id and stars.id = stars_in_movies.starId \r\n" + 
-//							"								group by movies.id, title, year, director, rating \r\n" + 
-//							"								order by rating desc"+
-//							" 								limit " + itemLimit + " offset " + page;
 				}
 			}
 			else if(mode.equals("search")) {
 //				//can be empty or null
 //				
 				String search_query = "";
-//				
-//				String inner_query_where = "where ratings.movieID = movies.id \r\n" + 
-//						"                                and genres_in_movies.movieId = movies.id\r\n" + 
-//						"								and genres_in_movies.genreId = genres.id\r\n" + 
-//						"								and stars_in_movies.movieId = movies.id \r\n" + 
-//						"                                and stars.id = stars_in_movies.starId \r\n";
-//				
+				
 				String search_title = request.getParameter("title");
 				String search_director = request.getParameter("director");
 				String search_year = request.getParameter("year");
 				String search_star = request.getParameter("star");
 				
-//				System.out.println(search_star);
 				
 				boolean searchTitleExist = search_title != null && !search_title.isEmpty();
 				boolean searchDirectorExist = search_director != null && !search_director.isEmpty();
@@ -127,10 +94,7 @@ public class MovieServlet extends HttpServlet{
 				
 				ArrayList<String> queryList = new ArrayList<String>();
 				
-//				System.out.println(searchTitleExist);
-//				System.out.println(searchDirectorExist);
-//				System.out.println(searchYearExist);
-//				System.out.println(searchStarExist);
+
 				
 				if(searchTitleExist || searchDirectorExist || searchYearExist || searchStarExist) {
 					search_query += "where ";
@@ -153,33 +117,7 @@ public class MovieServlet extends HttpServlet{
 				}
 				
 				base_query += search_query + "group by movies.id, movies.title, movies.year, movies.director, r.rating\n";
-//				
-//				
-//				if(search_title != null && !search_title.isEmpty()) {
-//					inner_query_where += " and movies.title LIKE '%"+ search_title +"%' \r\n";
-//				}
-//				if( search_director != null && !search_director.isEmpty()) {
-//					inner_query_where += " and movies.director LIKE '%" + search_director + "%' \r\n";
-//				}
-//				if(search_year != null && !search_year.isEmpty()  ) {
-//					inner_query_where += " and movies.year = " + search_year + " \r\n" ;
-//				}
-//				//doesn't matter as we just add the last parts to the query
-//				
-//				inner_query_where += "group by movies.id, movies.title, movies.year, movies.director, ratings.rating \r\n" + 
-//						"                                order by rating asc ) as d \r\n";
-//				
-//				//special case to handle the list of stars we have
-//				if(search_star != null && !search_star.isEmpty() ) {
-//					inner_query_where += "where d.stars LIKE '%" + search_star 	+ "%'";
-//				}
-//				//add to the base query
-//				query += inner_query_where;
-//				outer_query += query;
-//				query = outer_query;
-//				query += "limit " + itemLimit + " offset " + page;
-//				
-////				System.out.println(query);
+
 			}
 			String[] determine_sort = order.split(" ");
 			base_query += "order by " + determine_sort[0];
@@ -194,18 +132,13 @@ public class MovieServlet extends HttpServlet{
 			else {
 				base_query += " desc \n";
 			}
-//			if(order.equals("title"))
-//				base_query += " asc\n";
-//			else if(order.equals("rating"))
-//				base_query += " desc\n";
+
 				
 			base_query += " limit " + itemLimit + " offset " + page;
 			
-//			System.out.println(base_query);
-					
-			Statement statement = dbcon.createStatement();
-						
-			ResultSet rs = statement.executeQuery(base_query);
+			PreparedStatement statement = dbcon.prepareStatement(base_query);
+									
+			ResultSet rs = statement.executeQuery();
 			
 			JsonArray jsonArray = new JsonArray();
 			
