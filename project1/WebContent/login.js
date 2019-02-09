@@ -17,6 +17,7 @@ function handleSubmitForm(event) {
 	$.post("api/login", $("#login_form").serialize(), (result) => handleLogin(result));
 	
 	$("#login_form")[0].reset();
+	window.grecaptcha.reset();
 }
 
 $("#login_form").on("submit", (event) => handleSubmitForm(event));

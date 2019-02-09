@@ -29,13 +29,8 @@ public class MovieServlet extends HttpServlet{
 		
 		response.setContentType("application/json");
 		
-		
-//		
-//		System.out.println(request.getHeader("referer"));
-		
 		//gets number of results to display per page
 		String itemLimit = request.getParameter("limit");
-//		int itemLimit = 20;
 		
 		PrintWriter out = response.getWriter();
 		
@@ -59,11 +54,9 @@ public class MovieServlet extends HttpServlet{
 					"            left join stars_in_movies sim on sim.movieId = movies.id\n" + 
 					"            left join stars s on s.id = sim.starId\n" + 
 					"            left join ratings r on r.movieID = movies.id\n";
-
 			
 			if(mode.equals("browse")) {
 				String genre_id = request.getParameter("id");
-				//System.out.println("Genre Id: " + genre_id);
 				if(genre_id != null) {//means that there is an id
 					base_query += "group by movies.id, movies.title, movies.year, movies.director, r.rating\n" + 
 								  "having find_in_set(" + genre_id + ", genre_id)\n";
@@ -71,14 +64,11 @@ public class MovieServlet extends HttpServlet{
 				}
 				else {//means that they have selected browsing by letter
 					String first_letter = request.getParameter("search");
-					//System.out.println(first_letter);
 					base_query += "where movies.title like '" + first_letter + "%'\n" + 
 								  "group by movies.id, movies.title, movies.year, movies.director, r.rating\n";
 				}
 			}
 			else if(mode.equals("search")) {
-//				//can be empty or null
-//				
 				String search_query = "";
 				
 				String search_title = request.getParameter("title");
@@ -93,9 +83,7 @@ public class MovieServlet extends HttpServlet{
 				boolean searchStarExist = search_star != null && !search_star.isEmpty();
 				
 				ArrayList<String> queryList = new ArrayList<String>();
-				
-
-				
+							
 				if(searchTitleExist || searchDirectorExist || searchYearExist || searchStarExist) {
 					search_query += "where ";
 					
@@ -119,6 +107,7 @@ public class MovieServlet extends HttpServlet{
 				base_query += search_query + "group by movies.id, movies.title, movies.year, movies.director, r.rating\n";
 
 			}
+			
 			String[] determine_sort = order.split(" ");
 			base_query += "order by " + determine_sort[0];
 			if(determine_sort.length > 1) {
@@ -132,7 +121,6 @@ public class MovieServlet extends HttpServlet{
 			else {
 				base_query += " desc \n";
 			}
-
 				
 			base_query += " limit " + itemLimit + " offset " + page;
 			
@@ -184,18 +172,6 @@ public class MovieServlet extends HttpServlet{
 				
 				jsonArray.add(jsonObject);
 				
-//				HttpSession session = request.getSession();
-//				session.setAttribute("title",title);
-//				session.setAttribute("order",order);
-//				session.setAttribute("limit",itemLimit);
-//				session.setAttribute("page",page);
-//				session.setAttribute("mode", mode);
-				
-				
-//				System.out.println(sTitle);
-//				System.out.println(sOrder);
-//				System.out.println(sLimit);
-//				System.out.println(sPage);
 			}
 			String url = request.getHeader("referer");
 			

@@ -57,10 +57,8 @@ public class LoginServlet extends HttpServlet {
 			
 			ResultSet rs = statement.executeQuery();
 			
-			//COMMENTED CODE FOR INSERTING THE CAPTCHA 
 			try {
 				RecaptchaVerifyUtils.verify(gRecaptchaResponse);
-//				*******INSERT CODE BLOCK HERE*******
 				if(rs.next()) {
 					String sessionId = ((HttpServletRequest) request).getSession().getId();
 					Long lastAccessTime = ((HttpServletRequest) request).getSession().getLastAccessedTime();
@@ -88,9 +86,6 @@ public class LoginServlet extends HttpServlet {
 				response.getWriter().write(responseJsonObject.toString());
 			}
 			
-			//****CODE BLOCK TO BE INSERTED******
-			
-			
 			response.setStatus(200);
 			rs.close();
 			statement.close();
@@ -103,6 +98,7 @@ public class LoginServlet extends HttpServlet {
 			response.getWriter().write(responseJsonObject.toString());
 			response.setStatus(500);
 		}
+		
 	}
 
 }
