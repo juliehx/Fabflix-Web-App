@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,11 +55,16 @@ public class AddToCartServlet extends HttpServlet {
 
 		try {
 			Connection dbcon = dataSource.getConnection();
-			String query = "select id, title from movies where id = '" + movie_id + "'";
+//			String query = "select id, title from movies where id = '" + movie_id + "'";
 			
-			Statement statement = dbcon.createStatement();
+			String query = "select id, title from movies where id = ?";
 			
-			ResultSet rs = statement.executeQuery(query);
+			PreparedStatement statement = dbcon.prepareStatement(query);
+			statement.setString(1, movie_id);
+			
+//			Statement statement = dbcon.createStatement();
+			
+			ResultSet rs = statement.executeQuery();
 			
 			rs.next();
 			String id = rs.getString("id");
