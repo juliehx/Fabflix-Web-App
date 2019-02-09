@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 
@@ -46,12 +47,15 @@ public class LoginServlet extends HttpServlet {
 		try {
 			Connection dbcon = dataSource.getConnection();
 			
-			Statement statement = dbcon.createStatement();
+//			Statement statement = dbcon.createStatement();
 			
-			String query = "select email,password from customers where email = " + 
-					 "'" + username + "' and password = '" + password + "'"; 
+			String query = "select email,password from customers where email = ? and password = ?";
 			
-			ResultSet rs = statement.executeQuery(query);
+			PreparedStatement statement = dbcon.prepareStatement(query);
+			statement.setString(1, username);
+			statement.setString(2, password);
+			
+			ResultSet rs = statement.executeQuery();
 			
 			//COMMENTED CODE FOR INSERTING THE CAPTCHA 
 			try {
