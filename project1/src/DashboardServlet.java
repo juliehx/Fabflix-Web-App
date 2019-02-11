@@ -48,17 +48,50 @@ public class DashboardServlet extends HttpServlet {
 		response.setContentType("application/json");
 		
 		String star_name = request.getParameter("star_name");
-		String birth_year = request.getParameter("birth_year"); 
+		String birth_year = request.getParameter("birth_year");
+		
+		HttpSession session = request.getSession();
 		
 		try {
+			String user = session.getAttribute("user").toString();
+			
 			Connection dbcon = dataSource.getConnection();
 			
-			String query = "";
+			String query = "select email, fullname from employees where email = ?";
 			
 			PreparedStatement statement = dbcon.prepareStatement(query);
-		}catch (Exception e) {
+			statement.setString(1, user);
 			
+			ResultSet rs = statement.executeQuery();
+			
+			if(rs.next()) {
+				String fullname = rs.getString("fullname");
+				JsonObject jsonObject = new JsonObject();
+				jsonObject.addProperty("status", "success");
+				jsonObject.addProperty("message", "Welcome, " + fullname);
+					
+				response.getWriter().write(jsonObject.toString());
+			} else {
+				JsonObject jsonObject = new JsonObject();
+				jsonObject.addProperty("status", "fail");
+				jsonObject.addProperty("message", "You do not have access to this page.");
+					
+				response.getWriter().write(jsonObject.toString());
+			}
+			
+			response.setStatus(200);
+			
+			rs.close();
+			statement.close();
+			dbcon.close();
+			
+		} catch (Exception e) {
+			JsonObject responseJsonObject = new JsonObject();
+			responseJsonObject.addProperty("errorMessage", e.getMessage());
+			response.getWriter().write(responseJsonObject.toString());
+			response.setStatus(500);
 		}
+		
 	}
 
 
