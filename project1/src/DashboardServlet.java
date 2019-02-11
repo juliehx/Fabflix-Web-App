@@ -47,6 +47,18 @@ public class DashboardServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
 		
+		String star_name = request.getParameter("star_name");
+		String birth_year = request.getParameter("birth_year"); 
+		
+		try {
+			Connection dbcon = dataSource.getConnection();
+			
+			String query = "";
+			
+			PreparedStatement statement = dbcon.prepareStatement(query);
+		}catch (Exception e) {
+			
+		}
 	}
 
 
