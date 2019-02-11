@@ -31,12 +31,14 @@ function getUrl(paramObj, step, newOrder,newLimit) {
 function handlePagination() {
 	let paramObj = parseUrl();
 	let pageElem = $("#pag");
-	if(paramObj["page"] == "1") {
-		pageElem.append("<li class='page-item' disabled><span class='page-link'>Previous</span></li>");
-	} else {
-		pageElem.append("<li class='page-item'><a class='page-link' href='movielist.html" + getUrl(paramObj, -1, paramObj["order"],paramObj["limit"]) + "'>Previous</a></li>");
+	if(paramObj["page"] > "1") {
+//		pageElem.append("<li class='page-item' disabled><span class='page-link'>&#8592;</span></li>");
+		pageElem.append("<li class='page-item'><a class='page-link' href='movielist.html" + getUrl(paramObj, -1, paramObj["order"],paramObj["limit"]) + "'>&#8592;</a></li>");
 	}
-	pageElem.append("<li class='page-item'><a class='page-link' href='movielist.html" + getUrl(paramObj, 1, paramObj["order"],paramObj["limit"]) + "'>Next</a></li>");
+//	} else {
+//		pageElem.append("<li class='page-item'><a class='page-link' href='movielist.html" + getUrl(paramObj, -1, paramObj["order"],paramObj["limit"]) + "'>&#8592;</a></li>");
+//	}
+	pageElem.append("<li class='page-item'><a class='page-link' href='movielist.html" + getUrl(paramObj, 1, paramObj["order"],paramObj["limit"]) + "'>&#8594;</a></li>");
 }
 
 function parseGenreListHtml(arr) {

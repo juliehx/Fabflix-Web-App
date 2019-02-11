@@ -69,6 +69,7 @@ h2, h3, h4, h6 {
 	margin: 3px;
 	font-family: 'Roboto Mono', monospace;
 	background-color: white;
+	color: black!important;
 	-webkit-transition: all 0.3s ease-out;
 	-moz-transisition: all 0.3s ease-out;
 	-o-transition: all 0.3s ease-out;
@@ -81,6 +82,10 @@ h2, h3, h4, h6 {
 	-moz-transisition: all 0.3s ease-out;
 	-o-transition: all 0.3s ease-out;
 	transition: all 0.3s ease-out;
+}
+
+.btn a {
+	color: black!important;
 }
 
 .btn img {
@@ -191,7 +196,7 @@ select:focus {
 	right: 0;
 	margin-left: 0;
 	background-color: transparent!important;
-	color: transparent;
+	color: transparent!important;
 	font-size: 12px!important;
 	line-height: 2;
 	text-transform: uppercase;
@@ -204,7 +209,7 @@ select:focus {
 
 .cart-submit:hover {
 	width: 150px;
-	color: #F6D169;
+	color: #F6D169!important;
 	-webkit-transition: all 0.5s ease!important;
 	-moz-transition: all 0.5s ease!important;
 	-o-transition: all 0.5s ease!important;
@@ -213,6 +218,83 @@ select:focus {
 
 .cart-submit img {
 	width: 24px!important;
+}
+
+.pagination {
+	width: 100%;
+	text-align: center;
+	justify-content: center;
+	padding-bottom: 50px;
+}
+
+.page-item, .page-item a {
+	color: white!important;
+	text-align: center;
+}
+
+.page-link{
+	background-color: rgb(0, 0, 0, 0.3)!important;
+	box-shadow: 5px 5px 5px rgb(0, 0, 0, 0.4);
+	border: none!important;
+	width: 100px;
+	text-align: center;
+	margin: 30px;
+	color: white!important;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+
+.page-link:hover, .page-item, .page-link a:hover {
+	box-shadow: none;
+	color: white!important;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+
+.card {
+	background-color: transparent!important;
+	border: none!important;
+	padding: 20px;
+	font-family: 'Roboto Mono', monospace;
+	font-size: 14px;
+	letter-spacing: 1.5px;
+}
+
+.card-title {
+	text-transform: lowercase;
+	background-color: rgb(0, 0, 0, 0.3)!important;
+	padding: 20px!important;
+}
+
+.card img {
+	background-color: rgb(0, 0, 0, 0.3)!important;
+	padding: 20px;
+}
+
+table, .table {
+	background-color: rgb(0, 0, 0, 0.3)!important;
+	padding: 20px!important;
+}
+
+th {
+	border-top: none!important;
+	border-bottom: 1px solid black!important;
+}
+
+tr, td {
+	border: none!important;
+	padding: 20px!important;
+	text-align: center;
+}
+
+.cart-form-btn, .main-results-btn {
+	width: 100%;
+	text-align: center;
+	margin-top: 20px;
 }
 
 /* .detail {
