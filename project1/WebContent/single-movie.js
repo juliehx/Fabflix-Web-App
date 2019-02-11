@@ -7,14 +7,14 @@ function getParameterByName(name) {
 
 function parseMovieInfoHtml(data) {
 	return "<tr>" +
-				"<td>" + data["id"] + "</td>" + 
+//				"<td>" + data["id"] + "</td>" + 
 				"<td>" + data["year"] + "</td>" +
 				"<td>" + data["director"] + "</td>" +
 				"<td>" + data["rating"] + "</td>" +
-				"<td><form id='addCartForm' action='#' method='get'>" +
-        		"		<input type='hidden' name='id' value='" + data['id'] + "'>" +
-        		"		<input type='submit' value='Add to Cart' id='submit-form'>" +
-        		"</form></td>" +
+//				"<td><form id='addCartForm' action='#' method='get'>" +
+//        		"		<input type='hidden' name='id' value='" + data['id'] + "'>" +
+//        		"		<input type='submit' value='Add to Cart' id='submit-form'>" +
+//        		"</form></td>" +
 			"</tr>";
 }
 
@@ -34,15 +34,22 @@ function parsestarListHtml(arr) {
 	return listHtml;
 }
 
+function addCartButton(data) {
+	return "<input type='hidden' name='id' value='" + data['id'] + "'>" +
+			"<input type='submit' value='Add to Cart' class='btn' id='submit-form' data-toggle='popover' data-content='Item is now added to the cart' data-trigger='focus'>";
+}
+
 function handleResults(data) {
-	let movieTitleElement = jQuery("#movie-title");
+	let movieTitleElement = jQuery("#movie-title-card");
 	let movieInfoElement = jQuery("#movie-info");
 	let genreListElement = jQuery("#genre-list");
 	let starsListElement = jQuery("#star-list");
+	let addCartFormElement = jQuery("#addCartForm");
 	
 	let movieInfoHtml = parseMovieInfoHtml(data[0]);
 	let genresHtml = parseListHtml(data[0]["genres"]);
 	let starsHtml = parsestarListHtml(data[0]["stars"]);
+	let cartBtnHtml = addCartButton(data[0]);
 	
 	$("title").append(" | " + data[0]["title"]);
 	
@@ -50,6 +57,9 @@ function handleResults(data) {
 	movieInfoElement.append(movieInfoHtml);
 	genreListElement.append(genresHtml);
 	starsListElement.append(starsHtml);
+	addCartFormElement.append(cartBtnHtml);
+	
+	
 	
 	document.getElementById("mainResultPage").href = data[0]["url"];
 	
@@ -76,6 +86,8 @@ $(document).on("submit", "#addCartForm", function(event) {
 	console.log($(this).serialize());
 	
 	$.get('api/add-cart', $(this).serialize(), (data)=>handleCartInfo(data));
+	
+	$(this).find('#submit-form').popover('show');
 	
 	return false;
 });
