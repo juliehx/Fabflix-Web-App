@@ -13,12 +13,12 @@ function parseMovieListHtml(arr){
 }
 
 function handleResults(data){
-	let starNameElement = jQuery("#star-name");
+	let starNameElement = jQuery("#star-name-card");
 	let stardobElement = jQuery("#star-dob");
 	let movieListElement = jQuery("#movie-list");
 	
 	starNameElement.append(data[0]["name"]);
-	stardobElement.append(data[0]["birthYear"]);
+	stardobElement.append("<tr><td>" + data[0]["birthYear"] + "</td></tr>");
 	movieListElement.append(parseMovieListHtml(data[0]["movies"]));
 	
 	$("title").append(" | " + data[0]["name"]);
