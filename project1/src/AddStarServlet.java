@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class AddStarServlet
  */
-@WebServlet("/AddStarServlet")
+@WebServlet(name = "AddStarServlet", urlPatterns = "/api/add-star")
 public class AddStarServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -61,8 +61,8 @@ public class AddStarServlet extends HttpServlet {
 			
 			//information to populate the stars table
 			rs.next();
-			String newId = rs.getString("newId");
 			
+			String newId = rs.getString("newId");
 			String star_name = request.getParameter("star_name");
 			String birth_year = request.getParameter("birth_year");
 			
