@@ -45,10 +45,10 @@ public class DashboardServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		/*
+		 * 
+		 */
 		response.setContentType("application/json");
-		
-		String star_name = request.getParameter("star_name");
-		String birth_year = request.getParameter("birth_year");
 		
 		HttpSession session = request.getSession();
 		
