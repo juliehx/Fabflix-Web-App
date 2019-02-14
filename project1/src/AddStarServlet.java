@@ -66,15 +66,19 @@ public class AddStarServlet extends HttpServlet {
 			String star_name = request.getParameter("star_name");
 			String birth_year = request.getParameter("birth_year");
 			
+			System.out.println(star_name + " " + birth_year);
+			
 			String add_star_query = "insert into stars (id,name,birthyear) VALUES (?,?,?)";
 			
 			PreparedStatement star_statement = dbcon.prepareStatement(add_star_query);
 			
+			
 			star_statement.setString(1, newId);
 			star_statement.setString(2, star_name);
 			star_statement.setString(3, birth_year);
-			ResultSet rs2 = star_statement.executeQuery();
-			if(rs2.next()) {
+			System.out.println(star_statement);
+			int rows = star_statement.executeUpdate();
+			if(rows==1) {//(rs2.next()) {
 				
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("status", "success");
@@ -85,11 +89,12 @@ public class AddStarServlet extends HttpServlet {
 			}
 			newIdStatement.close();
 			rs.close();
-			rs2.close();
+//			rs2.close();
 			star_statement.close();
 			dbcon.close();
 			
 		}catch (Exception e) {
+			System.out.println(e);
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("status", "fail");
 			jsonObject.addProperty("message", "Failed to Add Star");
