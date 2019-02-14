@@ -61,31 +61,38 @@ public class ShowMetadataServlet extends HttpServlet {
 			String[] types = {"TABLE"};
 			ResultSet tables = meta.getTables(dbName,null, "%", types);
 			
-			HashMap <String,ArrayList<HashMap<String,String>>> metaData = new HashMap<String,ArrayList<HashMap<String,String>>>();
+//			HashMap <String,ArrayList<HashMap<String,String>>> metaData = new HashMap<String,ArrayList<HashMap<String,String>>>();
+			JsonObject metaData = new JsonObject();
 			
 			while(tables.next()) {
 				
 				String table_name = tables.getString("TABLE_NAME");
 				ResultSet columns = meta.getColumns(dbName,null, table_name, "%");//get column name and type of column
-				ArrayList<HashMap<String,String>> column_info_list = new ArrayList<HashMap<String,String>>();
+				JsonArray table_attributes = new JsonArray();
+//				ArrayList<HashMap<String,String>> column_info_list = new ArrayList<HashMap<String,String>>();
 				
 				while(columns.next()) {
-					HashMap <String,String> column_info = new HashMap<String,String>();
+					JsonObject jsonObject = new JsonObject();
+//					HashMap <String,String> column_info = new HashMap<String,String>();
 					String column_name = columns.getString("COLUMN_NAME");
 					String data_type = columns.getString("COLUMN_SIZE");
-					column_info.put("columnName", column_name);
-					column_info.put("dataType",data_type);
-					column_info_list.add(column_info);
+					jsonObject.addProperty("columnName", column_name);
+					jsonObject.addProperty("dataType", data_type);
+//					column_info.put("columnName", column_name);
+//					column_info.put("dataType",data_type);
+//					column_info_list.add(column_info);
+					table_attributes.add(jsonObject);
 				}
 				
 				columns.close();
-				metaData.put(table_name, column_info_list);		
+				metaData.add(table_name, table_attributes);
+//				metaData.put(table_name, column_info_list);		
 				
 			}
 			
-			Gson gson = new Gson();
-			String data = gson.toJson(metaData);
-			response.getWriter().write(data.toString());
+//			Gson gson = new Gson();
+//			String data = gson.toJson(metaData);
+			response.getWriter().write(metaData.toString());
 			
 			response.setStatus(200);
 			
