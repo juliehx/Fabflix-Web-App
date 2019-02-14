@@ -61,24 +61,25 @@ public class ShowMetadataServlet extends HttpServlet {
 			String[] types = {"TABLE"};
 			ResultSet tables = meta.getTables(dbName,null, "%", types);
 			
-			HashMap <String,HashMap<String,String>> metaData = new HashMap<String, HashMap<String,String>>();
+			HashMap <String,ArrayList<HashMap<String,String>>> metaData = new HashMap<String,ArrayList<HashMap<String,String>>>();
 			
 			while(tables.next()) {
 				
 				String table_name = tables.getString("TABLE_NAME");
 				ResultSet columns = meta.getColumns(dbName,null, table_name, "%");//get column name and type of column
-				HashMap <String,String> column_info = new HashMap<String,String>();
+				ArrayList<HashMap<String,String>> column_info_list = new ArrayList<HashMap<String,String>>();
 				
 				while(columns.next()) {
-					
+					HashMap <String,String> column_info = new HashMap<String,String>();
 					String column_name = columns.getString("COLUMN_NAME");
 					String data_type = columns.getString("COLUMN_SIZE");
-					column_info.put(column_name, data_type);
-					
+					column_info.put("columnName", column_name);
+					column_info.put("dataType",data_type);
+					column_info_list.add(column_info);
 				}
 				
 				columns.close();
-				metaData.put(table_name, column_info);		
+				metaData.put(table_name, column_info_list);		
 				
 			}
 			
