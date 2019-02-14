@@ -40,6 +40,7 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		//Create username/password objects that can be sent to mysql database
+		String loginType = request.getParameter("type");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
         String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
@@ -52,10 +53,14 @@ public class LoginServlet extends HttpServlet {
 			
 //			Statement statement = dbcon.createStatement();
 			
-			String query = "select email,password from customers where email = ? ";//and password = ?";
+			String query = "select email,password from customers where email = '" + username + "'";//and password = ?";
+			
+			if(loginType.equals("employee")) {
+				query = "select email, password from employees where email = '" + username + "'";
+			}
 			
 			PreparedStatement statement = dbcon.prepareStatement(query);
-			statement.setString(1, username);
+//			statement.setString(1, username);
 //			statement.setString(2, password);
 			
 			ResultSet rs = statement.executeQuery();
@@ -77,9 +82,18 @@ public class LoginServlet extends HttpServlet {
 				if(success) {
 					String sessionId = ((HttpServletRequest) request).getSession().getId();
 					Long lastAccessTime = ((HttpServletRequest) request).getSession().getLastAccessedTime();
-					request.getSession().setAttribute("user", username);
 					
 					JsonObject responseJsonObject = new JsonObject();
+					
+					if(loginType.equals("employee")) {
+						request.getSession().setAttribute("employee", username);
+						responseJsonObject.addProperty("type", "employee");
+					} else {
+						request.getSession().setAttribute("user", username);
+						responseJsonObject.addProperty("type", "user");
+					}
+					
+					
 					responseJsonObject.addProperty("status", "success");
 					responseJsonObject.addProperty("message", "success");
 					responseJsonObject.addProperty("sessionId", sessionId);

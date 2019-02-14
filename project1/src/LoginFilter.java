@@ -45,9 +45,9 @@ public class LoginFilter implements Filter {
 		if (httpRequest.getSession().getAttribute("user") == null) {
 			httpResponse.sendRedirect("login.html");
 		} else if(httpRequest.getSession().getAttribute("user") != null && httpRequest.getSession().getAttribute("employee") == null && httpRequest.getRequestURI().endsWith("__dashboard.html")) {
-			httpResponse.sendRedirect("login.html");
+			httpResponse.sendRedirect("index.html");
 		} else if(httpRequest.getSession().getAttribute("employee") == null && httpRequest.getRequestURI().endsWith("__dashboard.html")) {
-			httpResponse.sendRedirect("elogin.html");
+			httpResponse.sendRedirect("login.html");
 		}
 		else {
 			chain.doFilter(request, response);

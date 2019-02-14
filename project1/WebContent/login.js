@@ -3,7 +3,12 @@ function handleLogin(result) {
 	console.log(resultDataJson);
 	
 	if(resultDataJson["status"] == "success") {
-		window.location.replace("index.html");
+		if(resultDataJson["type"] == "user") {
+			window.location.replace("index.html");
+		} else if (resultDataJson["type"] == "employee") {
+			window.location.replace("__dashboard.html");
+		}
+		
 	}
 	else {
 		console.log(resultDataJson["message"]);
