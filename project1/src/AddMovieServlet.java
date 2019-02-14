@@ -43,16 +43,51 @@ public class AddMovieServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.setContentType("application/json");
 		
-		try {
-			
+		String movie_title = request.getParameter("movie_title");
+		String movie_year = request.getParameter("movie_year");
+		String movie_director = request.getParameter("movie_director");
+		
+		String star_name = request.getParameter("star_name");
+		String star_year = request.getParameter("star_year");
+		
+		String genre = request.getParameter("genre");
+		
+		try{
 			Connection dbcon = dataSource.getConnection();
 		
-		}catch (Exception e) {
+			String query = "call moviedb.addmovie(?,?,?,?,?,?);";
 			
+			PreparedStatement statement = dbcon.prepareStatement(query);
+			
+			statement.setString(1, movie_title);
+			statement.setString(2, movie_year);
+			statement.setString(3, movie_director);
+			statement.setString(4, star_name);
+			statement.setString(5, star_year);
+			statement.setString(6, genre);
+			
+			int rows = statement.executeUpdate();
+			if(rows == 1) {
+				JsonObject jsonObject = new JsonObject();
+				jsonObject.addProperty("status", "success");
+				jsonObject.addProperty("message", "Successfully Added Movie " + star_name);
+				
+				response.getWriter().write((jsonObject.toString()));
+				response.setStatus(200);
+			}
+			statement.close();
+			dbcon.close();
+			
+		}catch (Exception e) {
+			System.out.println(e);
+			JsonObject jsonObject = new JsonObject();
+			jsonObject.addProperty("status", "fail");
+			jsonObject.addProperty("message", "Movie Already Exists");
+			response.getWriter().write(jsonObject.toString());
 		}
 	}
 
