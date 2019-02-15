@@ -19,6 +19,8 @@ function handleLogin(result) {
 function handleSubmitForm(event) {
 	event.preventDefault();
 	
+	console.log($("#login_form").serialize());
+	
 	$.post("api/login", $("#login_form").serialize(), (result) => handleLogin(result));
 	
 	$("#login_form")[0].reset();

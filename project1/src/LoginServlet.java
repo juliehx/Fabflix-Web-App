@@ -41,6 +41,7 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		//Create username/password objects that can be sent to mysql database
 		String loginType = request.getParameter("type");
+//		System.out.println(loginType);
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
         String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
@@ -55,7 +56,7 @@ public class LoginServlet extends HttpServlet {
 			
 			String query = "select email,password from customers where email = '" + username + "'";//and password = ?";
 			
-			if(loginType.equals("employee")) {
+			if(loginType != null && loginType.equals("employee")) {
 				query = "select email, password from employees where email = '" + username + "'";
 			}
 			
@@ -85,12 +86,12 @@ public class LoginServlet extends HttpServlet {
 					
 					JsonObject responseJsonObject = new JsonObject();
 					
-					if(loginType.equals("employee")) {
-						request.getSession().setAttribute("employee", username);
-						responseJsonObject.addProperty("type", "employee");
-					} else {
+					if(loginType == null) {
 						request.getSession().setAttribute("user", username);
 						responseJsonObject.addProperty("type", "user");
+					} else if(loginType.equals("employee")) {
+						request.getSession().setAttribute("employee", username);
+						responseJsonObject.addProperty("type", "employee");
 					}
 					
 					
