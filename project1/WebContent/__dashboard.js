@@ -9,7 +9,7 @@ function handleResult(result) {
 	console.log(result);
 	for(var key in result) {
 		$("#metametameta").append("<table id='" + key + "' class='table'><h4>" + key + "</h4>" +
-				"<thead><tr><th>column name</th><th>column size</th></tr></thead>");
+				"<thead><tr><th>Attribute</th><th>Type</th></tr></thead>");
 		parseTableContent(key, result[key]);
 		$("#metametameta").append("</table>");
 	}
