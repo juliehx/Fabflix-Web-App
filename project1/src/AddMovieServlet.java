@@ -53,13 +53,16 @@ public class AddMovieServlet extends HttpServlet {
 		
 		String star_name = request.getParameter("star_name");
 		String star_year = request.getParameter("star_year");
+		if(star_year == "") {star_year = null;}
+
+		System.out.println("birthYear: " + star_year);
 		
 		String genre = request.getParameter("genre");
 		
 		try{
 			Connection dbcon = dataSource.getConnection();
 		
-			String query = "call moviedb.addmovie(?,?,?,?,?,?);";
+			String query = "call moviedb.add_movie(?,?,?,?,?,?);";
 			
 			PreparedStatement statement = dbcon.prepareStatement(query);
 			
@@ -74,7 +77,7 @@ public class AddMovieServlet extends HttpServlet {
 			if(rows == 1) {
 				JsonObject jsonObject = new JsonObject();
 				jsonObject.addProperty("status", "success");
-				jsonObject.addProperty("message", "Successfully Added Movie " + star_name);
+				jsonObject.addProperty("message", "Successfully Added Movie: " + movie_title);
 				
 				response.getWriter().write((jsonObject.toString()));
 				response.setStatus(200);

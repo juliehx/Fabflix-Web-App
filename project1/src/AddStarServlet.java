@@ -54,7 +54,7 @@ public class AddStarServlet extends HttpServlet {
 			String id_query = "(select ifnull\r\n" + 
 					"		(concat('nm',LPAD(\r\n" + 
 					"			(substring_index\r\n" + 
-					"				(max(id),'nm',-1) + 1),8,'0')),1) as newId from stars);";
+					"				(max(id),'nm',-1) + 1),7,'0')),1) as newId from stars);";
 			
 			PreparedStatement newIdStatement = dbcon.prepareStatement(id_query);
 			ResultSet rs = newIdStatement.executeQuery();
@@ -65,7 +65,7 @@ public class AddStarServlet extends HttpServlet {
 			String newId = rs.getString("newId");
 			String star_name = request.getParameter("star_name");
 			String birth_year = request.getParameter("birth_year");
-			
+			if(birth_year == "") {birth_year = null;}
 			System.out.println(star_name + " " + birth_year);
 			
 			String add_star_query = "insert into stars (id,name,birthyear) VALUES (?,?,?)";
