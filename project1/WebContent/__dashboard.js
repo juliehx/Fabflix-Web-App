@@ -3,7 +3,7 @@ function handleResult(result) {
 }
 
 function handleAddStarCallback(data) {
-	$("#message").text(data["message"]);
+	$("#star-message").text(data["message"]);
 }
 
 function handleAddStar(event) {
@@ -11,7 +11,18 @@ function handleAddStar(event) {
 	$.get("api/add-star", $("#add-star-form").serialize(), (data)=>handleAddStarCallback(data));
 }
 
+function handleAddMovieCallback(data) {
+	$("#movie-message").text(data["message"]);
+}
+
+function handleAddMovie(event) {
+	event.preventDefault();
+	$.post("api/add-movie", $("#add-movie-form").serialize(), (data)=>handleAddMovieCallback(data));
+}
+
 $("#add-star-form").on("submit", (event)=>handleAddStar(event));
+
+$("#add-movie-form").on("submit", (event)=>handleAddMovie(event));
 
 //$.ajax({
 //	dataType: 'json',

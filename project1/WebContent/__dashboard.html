@@ -5,16 +5,40 @@
 <title>Dashboard</title>
 </head>
 <body>
-	<form class="form" id="add-star-form">
+	<form class="form" id="add-star-form" action="#" method="get">
 		<h3>Add Star</h3>
 		<div class="form-group">
 			<input type="text" name="star_name" placeholder="Name">
 		</div>
 		<div class="form-group">
-			<input type="text" name="birth_year" placeholder="Birth year">
+			<input type="number" min="1000" max="9999" name="birth_year" placeholder="yyyy">
 		</div>
 		<input type="submit" class="btn" value="Add Star">
-		<div id="message"></div>
+		<div id="star-message"></div>
+	</form>
+	
+	<form class="form" id="add-movie-form"action="#" method="post">
+		<h3>Add Movie</h3>
+		<div class="form-group">
+			<input type="text" name="movie_title" placeholder="Title">
+		</div>
+		<div class="form-group">
+			Release Year: <input type="number" min="1000" max="9999" name="movie_year" placeholder="yyyy">
+		</div>
+		<div class="form-group">
+			<input type="text" name="movie_director" placeholder="Director">
+		</div>
+		<div class="form-group">
+			<input type="text" name="genre" placeholder="Genre">
+		</div>
+		<div class="form-group">
+			<input type="text" name="star_name" placeholder="Star Name">
+		</div>
+		<div class="form-group">
+			DOB: <input type="number" min="1000" max="9999" name="star_year" placeholder="yyyy">
+		</div>
+		<input type="submit" class="btn" value="Add Movie">
+		<div id="movie-message"></div>
 	</form>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
