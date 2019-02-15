@@ -1,5 +1,18 @@
+function parseTableContent(key, data) {
+	let tableHtml = $("#" + key);
+	for(let i = 0; i < data.length; i++) {
+		tableHtml.append("<tr><td>" + data[i]["columnName"] + "</td><td>" + data[i]["dataType"] + "</td></tr>");
+	}
+}
+
 function handleResult(result) {
 	console.log(result);
+	for(var key in result) {
+		$("#metametameta").append("<table id='" + key + "' class='table'><h4>" + key + "</h4>" +
+				"<thead><tr><th>column name</th><th>column size</th></tr></thead>");
+		parseTableContent(key, result[key]);
+		$("#metametameta").append("</table>");
+	}
 }
 
 function handleAddStarCallback(data) {
@@ -24,9 +37,9 @@ $("#add-star-form").on("submit", (event)=>handleAddStar(event));
 
 $("#add-movie-form").on("submit", (event)=>handleAddMovie(event));
 
-//$.ajax({
-//	dataType: 'json',
-//	method: 'GET',
-//	url: 'api/_dashboard',
-//	success: (result) => handleResult(result)
-//});
+$.ajax({
+	dataType: 'json',
+	method: 'POST',
+	url: 'api/show-metadata',
+	success: (result) => handleResult(result)
+});
