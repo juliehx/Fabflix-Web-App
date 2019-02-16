@@ -1,5 +1,7 @@
 package project1;
 
+import java.util.ArrayList;
+
 public class Movie {
 	
 	// PRIVATE VARIABLES
@@ -8,11 +10,12 @@ public class Movie {
 	private String title;
 	private int year;
 	private String director;
+	private ArrayList<String> genres;
 	
 	// CONSTRUCTORS
 	
 	public Movie() {
-		
+		this.genres = new ArrayList<String>();
 	}
 	
 	public Movie(String id, String title, 
@@ -41,6 +44,10 @@ public class Movie {
 		return this.director;
 	}
 	
+	public ArrayList<String> getGenres() {
+		return this.genres;
+	}
+	
 	// SETTER METHODS
 	
 	public void setId(String newId) {
@@ -59,12 +66,17 @@ public class Movie {
 		this.director = newDirector;
 	}
 	
+	public void addGenre(String genre) {
+		this.genres.add(genre);
+	}
+	
 	// toString
 	
 	public String toString() {
 		return "Movie: " + this.title + 
 				" (ID: " + this.id + ")\n==================\n" +
 				"Release Year: " + this.year + "\n" +
-				"Director: " + this.director;
+				"Director: " + this.director + "\n" +
+				"Genres: " + this.genres.toString();
 	}
 }
