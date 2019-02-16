@@ -90,6 +90,10 @@ public class MovieXmlParser extends DefaultHandler {
 			if(tempMovie.getDirector() == null || tempMovie.getDirector().equals("")) {
 				tempMovie.setDirector(tempVal);
 			}
+		} else if(qName.equalsIgnoreCase("cat")) {
+			if(tempMovie.getGenres() == null || tempMovie.getGenres().size() == 0) {
+				tempMovie.addGenre(tempVal);
+			}
 		}
 		System.out.print("Done\n");
 	}
