@@ -64,14 +64,14 @@ public class MovieXmlParser extends DefaultHandler {
 		}
 	}
 	
-	public void characters(char[] ch, int start, int length)
-						throws SAXException {
+	public void characters(char[] ch, int start, int length)throws SAXException {
 		tempVal = new String(ch, start, length);
 	}
 	
 	public void endElement(String uri, String localName, String qName)
 						throws SAXException {
 		System.out.print("Adding movie...");
+		
 		if(qName.equalsIgnoreCase("film")) {
 			movieList.add(tempMovie);
 		} else if(qName.equalsIgnoreCase("fid")) {
