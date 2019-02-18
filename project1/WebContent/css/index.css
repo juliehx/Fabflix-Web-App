@@ -92,7 +92,7 @@ h2, h3, h4, h6 {
 	width: 100%!important;
 }
 
-input[type=text], input[type=number] {
+input[type=text], input[type=number], input[type=date] {
 	width: 220px;
 	background-color: transparent;
 	border-top: none;
@@ -105,7 +105,8 @@ input[type=text], input[type=number] {
 	float: right;
 }
 
-input[type=text]:focus, input[type=password]:focus, input[type=number]:focus {
+input[type=text]:focus, input[type=password]:focus, 
+input[type=number]:focus, input[type=date]:focus {
 	background-color: transparent;
 	border-bottom: 1px solid #F6D169;
 	outline: none;
@@ -295,6 +296,27 @@ tr, td {
 	width: 100%;
 	text-align: center;
 	margin-top: 20px;
+}
+
+.qty-form {
+	display: inline!important;
+	margin: 5px;
+}
+
+.chkout-form input {
+	width: 100%;
+	float: none;
+	padding: 5px;
+}
+
+.chkout-form-container {
+	width: 500px;
+	padding: 50px;
+	margin: 0 auto;
+	background-color: rgb(0, 0, 0, 0.3)!important;
+	box-shadow: 5px 5px 5px rgb(0, 0, 0, 0.4);
+	border-radius: 10px;
+	letter-spacing: 1px!important;
 }
 
 /* .detail {

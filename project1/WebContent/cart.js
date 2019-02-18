@@ -9,17 +9,17 @@ function handleResult(data){
 			htmlElem += "<tr>"
 			htmlElem += "<td><a href='single-movie.html?id=" + key + "'>" + data[key]["title"] +"</a></td>";
 			
-			htmlElem += "<td id='qty'><form id = 'subtractForm' action='#' method='get'>" +
+			htmlElem += "<td id='qty'><form id = 'subtractForm' action='#' method='get' class='qty-form'>" +
 			"<input type='hidden' name='id' value='" + key + "'>" +
 			"<input type='hidden' name='action' value='subtract'>" +
-			"<input type='submit' class='btn btn-light subtract' value='-'></form><span id='qty-text'>" +data[key]["quantity"];
+			"<input type='submit' class='btn subtract' value='-'></form><span id='qty-text'>" +data[key]["quantity"];
 			
 //			htmlElem += "<td id='qty'>" + data[key]["quantity"] + "</td>";
 			
-			htmlElem += "</span><form id = 'addForm' action='#' method='get'>" +
+			htmlElem += "</span><form id = 'addForm' action='#' method='get' class='qty-form'>" +
 						"<input type='hidden' name='id' value='" + key + "'>" +
 						"<input type='hidden' name='action' value='add'>" + 
-						"<input type='submit' class='btn btn-light add' value='+'></form></td>";
+						"<input type='submit' class='btn add' value='+'></form></td>";
 			
 			htmlElem += "<td><form id='deleteCartForm' action='#' method='get'>" +
 						"<input type='hidden' name='id' value='" + key + "'>" +
