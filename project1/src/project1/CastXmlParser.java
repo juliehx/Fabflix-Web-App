@@ -11,14 +11,14 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class FilmXmlParser extends DefaultHandler {
-	static ArrayList<Film> filmList;
+public class CastXmlParser extends DefaultHandler {
+	static ArrayList<Cast> castList;
 	
 	private String tempVal;
-	private Film tempFilm;
+	private Cast tempCast;
 	
-	public FilmXmlParser() {
-		filmList = new ArrayList<Film>();
+	public CastXmlParser() {
+		castList = new ArrayList<Cast>();
 	}
 	
 	private void parseDocument() {
@@ -38,22 +38,22 @@ public class FilmXmlParser extends DefaultHandler {
 		}
 	}
 	
-	public void runFilmParser() {
+	public void runCastParser() {
 		parseDocument();
 		printData();
 	}
 	
 	private void printData() {
-		System.out.println(filmList.size() + " films added\n\n");
-		for(int i = 0; i < filmList.size(); i++) {
-			System.out.println(filmList.get(i) + "\n\n");
+		System.out.println(castList.size() + " casts added\n\n");
+		for(int i = 0; i < castList.size(); i++) {
+			System.out.println(castList.get(i) + "\n\n");
 		}
 	}
 	
 	public void startElement(String url, String localName,String qName, Attributes attributes) throws SAXException {
 		tempVal = "";
 		if(qName.equalsIgnoreCase("m")) {
-			tempFilm = new Film();
+			tempCast = new Cast();
 		}
 	}
 
@@ -62,24 +62,24 @@ public class FilmXmlParser extends DefaultHandler {
 	}
 	
 	public void endElement(String uri, String localName, String qName)throws SAXException{
-		System.out.println("Curating Cast..");
+		System.out.print("Curating Cast..");
 		if(qName.equalsIgnoreCase("m")) {
-			filmList.add(tempFilm);
+			castList.add(tempCast);
 		}
 		if(qName.equalsIgnoreCase("f")) {
-			tempFilm.setId(tempVal);
+			tempCast.setId(tempVal);
 		}
 		else if(qName.equalsIgnoreCase("t")){
-			tempFilm.setTitle(tempVal);
+			tempCast.setTitle(tempVal);
 		}
 		else if(qName.equalsIgnoreCase("a")) {
-			tempFilm.addActor(tempVal);
+			tempCast.addActor(tempVal);
 		}
-		System.out.println("Done curating cast!");
+		System.out.print("Done curating cast!\n");
 	}
 	
 	public static void main(String[] args) {
-		FilmXmlParser fxp = new FilmXmlParser();
-		fxp.runFilmParser();
+		CastXmlParser fxp = new CastXmlParser();
+		fxp.runCastParser();
 	}
 }

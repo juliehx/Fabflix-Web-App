@@ -1,18 +1,18 @@
 package project1;
 import java.util.ArrayList;
 
-public class Film {
+public class Cast {
 	private String id;
 	
 	private String title;
 	
 	private String actors;
 	
-	public Film() {
+	public Cast() {
 		
 	}
 	
-	public Film(String id, String title, String actor) {
+	public Cast(String id, String title, String actor) {
 		this.id = id;
 		this.title = title;
 		this.actors = actor;
