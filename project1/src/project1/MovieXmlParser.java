@@ -1,6 +1,10 @@
 package project1;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -40,11 +44,30 @@ public class MovieXmlParser extends DefaultHandler {
 		}
 	}
 	
+	public int getArraySize() {
+		return movieList.size();
+	}
+	
+	public ArrayList<Movie> getArray(){
+		return movieList;
+	}
 	
 	public void runMovieParser() {
 		parseDocument();
-		printData();
+		
+//		System.out.println("Done");
+//		printData();
 	}
+	
+//	public void insertIntoDB() {//500 searches
+//		PreparedStatement psInsertRecord = null;
+//		String  sqlInsertRecord = null;
+//		
+//		int[] insertRows = null;
+//		
+//		sqlInsertRecord = "call moviedb.add_mains(?,?,?,?)";
+//		
+//	}
 	
 	private void printData() {
 		System.out.println(movieList.size() + " movies added\n\n");
@@ -62,6 +85,7 @@ public class MovieXmlParser extends DefaultHandler {
 		if(qName.equalsIgnoreCase("film")) {
 			tempMovie = new Movie();
 		}
+		
 	}
 	
 	public void characters(char[] ch, int start, int length)throws SAXException {
@@ -70,7 +94,7 @@ public class MovieXmlParser extends DefaultHandler {
 	
 	public void endElement(String uri, String localName, String qName)
 						throws SAXException {
-		System.out.print("Adding movie...");
+//		System.out.print("Adding movie...");
 		
 		if(qName.equalsIgnoreCase("film")) {
 			movieList.add(tempMovie);
@@ -95,11 +119,82 @@ public class MovieXmlParser extends DefaultHandler {
 				tempMovie.addGenre(tempVal);
 			}
 		}
-		System.out.print("Done\n");
+//		System.out.print("Done\n");
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		MovieXmlParser mxp = new MovieXmlParser();
 		mxp.runMovieParser();
+		
+		Connection conn = null;
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		String jdbcURL = "jdbc:mysql://localhost:3306/moviedb";
+		
+		try {
+			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		PreparedStatement psInsertMovies = null;
+		String sqlInsertMovies = null;
+		
+		PreparedStatement psInsertGenres = null;
+		String sqlInsertGenres = null;
+		
+		int[] numRows = null;
+		
+		sqlInsertMovies = "call moviedb.add_mains(?,?,?,?)";
+		sqlInsertGenres = "call moviedb.add_mains_genre(?,?)";
+		try {
+			conn.setAutoCommit(false);
+			
+			psInsertMovies = conn.prepareStatement(sqlInsertMovies);
+			psInsertGenres = conn.prepareStatement(sqlInsertGenres);
+			for(int i = 0; i < mxp.getArraySize();i++) {
+				Movie mov = mxp.getArray().get(i);
+				String id = mov.getId();
+				String title = mov.getTitle();
+				int year = mov.getYear();
+				String director = mov.getDirector();
+				
+				if(mov.checkMovieDetails()) {
+					psInsertMovies.setString(1,id);
+					psInsertMovies.setString(2, title);
+					psInsertMovies.setInt(3, year);
+					psInsertMovies.setString(4, director);
+					
+					psInsertMovies.addBatch();
+					
+					for(int k = 0; k < mov.getGenres().size();k++) {
+						psInsertGenres.setString(1, mov.getId());
+//						System.out.println(mov.getGenres().size());
+						psInsertGenres.setString(2, mov.getGenres().get(k));
+					}
+					psInsertGenres.addBatch();
+				}
+				else {
+					System.out.println(String.format("Failed To Insert Movie: M_ID: %s\n Title:%s\n Year:%d\n Director:%s",id,title,year,director) );
+				}
+			}
+			
+			numRows = psInsertMovies.executeBatch();
+			conn.commit();
+			numRows = psInsertGenres.executeBatch();
+			conn.commit();
+			System.out.println("Done");
+				
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			if(psInsertMovies!= null) psInsertMovies.close();
+			if(psInsertGenres != null) psInsertGenres.close();
+			if(conn != null) conn.close();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 }
