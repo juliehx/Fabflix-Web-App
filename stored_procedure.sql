@@ -50,8 +50,8 @@ BEGIN
         SET MESSAGE_TEXT = 'Movie Exists in Database';
 	END IF;
 END$$
-
 DELIMITER ;
+
 
 DELIMITER $$
 USE `moviedb`$$ 
@@ -69,7 +69,6 @@ Begin
             #SET MESSAGE_TEXT = "Movie Exists Already!";
         
         END IF;
-
 END $$ 
 DELIMITER ;
 
@@ -86,7 +85,7 @@ BEGIN
 		insert into genres(id,name) VALUES (genre_id,genre_name);
     END IF;
     insert into genres_in_movies(genreId,movieId) VALUES(genre_id,movie_id);
-END
+END$$
 DELIMITER ;
 
 DELIMITER $$
@@ -109,8 +108,9 @@ BEGIN
         
 	END IF; 
     END IF;
-END
+END$$
 DELIMITER ;
+
 
 DELIMITER $$
 USE `moviedb` $$
@@ -128,6 +128,6 @@ BEGIN
 		insert into stars (id,name,birthyear) VALUES (a_id,actor_name,birth_year);
 
 	END IF;
-END
+END$$
 DELIMITER ;
 
