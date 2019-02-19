@@ -44,6 +44,7 @@
         <version>3.2.1</version>
         <configuration>
           <warSourceDirectory>WebContent</warSourceDirectory>
+          <cleanupDaemonThreads>false</cleanupDaemonThreads>
         </configuration>
       </plugin>
     </plugins>

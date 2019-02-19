@@ -164,6 +164,11 @@ select:focus {
 	margin-bottom: 30px;
 }
 
+.genrelist-container {
+	height: 300px;
+	overflow: auto;
+}
+
 #movie_table {
 	width: 100%;
 	padding: 50px;
