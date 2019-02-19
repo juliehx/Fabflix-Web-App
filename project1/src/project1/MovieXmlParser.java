@@ -1,5 +1,5 @@
 package project1;
-
+import project1.Movie;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -58,16 +58,6 @@ public class MovieXmlParser extends DefaultHandler {
 //		System.out.println("Done");
 //		printData();
 	}
-	
-//	public void insertIntoDB() {//500 searches
-//		PreparedStatement psInsertRecord = null;
-//		String  sqlInsertRecord = null;
-//		
-//		int[] insertRows = null;
-//		
-//		sqlInsertRecord = "call moviedb.add_mains(?,?,?,?)";
-//		
-//	}
 	
 	private void printData() {
 		System.out.println(movieList.size() + " movies added\n\n");

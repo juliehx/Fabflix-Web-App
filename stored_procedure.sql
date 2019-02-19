@@ -5,6 +5,13 @@ DROP procedure IF EXISTS `add_mains_genre`;
 DROP procedure IF EXISTS `add_actor`;
 DROP procedure IF EXISTS `add_to_sim`;
 
+CREATE TABLE employees
+(
+	email varchar(50) primary key,
+	password varchar(20) not null,
+	fullname varchar(100)
+)
+
 
 DELIMITER $$
 USE `moviedb`$$

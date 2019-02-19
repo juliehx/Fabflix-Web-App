@@ -1,7 +1,12 @@
 package project1;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -14,8 +19,17 @@ import org.xml.sax.helpers.DefaultHandler;
 public class CastXmlParser extends DefaultHandler {
 	static ArrayList<Cast> castList;
 	
+	private static String dbUrl = "jdbc:mysql://localhost:3306/moviedb";
+	private static String user = "mytestuser";
+	private static String password = "mypassword";
+	
+	private Connection conn;
+	
 	private String tempVal;
 	private Cast tempCast;
+	
+	private HashMap<String,String>stars = new HashMap<String,String>();
+	private HashMap<String,String>movies = new HashMap<String,String>();
 	
 	public CastXmlParser() {
 		castList = new ArrayList<Cast>();
@@ -40,7 +54,7 @@ public class CastXmlParser extends DefaultHandler {
 	
 	public void runCastParser() {
 		parseDocument();
-		printData();
+//		printData();
 	}
 	
 	private void printData() {
@@ -78,8 +92,23 @@ public class CastXmlParser extends DefaultHandler {
 		System.out.print("Done curating cast!\n");
 	}
 	
-	public static void main(String[] args) {
-		CastXmlParser fxp = new CastXmlParser();
-		fxp.runCastParser();
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+//		CastXmlParser fxp = new CastXmlParser();
+//		fxp.runCastParser();
+//		
+//		Connection conn = null;
+//		Class.forName("com.mysql.jdbc.Driver").newInstance();
+//		String jdbcURL = "jdbc:mysql://localhost:3306/moviedb";
+//		
+//		try {
+//			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		Statement statement = conn.createStatement();
+//		String query = "select * from stars;";
+//		ResultSet allStars = statement.executeQuery(query);
+		
+		
 	}
 }
