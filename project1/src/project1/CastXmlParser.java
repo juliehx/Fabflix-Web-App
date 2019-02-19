@@ -35,6 +35,8 @@ public class CastXmlParser extends DefaultHandler {
 		castList = new ArrayList<Cast>();
 	}
 	
+	
+	
 	private void parseDocument() {
 		SAXParserFactory spf = SAXParserFactory.newInstance();
 		

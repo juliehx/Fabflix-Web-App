@@ -55,7 +55,7 @@ public class AddMovieServlet extends HttpServlet {
 		String star_year = request.getParameter("star_year");
 		if(star_year == "") {star_year = null;}
 
-		System.out.println("birthYear: " + star_year);
+//		System.out.println("birthYear: " + star_year);
 		
 		String genre = request.getParameter("genre");
 		
@@ -72,8 +72,9 @@ public class AddMovieServlet extends HttpServlet {
 			statement.setString(4, star_name);
 			statement.setString(5, star_year);
 			statement.setString(6, genre);
-			
+//			System.out.println("this is wack");
 			int rows = statement.executeUpdate();
+//			System.out.println("NUM ROWS: " + rows);
 			if(rows == 1) {
 				JsonObject jsonObject = new JsonObject();
 				jsonObject.addProperty("status", "success");
