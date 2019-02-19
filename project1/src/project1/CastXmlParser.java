@@ -3,7 +3,9 @@ package project1;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,13 +107,21 @@ public class CastXmlParser extends DefaultHandler {
 		System.out.print("Done curating cast!\n");
 	}
 	
+	public ArrayList<Cast> getArray(){
+		return castList;
+	}
+	
+	public int getArraySize(){
+		return castList.size();
+	}
+	
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		CastXmlParser fxp = new CastXmlParser();
 		fxp.runCastParser();
 		
 		Connection conn = null;
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
-		String jdbcURL = "jdbc:mysql://localhost:3306/moviedb";
+		String jdbcURL = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
 		
 		try {
 			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
@@ -121,7 +131,52 @@ public class CastXmlParser extends DefaultHandler {
 //		Statement statement = conn.createStatement();
 //		String query = "select * from stars;";
 //		ResultSet allStars = statement.executeQuery(query);
-		PreparedStatement psInsert
+		PreparedStatement psInsertSim = null;
+		String sqlInsertSim = null;
+		
+		PreparedStatement psInsertStar = null;
+		String sqlInsertStar = null;
+		
+		int[] numRows = null;
+		
+		sqlInsertSim = "call moviedb.add_to_sim(?,?)";
+		sqlInsertStar = "call moviedb.add_actor(?,?)";
+		
+		try {
+			conn.setAutoCommit(false);
+			
+			psInsertSim = conn.prepareStatement(sqlInsertSim);
+			psInsertStar = conn.prepareStatement(sqlInsertStar);
+			
+			for(int i = 0; i < fxp.getArraySize(); i++) {
+				Cast c = fxp.getArray().get(i);
+				String m_id = c.getId();
+				String m_title = c.getTitle();
+				String actor = c.getActors(); //only one actor
+				
+				psInsertSim.setString(1, actor);
+				psInsertSim.setString(2, m_id);
+				
+				psInsertSim.addBatch();
+			}
+			try {
+			numRows = psInsertSim.executeBatch();
+			}catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
+			conn.commit();
+			System.out.println("Done");
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			if(psInsertSim!= null) psInsertSim.close();
+			if(psInsertStar != null) psInsertStar.close();
+			if(conn != null) conn.close();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 }
