@@ -95,7 +95,7 @@ public class ActorXmlParser extends DefaultHandler {
 		
 		Connection conn = null;
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
-		String jdbcURL = "jdbc:mysql://localhost:3306/moviedb";
+		String jdbcURL = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
 		
 		try {
 			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
