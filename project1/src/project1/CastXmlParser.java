@@ -28,11 +28,16 @@ public class CastXmlParser extends DefaultHandler {
 	private String tempVal;
 	private Cast tempCast;
 	
-	private HashMap<String,String>stars = new HashMap<String,String>();
-	private HashMap<String,String>movies = new HashMap<String,String>();
+	private HashMap<String,String>stars;
+	private HashMap<String,String>movies;
+	
+	
 	
 	public CastXmlParser() {
 		castList = new ArrayList<Cast>();
+		stars =  new HashMap<String,String>();
+		movies =  new HashMap<String,String>();
+		
 	}
 	
 	
@@ -77,10 +82,16 @@ public class CastXmlParser extends DefaultHandler {
 		tempVal = new String(ch, start, length);
 	}
 	
+	public boolean isValid(String arg) {
+		return arg != null && !arg.equals("");
+	}
+	
 	public void endElement(String uri, String localName, String qName)throws SAXException{
 		System.out.print("Curating Cast..");
 		if(qName.equalsIgnoreCase("m")) {
-			castList.add(tempCast);
+			if(isValid(tempCast.getActors()) && isValid(tempCast.getId())
+					&& isValid(tempCast.getTitle()))
+				castList.add(tempCast);
 		}
 		if(qName.equalsIgnoreCase("f")) {
 			tempCast.setId(tempVal);
@@ -95,22 +106,22 @@ public class CastXmlParser extends DefaultHandler {
 	}
 	
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-//		CastXmlParser fxp = new CastXmlParser();
-//		fxp.runCastParser();
-//		
-//		Connection conn = null;
-//		Class.forName("com.mysql.jdbc.Driver").newInstance();
-//		String jdbcURL = "jdbc:mysql://localhost:3306/moviedb";
-//		
-//		try {
-//			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		CastXmlParser fxp = new CastXmlParser();
+		fxp.runCastParser();
+		
+		Connection conn = null;
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		String jdbcURL = "jdbc:mysql://localhost:3306/moviedb";
+		
+		try {
+			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 //		Statement statement = conn.createStatement();
 //		String query = "select * from stars;";
 //		ResultSet allStars = statement.executeQuery(query);
-		
+		PreparedStatement psInsert
 		
 	}
 }

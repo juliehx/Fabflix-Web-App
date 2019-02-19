@@ -87,7 +87,16 @@ public class MovieXmlParser extends DefaultHandler {
 //		System.out.print("Adding movie...");
 		
 		if(qName.equalsIgnoreCase("film")) {
-			movieList.add(tempMovie);
+			if(tempMovie.checkMovieDetails()) {
+				movieList.add(tempMovie);
+			}
+			else {
+				System.out.println(String.format("Failed To Insert Movie: M_ID: %s\n Title:%s\n Year:%d\n Director:%s",
+						tempMovie.getId(),
+						tempMovie.getTitle(),
+						tempMovie.getYear(),
+						tempMovie.getDirector()));
+			}
 		} else if(qName.equalsIgnoreCase("fid")) {
 			tempMovie.setId(tempVal);
 		} else if(qName.equalsIgnoreCase("t")) {
@@ -141,6 +150,7 @@ public class MovieXmlParser extends DefaultHandler {
 			
 			psInsertMovies = conn.prepareStatement(sqlInsertMovies);
 			psInsertGenres = conn.prepareStatement(sqlInsertGenres);
+			
 			for(int i = 0; i < mxp.getArraySize();i++) {
 				Movie mov = mxp.getArray().get(i);
 				String id = mov.getId();
@@ -148,32 +158,24 @@ public class MovieXmlParser extends DefaultHandler {
 				int year = mov.getYear();
 				String director = mov.getDirector();
 				
-				if(mov.checkMovieDetails()) {
-					psInsertMovies.setString(1,id);
-					psInsertMovies.setString(2, title);
-					psInsertMovies.setInt(3, year);
-					psInsertMovies.setString(4, director);
-					
-					psInsertMovies.addBatch();
-					
-					for(int k = 0; k < mov.getGenres().size();k++) {
-						psInsertGenres.setString(1, mov.getId());
-//						System.out.println(mov.getGenres().size());
-						psInsertGenres.setString(2, mov.getGenres().get(k));
-					}
-					psInsertGenres.addBatch();
+				psInsertMovies.setString(1,id);
+				psInsertMovies.setString(2, title);
+				psInsertMovies.setInt(3, year);
+				psInsertMovies.setString(4, director);
+				
+				psInsertMovies.addBatch();
+				
+				for(int k = 0; k < mov.getGenres().size();k++) {
+					psInsertGenres.setString(1, mov.getId());
+					psInsertGenres.setString(2, mov.getGenres().get(k));
 				}
-				else {
-					System.out.println(String.format("Failed To Insert Movie: M_ID: %s\n Title:%s\n Year:%d\n Director:%s",id,title,year,director) );
+				psInsertGenres.addBatch();
 				}
-			}
-			
 			numRows = psInsertMovies.executeBatch();
 			conn.commit();
 			numRows = psInsertGenres.executeBatch();
 			conn.commit();
 			System.out.println("Done");
-				
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}

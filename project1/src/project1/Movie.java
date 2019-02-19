@@ -72,7 +72,7 @@ public class Movie {
 	
 	public boolean checkMovieDetails() {
 		return this.getId() != null && !this.getId().equals("") &&
-				this.getTitle() != null && !this.getId().equals("") &&
+				this.getTitle() != null && !this.getTitle().equals("") &&
 				this.getDirector() != null && !this.getDirector().equals("");
 				
 	}
