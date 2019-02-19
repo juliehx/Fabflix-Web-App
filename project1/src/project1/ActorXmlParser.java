@@ -16,13 +16,38 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class ActorXmlParser extends DefaultHandler {
-	static ArrayList<Actor> actorList;
-	
+//	static ArrayList<Actor> actorList;
+	private String jdbcURL = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
+
 	private String tempVal;
 	private Actor tempAct;
 	
-	public ActorXmlParser() {
-		actorList = new ArrayList<Actor>();
+	private Connection conn;
+	
+	PreparedStatement psInsertActors;
+	String sqlInsertActors; 
+
+	
+	public ActorXmlParser() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+//		actorList = new ArrayList<Actor>();
+		
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		try {
+			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
+			conn.setAutoCommit(false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		sqlInsertActors = "call moviedb.add_actor(?,?)";
+		
+		try {
+			psInsertActors = conn.prepareStatement(sqlInsertActors);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	private void parseDocument() {
@@ -41,17 +66,28 @@ public class ActorXmlParser extends DefaultHandler {
 		}
 	}
 	
+	
+	
 	public void runActorParser() {
 		parseDocument();
+		try {
+			conn.commit();
+			psInsertActors.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
 //		printData();
 	}
 	
-	private void printData() {
-		System.out.println(actorList.size() + " actors added\n\n");
-		for(int i = 0; i < actorList.size(); i++) {
-			System.out.println(actorList.get(i) + "\n\n");
-		}
-	}
+//	private void printData() {
+//		System.out.println(actorList.size() + " actors added\n\n");
+//		for(int i = 0; i < actorList.size(); i++) {
+//			System.out.println(actorList.get(i) + "\n\n");
+//		}
+//	}
 	
 	// EVENT HANDLERS
 	
@@ -74,7 +110,14 @@ public class ActorXmlParser extends DefaultHandler {
 		System.out.print("Adding actor...");
 		
 		if(qName.equalsIgnoreCase("actor")) {
-			actorList.add(tempAct);
+//			actorList.add(tempAct);
+			try {
+				psInsertActors.setString(1, tempAct.getName());
+				psInsertActors.setInt(2, tempAct.getBirthYear());
+				psInsertActors.addBatch();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		} else if(qName.equalsIgnoreCase("stagename")) {
 			tempAct.setName(tempVal);
 		} else if(qName.equalsIgnoreCase("dob")) {
@@ -86,6 +129,14 @@ public class ActorXmlParser extends DefaultHandler {
 			}
 			tempAct.setBirthYear(year);
 		}
+		
+		if(qName.equalsIgnoreCase("actors")) {
+			try {
+				psInsertActors.executeBatch();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		System.out.print("Done\n");
 	}
 	
@@ -93,50 +144,50 @@ public class ActorXmlParser extends DefaultHandler {
 		ActorXmlParser axp = new ActorXmlParser();
 		axp.runActorParser();
 		
-		Connection conn = null;
-		Class.forName("com.mysql.jdbc.Driver").newInstance();
-		String jdbcURL = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
-		
-		try {
-			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		PreparedStatement psInsertActor = null;
-		String sqlInsertActors = null;
-		int[] numRows = null;
-		
-		sqlInsertActors = "call moviedb.add_actor(?,?)";
-		
-		try {
-			conn.setAutoCommit(false);
-			
-			psInsertActor = conn.prepareStatement(sqlInsertActors);	
-			
-			for(int i = 0; i < actorList.size();i++) {
-				Actor a = axp.actorList.get(i);
-				String fullName = a.getName();
-				int birthYear = a.getBirthYear();
-				psInsertActor.setString(1, fullName);
-				psInsertActor.setInt(2, birthYear);
-				
-				psInsertActor.addBatch();
-			}
-			numRows = psInsertActor.executeBatch();
-			conn.commit();
-			System.out.println("Done");
-			
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			if(psInsertActor != null) psInsertActor.close();
-			if(conn != null) conn.close();
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+//		Connection conn = null;
+//		Class.forName("com.mysql.jdbc.Driver").newInstance();
+//		String jdbcURL = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
+//		
+//		try {
+//			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		PreparedStatement psInsertActor = null;
+//		String sqlInsertActors = null;
+//		int[] numRows = null;
+//		
+//		sqlInsertActors = "call moviedb.add_actor(?,?)";
+//		
+//		try {
+//			conn.setAutoCommit(false);
+//			
+//			psInsertActor = conn.prepareStatement(sqlInsertActors);	
+//			
+//			for(int i = 0; i < actorList.size();i++) {
+//				Actor a = axp.actorList.get(i);
+//				String fullName = a.getName();
+//				int birthYear = a.getBirthYear();
+//				psInsertActor.setString(1, fullName);
+//				psInsertActor.setInt(2, birthYear);
+//				
+//				psInsertActor.addBatch();
+//			}
+//			numRows = psInsertActor.executeBatch();
+//			conn.commit();
+//			System.out.println("Done");
+//			
+//		}catch(SQLException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		try {
+//			if(psInsertActor != null) psInsertActor.close();
+//			if(conn != null) conn.close();
+//		}catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
 	}
 }
