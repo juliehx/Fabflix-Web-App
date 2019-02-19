@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -16,14 +17,29 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class MovieXmlParser extends DefaultHandler {
-	static ArrayList<Movie> movieList;
+//	static ArrayList<Movie> movieList;
 	
 	private String tempVal;
 	private Movie tempMovie;
 	
+	private Connection conn;
+	private String jdbcURL; 
+
+	private HashMap<Movie,String> movieMap;
 	
-	public MovieXmlParser() {
-		movieList = new ArrayList<Movie>();
+	
+	
+	public MovieXmlParser() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
+//		movieList = new ArrayList<Movie>();
+		movieMap = new HashMap<Movie,String>();
+		
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		jdbcURL = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
+		try {
+			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -44,12 +60,16 @@ public class MovieXmlParser extends DefaultHandler {
 		}
 	}
 	
-	public int getArraySize() {
-		return movieList.size();
-	}
+//	public int getArraySize() {
+//		return movieList.size();
+//	}
+//	
+//	public ArrayList<Movie> getArray(){
+//		return movieList;
+//	}
 	
-	public ArrayList<Movie> getArray(){
-		return movieList;
+	public void initialize() {
+		
 	}
 	
 	public void runMovieParser() {
@@ -59,12 +79,12 @@ public class MovieXmlParser extends DefaultHandler {
 //		printData();
 	}
 	
-	private void printData() {
-		System.out.println(movieList.size() + " movies added\n\n");
-		for(int i = 0; i < movieList.size(); i++) {
-			System.out.println(movieList.get(i) + "\n\n");
-		}
-	}
+//	private void printData() {
+//		System.out.println(movieList.size() + " movies added\n\n");
+//		for(int i = 0; i < movieList.size(); i++) {
+//			System.out.println(movieList.get(i) + "\n\n");
+//		}
+//	}
 	
 	// EVENT HANDLERS
 	
@@ -88,7 +108,7 @@ public class MovieXmlParser extends DefaultHandler {
 		
 		if(qName.equalsIgnoreCase("film")) {
 			if(tempMovie.checkMovieDetails()) {
-				movieList.add(tempMovie);
+//				movieList.add(tempMovie);
 			}
 			else {
 				System.out.println(String.format("Failed To Insert Movie: M_ID: %s\n Title:%s\n Year:%d\n Director:%s",
@@ -129,64 +149,64 @@ public class MovieXmlParser extends DefaultHandler {
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
 		String jdbcURL = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
 		
-		try {
-			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		PreparedStatement psInsertMovies = null;
-		String sqlInsertMovies = null;
-		
-		PreparedStatement psInsertGenres = null;
-		String sqlInsertGenres = null;
-		
-		int[] numRows = null;
-		
-		sqlInsertMovies = "call moviedb.add_mains(?,?,?,?)";
-		sqlInsertGenres = "call moviedb.add_mains_genre(?,?)";
-		try {
-			conn.setAutoCommit(false);
-			
-			psInsertMovies = conn.prepareStatement(sqlInsertMovies);
-			psInsertGenres = conn.prepareStatement(sqlInsertGenres);
-			
-			for(int i = 0; i < mxp.getArraySize();i++) {
-				Movie mov = mxp.getArray().get(i);
-				String id = mov.getId();
-				String title = mov.getTitle();
-				int year = mov.getYear();
-				String director = mov.getDirector();
-				
-				psInsertMovies.setString(1,id);
-				psInsertMovies.setString(2, title);
-				psInsertMovies.setInt(3, year);
-				psInsertMovies.setString(4, director);
-				
-				psInsertMovies.addBatch();
-				
-				for(int k = 0; k < mov.getGenres().size();k++) {
-					psInsertGenres.setString(1, mov.getId());
-					psInsertGenres.setString(2, mov.getGenres().get(k));
-				}
-				psInsertGenres.addBatch();
-				}
-			numRows = psInsertMovies.executeBatch();
-			conn.commit();
-			numRows = psInsertGenres.executeBatch();
-			conn.commit();
-			System.out.println("Done");
-		}catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			if(psInsertMovies!= null) psInsertMovies.close();
-			if(psInsertGenres != null) psInsertGenres.close();
-			if(conn != null) conn.close();
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+//		try {
+//			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		PreparedStatement psInsertMovies = null;
+//		String sqlInsertMovies = null;
+//		
+//		PreparedStatement psInsertGenres = null;
+//		String sqlInsertGenres = null;
+//		
+//		int[] numRows = null;
+//		
+//		sqlInsertMovies = "call moviedb.add_mains(?,?,?,?)";
+//		sqlInsertGenres = "call moviedb.add_mains_genre(?,?)";
+//		try {
+//			conn.setAutoCommit(false);
+//			
+//			psInsertMovies = conn.prepareStatement(sqlInsertMovies);
+//			psInsertGenres = conn.prepareStatement(sqlInsertGenres);
+//			
+//			for(int i = 0; i < mxp.getArraySize();i++) {
+//				Movie mov = mxp.getArray().get(i);
+//				String id = mov.getId();
+//				String title = mov.getTitle();
+//				int year = mov.getYear();
+//				String director = mov.getDirector();
+//				
+//				psInsertMovies.setString(1,id);
+//				psInsertMovies.setString(2, title);
+//				psInsertMovies.setInt(3, year);
+//				psInsertMovies.setString(4, director);
+//				
+//				psInsertMovies.addBatch();
+//				
+//				for(int k = 0; k < mov.getGenres().size();k++) {
+//					psInsertGenres.setString(1, mov.getId());
+//					psInsertGenres.setString(2, mov.getGenres().get(k));
+//				}
+//				psInsertGenres.addBatch();
+//				}
+//			numRows = psInsertMovies.executeBatch();
+//			conn.commit();
+//			numRows = psInsertGenres.executeBatch();
+//			conn.commit();
+//			System.out.println("Done");
+//		}catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		try {
+//			if(psInsertMovies!= null) psInsertMovies.close();
+//			if(psInsertGenres != null) psInsertGenres.close();
+//			if(conn != null) conn.close();
+//		}catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
 	}
 }
