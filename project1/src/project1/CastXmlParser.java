@@ -105,12 +105,12 @@ public class CastXmlParser extends DefaultHandler {
 //		printData();
 	}
 	
-	private void printData() {
-		System.out.println(castList.size() + " casts added\n\n");
-		for(int i = 0; i < castList.size(); i++) {
-			System.out.println(castList.get(i) + "\n\n");
-		}
-	}
+//	private void printData() {
+//		System.out.println(castList.size() + " casts added\n\n");
+//		for(int i = 0; i < castList.size(); i++) {
+//			System.out.println(castList.get(i) + "\n\n");
+//		}
+//	}
 	
 	public void startElement(String url, String localName,String qName, Attributes attributes) throws SAXException {
 		tempVal = "";
