@@ -47,6 +47,7 @@ public class MovieXmlParser extends DefaultHandler {
 		jdbcURL = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
 		try {
 			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
+			conn.setAutoCommit(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

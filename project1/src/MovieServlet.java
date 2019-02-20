@@ -136,9 +136,9 @@ public class MovieServlet extends HttpServlet{
 				String rating = rs.getString("rating");
 				String year = rs.getString("year");
 				String director = rs.getString("director");
-				String[] genres_id = rs.getString("genre_id").split(",");
-				String[] genres_name = rs.getString("genre_name").split(",");
-				String[] stars = rs.getString("star").split(";");
+				String genres_id = rs.getString("genre_id"); //.split(",");
+				String genres_name = rs.getString("genre_name"); //.split(",");
+				String stars = rs.getString("star"); //.split(";");
 				JsonObject jsonObject = new JsonObject();
 				jsonObject.addProperty("id", id);
 				jsonObject.addProperty("title", title);
@@ -150,22 +150,31 @@ public class MovieServlet extends HttpServlet{
 				JsonArray genreList = new JsonArray();
 				JsonArray starList = new JsonArray();
 				
-				for(int i = 0; i < genres_id.length; i++) {
-					JsonObject genreObj = new JsonObject();
-					genreObj.addProperty("genre_id", genres_id[i]);
-					genreObj.addProperty("genre_name", genres_name[i]);
-					genreList.add(genreObj);
+				if(genres_id != null) {
+					String[] genreIdList = genres_id.split(",");
+					String[] genreNameList = genres_name.split(",");
+					for(int i = 0; i < genreIdList.length; i++) {
+						JsonObject genreObj = new JsonObject();
+						genreObj.addProperty("genre_id", genreIdList[i]);
+						genreObj.addProperty("genre_name", genreNameList[i]);
+						genreList.add(genreObj);
+					}
 				}
 				
 				
 				
-				for(int i = 0; i < stars.length; i++) {
-					JsonObject starObj = new JsonObject();
-					String[] star_info = stars[i].split(",");
-					starObj.addProperty("star_id", star_info[0]);
-					starObj.addProperty("star_name", star_info[1]);
-					starList.add(starObj);
+				
+				if(stars != null) {
+					String[] sList = stars.split(";");
+					for(int i = 0; i < sList.length; i++) {
+						JsonObject starObj = new JsonObject();
+						String[] star_info = sList[i].split(",");
+						starObj.addProperty("star_id", star_info[0]);
+						starObj.addProperty("star_name", star_info[1]);
+						starList.add(starObj);
+					}
 				}
+				
 				
 				
 				jsonObject.add("genres", genreList);
@@ -191,6 +200,7 @@ public class MovieServlet extends HttpServlet{
 			statement.close();
 			dbcon.close();
 		} catch (Exception e) {
+			e.printStackTrace();
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("errorMessage", e.getMessage());
 			out.write(jsonObject.toString());
