@@ -41,18 +41,20 @@ public class MovieXmlParser extends DefaultHandler {
 		sqlInsertMovies = "call moviedb.add_mains(?,?,?,?)";
 		sqlInsertGenres = "call moviedb.add_mains_genre(?,?)";
 		
-		try {
-			psInsertMovies = conn.prepareStatement(sqlInsertMovies);
-			psInsertGenres = conn.prepareStatement(sqlInsertGenres);
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}
+		
 		
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
 		jdbcURL = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
 		try {
 			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			psInsertMovies = conn.prepareStatement(sqlInsertMovies);
+			psInsertGenres = conn.prepareStatement(sqlInsertGenres);
+		}catch(SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -93,6 +95,7 @@ public class MovieXmlParser extends DefaultHandler {
 			conn.commit();
 			psInsertMovies.close();
 			psInsertGenres.close();
+			conn.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -191,9 +194,9 @@ public class MovieXmlParser extends DefaultHandler {
 			try {
 				psInsertMovies.executeBatch();
 				psInsertGenres.executeBatch();
-				conn.close();
-				psInsertMovies.close();
-				psInsertGenres.close();
+//				conn.close();
+//				psInsertMovies.close();
+//				psInsertGenres.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -204,7 +207,11 @@ public class MovieXmlParser extends DefaultHandler {
 	
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		MovieXmlParser mxp = new MovieXmlParser();
+		long startTime = System.currentTimeMillis();
 		mxp.runMovieParser();
+		long endTime = System.currentTimeMillis();
+		long elapsedTime = endTime - startTime;
+		System.out.println(elapsedTime);
 		
 //		Connection conn = null;
 //		Class.forName("com.mysql.jdbc.Driver").newInstance();

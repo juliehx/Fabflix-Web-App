@@ -142,7 +142,11 @@ public class ActorXmlParser extends DefaultHandler {
 	
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException{
 		ActorXmlParser axp = new ActorXmlParser();
+		long startTime = System.currentTimeMillis();
 		axp.runActorParser();
+		long endTime = System.currentTimeMillis();
+		long elapsedTime = endTime - startTime;
+		System.out.println(elapsedTime);
 		
 //		Connection conn = null;
 //		Class.forName("com.mysql.jdbc.Driver").newInstance();

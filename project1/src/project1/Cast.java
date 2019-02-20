@@ -8,14 +8,17 @@ public class Cast {
 	
 	private String actors;
 	
+	private String star_id;
+	
 	public Cast() {
 		
 	}
 	
-	public Cast(String id, String title, String actor) {
+	public Cast(String id, String title, String actor, String star_id) {
 		this.id = id;
 		this.title = title;
 		this.actors = actor;
+		this.star_id = star_id;
 	}
 	
 	//SET METHODS
@@ -44,6 +47,10 @@ public class Cast {
 	
 	public String getId() {
 		return this.id;
+	}
+	
+	public String getStarId() {
+		return this.star_id;
 	}
 	
 	//toString method

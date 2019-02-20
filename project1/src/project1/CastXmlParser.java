@@ -35,6 +35,8 @@ public class CastXmlParser extends DefaultHandler {
 	
 	static HashMap<String, Cast>cList;
 	
+	private String star_id;
+	
 	
 	
 	public CastXmlParser() {
@@ -42,7 +44,7 @@ public class CastXmlParser extends DefaultHandler {
 		stars =  new HashMap<String,String>();
 		movies =  new HashMap<String,Movie>();
 		cList = new HashMap<String, Cast>();
-		
+		star_id = "am0";
 	}
 	
 	public void prefetch() throws Exception {
@@ -78,6 +80,15 @@ public class CastXmlParser extends DefaultHandler {
 		}
 		
 		starResult.close();
+		
+//		String starIdQuery = "select max(id) as s_id from stars where stars.id like 'nm0%'";
+//		ResultSet starIdRes = statement.executeQuery();
+//		
+//		if(starIdRes.next()) {
+//			star_id = starIdRes.getString("s_id");
+//		}
+//		
+//		starIdRes.close();
 		statement.close();
 		dbcon.close();
 	}
@@ -130,6 +141,7 @@ public class CastXmlParser extends DefaultHandler {
 	private void addToCastList(Cast c) {
 		String m_id = null;
 		String a_id = null;
+//		String s_id = null;
 		
 		String actor = c.getActors();
 		String title = c.getTitle();
@@ -142,12 +154,17 @@ public class CastXmlParser extends DefaultHandler {
 			a_id = stars.get(c.getActors());
 		}
 		
-		if(a_id == null)
-			System.out.println("Actor does not exist in database");
-		else if(m_id == null)
+//		if(a_id == null) {
+//			String currId = star_id.replace("am", "");
+//			int newIdNum = Integer.parseInt(currId) + 1;
+//			a_id = "am" + Integer.toString(newIdNum);
+//			star_id = a_id;
+//		}
+//			System.out.println("Actor does not exist in database");
+		if(m_id == null)
 			System.out.println("Movie does not exist in database");
 		else
-			cList.put(a_id, new Cast(m_id, title, actor));
+			cList.put(a_id, new Cast(m_id, title, actor, a_id));
 	}
 	
 	public void endElement(String uri, String localName, String qName)throws SAXException{
