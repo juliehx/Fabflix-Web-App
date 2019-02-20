@@ -1,0 +1,22 @@
+Three Parser Results: 
+
+MovieXmlParser : ~45 seconds on AWS to insert
+
+ActorXmlParser : ~3 minutes on AWS to insert 
+
+CastXmlParser : ~12 seconds on AWS to insert
+
+Optimization Tactics:
+
+The optimization tactics we used to decrease the runtime of these parsers is to
+reduce as much select statements to reduce the number of database connections as possible.
+
+Also another way to optimize the run time is validate the data as we parse and addbatch to the 
+preparedstatement and do batch inserts to decrease time.
+
+Also another thing we did is that we essentially do a 1-pass over the xml parsed information to also reduce speed
+and did a batch insert after we finished scanning through the xml information.
+
+Another thing is that we used hashmaps for the casts.xml file to reduce the number of select statements being sent to the database
+and decreased runtime by using hashmaps for the star and movies to ensure that both of them exist while we parse through the casts.xml file.
+Once done, we also form a similar 1-pass over the xml file to extract the information and then batch insert once the parser is done.
