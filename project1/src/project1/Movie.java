@@ -15,6 +15,10 @@ public class Movie {
 	// CONSTRUCTORS
 	
 	public Movie() {
+		this.id = null;
+		this.title = null;
+		this.year = 0;
+		this.director = null;
 		this.genres = new ArrayList<String>();
 	}
 	
@@ -70,12 +74,6 @@ public class Movie {
 		this.genres.add(genre);
 	}
 	
-	public boolean checkMovieDetails() {
-		return this.getId() != null && !this.getId().equals("") &&
-				this.getTitle() != null && !this.getTitle().equals("") &&
-				this.getDirector() != null && !this.getDirector().equals("");
-				
-	}
 	
 	// toString
 	
