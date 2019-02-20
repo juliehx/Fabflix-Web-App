@@ -27,6 +27,13 @@ public class CastXmlParser extends DefaultHandler {
 	
 	private Connection conn;
 	
+	PreparedStatement psInsertStar;
+	String sqlInsertStar;
+	String jdbcUrl;
+	
+	PreparedStatement psInsertSim;
+	String sqlInsertSim ;
+	
 	private String tempVal;
 	private Cast tempCast;
 	
@@ -37,26 +44,42 @@ public class CastXmlParser extends DefaultHandler {
 	
 	private String star_id;
 	
-	
-	
-	public CastXmlParser() {
+	public CastXmlParser() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 //		castList = new ArrayList<Cast>();
 		stars =  new HashMap<String,String>();
 		movies =  new HashMap<String,Movie>();
 		cList = new HashMap<String, Cast>();
 		star_id = "am0";
+		jdbcUrl = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
+		
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		
+		try {
+			conn = DriverManager.getConnection(jdbcUrl, "mytestuser", "mypassword");
+			conn.setAutoCommit(false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		sqlInsertSim = "call moviedb.add_to_sim(?,?,?)";
+		sqlInsertStar = "call moviedb.add_actor(?,?)";
+		
+		try {
+			psInsertSim = conn.prepareStatement(sqlInsertSim);
+			psInsertStar = conn.prepareStatement(sqlInsertStar);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 	}
 	
-	public void prefetch() throws Exception {
-		Class.forName("com.mysql.jdbc.Driver").newInstance();
-		String jdbcUrl = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
-		
-		Connection dbcon = DriverManager.getConnection(jdbcUrl, "mytestuser", "mypassword");
-		
+	public void prefetch() throws Exception {		
 		String movieQuery = "select * from movies";
 		String starQuery = "select * from stars";
 		
-		PreparedStatement statement = dbcon.prepareStatement(movieQuery);
+		PreparedStatement statement = conn.prepareStatement(movieQuery);
 		ResultSet movieResult = statement.executeQuery();
 		
 		while(movieResult.next()) {
@@ -69,7 +92,7 @@ public class CastXmlParser extends DefaultHandler {
 		}
 		movieResult.close();
 		
-		statement = dbcon.prepareStatement(starQuery);
+		statement = conn.prepareStatement(starQuery);
 		ResultSet starResult = statement.executeQuery();
 		
 		while(starResult.next()) {
@@ -90,7 +113,6 @@ public class CastXmlParser extends DefaultHandler {
 //		
 //		starIdRes.close();
 		statement.close();
-		dbcon.close();
 	}
 	
 	private void parseDocument() {
@@ -113,6 +135,10 @@ public class CastXmlParser extends DefaultHandler {
 	public void runCastParser() throws Exception {
 		prefetch();
 		parseDocument();
+		conn.commit();
+		psInsertSim.close();
+		psInsertStar.close();
+		conn.close();
 //		printData();
 	}
 	
@@ -155,16 +181,35 @@ public class CastXmlParser extends DefaultHandler {
 		}
 		
 //		if(a_id == null) {
+//			System.out.println("Actor does not exist in database");
+//			System.out.println("Adding Actor");
+//			try {
+//				psInsertStar.setString(1, actor);
+//				psInsertStar.setString(2, null);
+//				psInsertStar.addBatch();
+//			} catch (SQLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 //			String currId = star_id.replace("am", "");
 //			int newIdNum = Integer.parseInt(currId) + 1;
 //			a_id = "am" + Integer.toString(newIdNum);
 //			star_id = a_id;
 //		}
-//			System.out.println("Actor does not exist in database");
+		
 		if(m_id == null)
 			System.out.println("Movie does not exist in database");
 		else
-			cList.put(a_id, new Cast(m_id, title, actor, a_id));
+//			cList.put(a_id, new Cast(m_id, title, actor, a_id));
+			try {
+				psInsertSim.setString(1, a_id);
+				psInsertSim.setString(2, m_id);
+				psInsertSim.setString(3, actor);
+				psInsertSim.addBatch();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
 	}
 	
 	public void endElement(String uri, String localName, String qName)throws SAXException{
@@ -174,7 +219,6 @@ public class CastXmlParser extends DefaultHandler {
 					&& isValid(tempCast.getTitle())) {
 				addToCastList(tempCast);
 			}
-//				castList.add(tempCast);
 		}
 		if(qName.equalsIgnoreCase("f")) {
 			tempCast.setId(tempVal);
@@ -184,6 +228,16 @@ public class CastXmlParser extends DefaultHandler {
 		}
 		else if(qName.equalsIgnoreCase("a")) {
 			tempCast.addActor(tempVal);
+		}
+		
+		if(qName.equalsIgnoreCase("casts")) {
+			try {
+				psInsertStar.executeBatch();
+				psInsertSim.executeBatch();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 //		System.out.print("Done curating cast!\n");
 	}
@@ -203,77 +257,76 @@ public class CastXmlParser extends DefaultHandler {
 		fxp.runCastParser();
 		System.out.print("Done!\n");
 		
-		Connection conn = null;
-		Class.forName("com.mysql.jdbc.Driver").newInstance();
-		String jdbcURL = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
-		
-		try {
-			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-//		Statement statement = conn.createStatement();
-//		String query = "select * from stars;";
-//		ResultSet allStars = statement.executeQuery(query);
-		PreparedStatement psInsertSim = null;
-		String sqlInsertSim = null;
-		
-		PreparedStatement psInsertStar = null;
-		String sqlInsertStar = null;
-		
-		int[] numRows = null;
-		
-		sqlInsertSim = "call moviedb.add_to_sim(?,?,?)";
-		sqlInsertStar = "call moviedb.add_actor(?,?)";
-		
-		try {
-			conn.setAutoCommit(false);
-			
-			psInsertSim = conn.prepareStatement(sqlInsertSim);
-			psInsertStar = conn.prepareStatement(sqlInsertStar);
-			
-//			for(int i = 0; i < fxp.getArraySize(); i++) {
-//				Cast c = fxp.getArray().get(i);
-//				String m_id = c.getId();
-////				String m_title = c.getTitle();
-//				String actor = c.getActors(); //only one actor
-//				
-//				psInsertSim.setString(1, actor);
-//				psInsertSim.setString(2, m_id);
+//		Connection conn = null;
+//		Class.forName("com.mysql.jdbc.Driver").newInstance();
+//		String jdbcURL = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
+//		
+//		try {
+//			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+////		Statement statement = conn.createStatement();
+////		String query = "select * from stars;";
+////		ResultSet allStars = statement.executeQuery(query);
+//		PreparedStatement psInsertSim = null;
+//		String sqlInsertSim = null;
+//		
+//		
+//		
+//		int[] numRows = null;
+//		
+//		sqlInsertSim = "call moviedb.add_to_sim(?,?,?)";
+////		sqlInsertStar = "call moviedb.add_actor(?,?)";
+//		
+//		try {
+//			conn.setAutoCommit(false);
+//			
+//			psInsertSim = conn.prepareStatement(sqlInsertSim);
+////			psInsertStar = conn.prepareStatement(sqlInsertStar);
+//			
+////			for(int i = 0; i < fxp.getArraySize(); i++) {
+////				Cast c = fxp.getArray().get(i);
+////				String m_id = c.getId();
+//////				String m_title = c.getTitle();
+////				String actor = c.getActors(); //only one actor
+////				
+////				psInsertSim.setString(1, actor);
+////				psInsertSim.setString(2, m_id);
+////				
+////				psInsertSim.addBatch();
+////			}
+//			
+//			for(String key: cList.keySet()) {
+//				psInsertSim.setString(1, key);
+//				psInsertSim.setString(2, cList.get(key).getId());
+//				psInsertSim.setString(3, cList.get(key).getActors());
 //				
 //				psInsertSim.addBatch();
 //			}
-			
-			for(String key: cList.keySet()) {
-				psInsertSim.setString(1, key);
-				psInsertSim.setString(2, cList.get(key).getId());
-				psInsertSim.setString(3, cList.get(key).getActors());
-				
-				psInsertSim.addBatch();
-			}
-			try {
-				System.out.print("Adding casts to database...");
-			numRows = psInsertSim.executeBatch();
-			}catch (SQLException e) {
-				System.out.println(e.getMessage());
-			}
-			conn.commit();
-			System.out.print("Done!\n");
-			long endTime = System.currentTimeMillis();
-			long elapsedTime = endTime - startTime;
-			System.out.println("Finished in: " + elapsedTime + " ms");
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			if(psInsertSim!= null) psInsertSim.close();
-			if(psInsertStar != null) psInsertStar.close();
-			if(conn != null) conn.close();
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
+//			try {
+//				System.out.print("Adding casts to database...");
+//			numRows = psInsertSim.executeBatch();
+//			}catch (SQLException e) {
+//				System.out.println(e.getMessage());
+//			}
+//			conn.commit();
+//			System.out.print("Done!\n");
+//			long endTime = System.currentTimeMillis();
+//			long elapsedTime = endTime - startTime;
+//			System.out.println("Finished in: " + elapsedTime + " ms");
+//			
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		try {
+//			if(psInsertSim!= null) psInsertSim.close();
+//			if(psInsertStar != null) psInsertStar.close();
+//			if(conn != null) conn.close();
+//		}catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		
 	}
 }

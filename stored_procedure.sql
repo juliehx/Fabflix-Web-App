@@ -96,7 +96,7 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE DEFINER=`mytestuser`@`localhost` PROCEDURE `add_to_sim`(IN actor_id VARCHAR(100), IN movie_id VARCHAR(10), in actor_name varchar(100))
+CREATE DEFINER=`mytestuser`@`localhost` PROCEDURE `add_to_sim`(IN actor_id VARCHAR(100), IN movie_id VARCHAR(10), actor_name varchar(100))
 BEGIN
 
 	-- set @m_id = (select id from movies where movies.id = movie_id);
@@ -108,9 +108,15 @@ BEGIN
 -- 		SIGNAL sqlstate '45000'
 --         SET message_text = 'Movie does not exist in database';
 --     ELSE
+
+		set @a_id = (select ifnull
+			(concat('nm',LPAD(
+				(substring_index
+					(max(id),'nm',-1) + 1),7,'0')),1) from stars);
+                    
 		if actor_id is null then
-			insert into stars(id,name,birthYear) VALUES(actor_id, actor_name, 0);
-			insert into stars_in_movies(starId,movieId) VALUES(actor_id,movie_id);
+			insert into stars(id,name,birthYear) VALUES(@a_id, actor_name, null);
+			insert into stars_in_movies(starId,movieId) VALUES(@a_id,movie_id);
 		else
 			insert into stars_in_movies(starId,movieId) VALUES(actor_id,movie_id);
 		end if;
