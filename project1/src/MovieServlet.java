@@ -173,11 +173,16 @@ public class MovieServlet extends HttpServlet{
 				
 				jsonArray.add(jsonObject);
 				
+				System.out.println(jsonArray.toString());
+				
 			}
+			System.out.println("working");
 			String url = request.getHeader("referer");
 			
 			HttpSession session = request.getSession();
 			session.setAttribute("url", url);
+			
+			System.out.println("working");
 			
 			
 			out.write(jsonArray.toString());
