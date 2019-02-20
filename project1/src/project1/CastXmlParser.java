@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class CastXmlParser extends DefaultHandler {
-	static ArrayList<Cast> castList;
+//	static ArrayList<Cast> castList;
 	
 	private static String dbUrl = "jdbc:mysql://localhost:3306/moviedb";
 	private static String user = "mytestuser";
@@ -33,15 +33,15 @@ public class CastXmlParser extends DefaultHandler {
 	private HashMap<String,String>stars;
 	private HashMap<String,Movie>movies;
 	
-	static HashMap<String, String>cList;
+	static HashMap<String, Cast>cList;
 	
 	
 	
 	public CastXmlParser() {
-		castList = new ArrayList<Cast>();
+//		castList = new ArrayList<Cast>();
 		stars =  new HashMap<String,String>();
 		movies =  new HashMap<String,Movie>();
-		cList = new HashMap<String, String>();
+		cList = new HashMap<String, Cast>();
 		
 	}
 	
@@ -105,12 +105,12 @@ public class CastXmlParser extends DefaultHandler {
 //		printData();
 	}
 	
-	private void printData() {
-		System.out.println(castList.size() + " casts added\n\n");
-		for(int i = 0; i < castList.size(); i++) {
-			System.out.println(castList.get(i) + "\n\n");
-		}
-	}
+//	private void printData() {
+//		System.out.println(castList.size() + " casts added\n\n");
+//		for(int i = 0; i < castList.size(); i++) {
+//			System.out.println(castList.get(i) + "\n\n");
+//		}
+//	}
 	
 	public void startElement(String url, String localName,String qName, Attributes attributes) throws SAXException {
 		tempVal = "";
@@ -130,6 +130,10 @@ public class CastXmlParser extends DefaultHandler {
 	private void addToCastList(Cast c) {
 		String m_id = null;
 		String a_id = null;
+		
+		String actor = c.getActors();
+		String title = c.getTitle();
+		
 		if(movies.containsKey(c.getId())) {
 			m_id = c.getId();
 		}
@@ -143,7 +147,7 @@ public class CastXmlParser extends DefaultHandler {
 		else if(m_id == null)
 			System.out.println("Movie does not exist in database");
 		else
-			cList.put(a_id, m_id);
+			cList.put(a_id, new Cast(m_id, title, actor));
 	}
 	
 	public void endElement(String uri, String localName, String qName)throws SAXException{
@@ -167,13 +171,13 @@ public class CastXmlParser extends DefaultHandler {
 //		System.out.print("Done curating cast!\n");
 	}
 	
-	public ArrayList<Cast> getArray(){
-		return castList;
-	}
-	
-	public int getArraySize(){
-		return castList.size();
-	}
+//	public ArrayList<Cast> getArray(){
+//		return castList;
+//	}
+//	
+//	public int getArraySize(){
+//		return castList.size();
+//	}
 	
 	public static void main(String[] args) throws Exception, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		CastXmlParser fxp = new CastXmlParser();
@@ -202,7 +206,7 @@ public class CastXmlParser extends DefaultHandler {
 		
 		int[] numRows = null;
 		
-		sqlInsertSim = "call moviedb.add_to_sim(?,?)";
+		sqlInsertSim = "call moviedb.add_to_sim(?,?,?)";
 		sqlInsertStar = "call moviedb.add_actor(?,?)";
 		
 		try {
@@ -225,7 +229,8 @@ public class CastXmlParser extends DefaultHandler {
 			
 			for(String key: cList.keySet()) {
 				psInsertSim.setString(1, key);
-				psInsertSim.setString(2, cList.get(key));
+				psInsertSim.setString(2, cList.get(key).getId());
+				psInsertSim.setString(3, cList.get(key).getActors());
 				
 				psInsertSim.addBatch();
 			}
