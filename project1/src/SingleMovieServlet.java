@@ -68,24 +68,32 @@ public class SingleMovieServlet extends HttpServlet {
 			String title = rs.getString("title");
 			String year = rs.getString("year");
 			String director = rs.getString("director");
-			String[] genreStringList = rs.getString("genres").split(",");
-			String[] starStringList = rs.getString("stars").split(";");
+			String genreString = rs.getString("genres"); //.split(",");
+			String starString = rs.getString("stars"); //.split(";");
 			String rating = rs.getString("rating");
 			
 			JsonArray genreList = new JsonArray();
 			JsonArray starList = new JsonArray();
 			
-			for(int i = 0; i < genreStringList.length; i++) {
-				genreList.add(genreStringList[i]);
+			if(genreString != null) {
+				String[] genreStringList = genreString.split(",");
+				for(int i = 0; i < genreStringList.length; i++) {
+					genreList.add(genreStringList[i]);
+				}
 			}
 			
-			for(int i = 0; i < starStringList.length; i++) {
-				JsonObject starObj = new JsonObject();
-				String[] star_info = starStringList[i].split(",");
-				starObj.addProperty("star_id", star_info[0]);
-				starObj.addProperty("star_name", star_info[1]);
-				starList.add(starObj);
+			
+			if(starString != null) {
+				String[] starStringList = starString.split(";");
+				for(int i = 0; i < starStringList.length; i++) {
+					JsonObject starObj = new JsonObject();
+					String[] star_info = starStringList[i].split(",");
+					starObj.addProperty("star_id", star_info[0]);
+					starObj.addProperty("star_name", star_info[1]);
+					starList.add(starObj);
+				}
 			}
+			
 			
 			JsonObject jsonObject = new JsonObject(); 
 			jsonObject.addProperty("id", movie_id);
