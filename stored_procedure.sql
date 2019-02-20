@@ -7,13 +7,13 @@ DROP procedure IF EXISTS `add_actor`;
 DROP procedure IF EXISTS `add_to_sim`;
 drop table if exists `employees`;
 
- CREATE TABLE employees
- (
- 	email varchar(50) primary key,
- 	password varchar(20) not null,
- 	fullname varchar(100)
- );
- insert into employees(email,password,fullname) VALUES('classta@email.edu','classta','TA CS122B');
+--  CREATE TABLE employees
+--  (
+--  	email varchar(50) primary key,
+--  	password varchar(20) not null,
+--  	fullname varchar(100)
+--  );
+--  insert into employees(email,password,fullname) VALUES('classta@email.edu','classta','TA CS122B');
  
 /*
 DELIMITER $$
