@@ -5,7 +5,6 @@ DROP procedure IF EXISTS `add_mains`;
 DROP procedure IF EXISTS `add_mains_genre`;
 DROP procedure IF EXISTS `add_actor`;
 DROP procedure IF EXISTS `add_to_sim`;
-drop table if exists `employees`;
 
 --  CREATE TABLE employees
 --  (
@@ -14,15 +13,6 @@ drop table if exists `employees`;
 --  	fullname varchar(100)
 --  );
 --  insert into employees(email,password,fullname) VALUES('classta@email.edu','classta','TA CS122B');
- 
-/*
-DELIMITER $$
-CREATE TRIGGER insert_rating AFTER INSERT
-    ON movies FOR EACH ROW
-BEGIN
-    INSERT into ratings(movieID, rating, numVotes) VALUES(NEW.id, 0, 0);
-END$$
-DELIMITER ;*/
 
 DELIMITER $$
 #USE `moviedb`$$
