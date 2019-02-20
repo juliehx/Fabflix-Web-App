@@ -147,51 +147,5 @@ public class ActorXmlParser extends DefaultHandler {
 		long endTime = System.currentTimeMillis();
 		long elapsedTime = endTime - startTime;
 		System.out.println(elapsedTime);
-		
-//		Connection conn = null;
-//		Class.forName("com.mysql.jdbc.Driver").newInstance();
-//		String jdbcURL = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
-//		
-//		try {
-//			conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		PreparedStatement psInsertActor = null;
-//		String sqlInsertActors = null;
-//		int[] numRows = null;
-//		
-//		sqlInsertActors = "call moviedb.add_actor(?,?)";
-//		
-//		try {
-//			conn.setAutoCommit(false);
-//			
-//			psInsertActor = conn.prepareStatement(sqlInsertActors);	
-//			
-//			for(int i = 0; i < actorList.size();i++) {
-//				Actor a = axp.actorList.get(i);
-//				String fullName = a.getName();
-//				int birthYear = a.getBirthYear();
-//				psInsertActor.setString(1, fullName);
-//				psInsertActor.setInt(2, birthYear);
-//				
-//				psInsertActor.addBatch();
-//			}
-//			numRows = psInsertActor.executeBatch();
-//			conn.commit();
-//			System.out.println("Done");
-//			
-//		}catch(SQLException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		try {
-//			if(psInsertActor != null) psInsertActor.close();
-//			if(conn != null) conn.close();
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
 	}
 }
