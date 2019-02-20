@@ -31,18 +31,56 @@ public class CastXmlParser extends DefaultHandler {
 	private Cast tempCast;
 	
 	private HashMap<String,String>stars;
-	private HashMap<String,String>movies;
+	private HashMap<String,Movie>movies;
+	
+	static HashMap<String, String>cList;
 	
 	
 	
 	public CastXmlParser() {
 		castList = new ArrayList<Cast>();
 		stars =  new HashMap<String,String>();
-		movies =  new HashMap<String,String>();
+		movies =  new HashMap<String,Movie>();
+		cList = new HashMap<String, String>();
 		
 	}
 	
-	
+	public void prefetch() throws Exception {
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		String jdbcUrl = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
+		
+		Connection dbcon = DriverManager.getConnection(jdbcUrl, "mytestuser", "mypassword");
+		
+		String movieQuery = "select * from movies";
+		String starQuery = "select * from stars";
+		
+		PreparedStatement statement = dbcon.prepareStatement(movieQuery);
+		ResultSet movieResult = statement.executeQuery();
+		
+		while(movieResult.next()) {
+			String mov_id = movieResult.getString("id");
+			String mov_title = movieResult.getString("title");
+			int mov_year = movieResult.getInt("year");
+			String mov_dir = movieResult.getString("director");
+			
+			movies.put(mov_id, new Movie(mov_id, mov_title, mov_year, mov_dir));
+		}
+		movieResult.close();
+		
+		statement = dbcon.prepareStatement(starQuery);
+		ResultSet starResult = statement.executeQuery();
+		
+		while(starResult.next()) {
+			String star_id = starResult.getString("id");
+			String star_nm = starResult.getString("name");
+			
+			stars.put(star_nm, star_id);
+		}
+		
+		starResult.close();
+		statement.close();
+		dbcon.close();
+	}
 	
 	private void parseDocument() {
 		SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -61,7 +99,8 @@ public class CastXmlParser extends DefaultHandler {
 		}
 	}
 	
-	public void runCastParser() {
+	public void runCastParser() throws Exception {
+		prefetch();
 		parseDocument();
 //		printData();
 	}
@@ -88,12 +127,33 @@ public class CastXmlParser extends DefaultHandler {
 		return arg != null && !arg.equals("");
 	}
 	
+	private void addToCastList(Cast c) {
+		String m_id = null;
+		String a_id = null;
+		if(movies.containsKey(c.getId())) {
+			m_id = c.getId();
+		}
+		
+		if(stars.containsKey(c.getActors())) {
+			a_id = stars.get(c.getActors());
+		}
+		
+		if(a_id == null)
+			System.out.println("Actor does not exist in database");
+		else if(m_id == null)
+			System.out.println("Movie does not exist in database");
+		else
+			cList.put(a_id, m_id);
+	}
+	
 	public void endElement(String uri, String localName, String qName)throws SAXException{
-		System.out.print("Curating Cast..");
+//		System.out.print("Curating Cast..");
 		if(qName.equalsIgnoreCase("m")) {
 			if(isValid(tempCast.getActors()) && isValid(tempCast.getId())
-					&& isValid(tempCast.getTitle()))
-				castList.add(tempCast);
+					&& isValid(tempCast.getTitle())) {
+				addToCastList(tempCast);
+			}
+//				castList.add(tempCast);
 		}
 		if(qName.equalsIgnoreCase("f")) {
 			tempCast.setId(tempVal);
@@ -104,7 +164,7 @@ public class CastXmlParser extends DefaultHandler {
 		else if(qName.equalsIgnoreCase("a")) {
 			tempCast.addActor(tempVal);
 		}
-		System.out.print("Done curating cast!\n");
+//		System.out.print("Done curating cast!\n");
 	}
 	
 	public ArrayList<Cast> getArray(){
@@ -115,9 +175,12 @@ public class CastXmlParser extends DefaultHandler {
 		return castList.size();
 	}
 	
-	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public static void main(String[] args) throws Exception, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		CastXmlParser fxp = new CastXmlParser();
+		long startTime = System.currentTimeMillis();
+		System.out.print("Parsing casts...");
 		fxp.runCastParser();
+		System.out.print("Done!\n");
 		
 		Connection conn = null;
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -148,24 +211,36 @@ public class CastXmlParser extends DefaultHandler {
 			psInsertSim = conn.prepareStatement(sqlInsertSim);
 			psInsertStar = conn.prepareStatement(sqlInsertStar);
 			
-			for(int i = 0; i < fxp.getArraySize(); i++) {
-				Cast c = fxp.getArray().get(i);
-				String m_id = c.getId();
-				String m_title = c.getTitle();
-				String actor = c.getActors(); //only one actor
-				
-				psInsertSim.setString(1, actor);
-				psInsertSim.setString(2, m_id);
+//			for(int i = 0; i < fxp.getArraySize(); i++) {
+//				Cast c = fxp.getArray().get(i);
+//				String m_id = c.getId();
+////				String m_title = c.getTitle();
+//				String actor = c.getActors(); //only one actor
+//				
+//				psInsertSim.setString(1, actor);
+//				psInsertSim.setString(2, m_id);
+//				
+//				psInsertSim.addBatch();
+//			}
+			
+			for(String key: cList.keySet()) {
+				psInsertSim.setString(1, key);
+				psInsertSim.setString(2, cList.get(key));
 				
 				psInsertSim.addBatch();
 			}
 			try {
+				System.out.print("Adding casts to database...");
 			numRows = psInsertSim.executeBatch();
 			}catch (SQLException e) {
 				System.out.println(e.getMessage());
 			}
 			conn.commit();
-			System.out.println("Done");
+			System.out.print("Done!\n");
+			long endTime = System.currentTimeMillis();
+			long elapsedTime = endTime - startTime;
+			System.out.println("Finished in: " + elapsedTime + " ms");
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

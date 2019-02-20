@@ -73,6 +73,7 @@ Begin
         
         IF @movie_id IS NULL THEN
 			insert into movies(id,title,year,director) VALUES(m_id,m_title,m_year,m_director);
+            insert into ratings(movieID,rating,numVotes) VALUES(m_id,0,0);
      
         
         END IF;
@@ -95,28 +96,28 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE DEFINER=`mytestuser`@`localhost` PROCEDURE `add_to_sim`(IN actor_name VARCHAR(100), IN movie_id VARCHAR(10))
+CREATE DEFINER=`mytestuser`@`localhost` PROCEDURE `add_to_sim`(IN actor_id VARCHAR(100), IN movie_id VARCHAR(10))
 BEGIN
 
-	set @m_id = (select id from movies where movies.id = movie_id);
-    set @a_id = (select id from stars where stars.name = actor_name limit 1);
-    IF @a_id IS NULL THEN
-		SIGNAL SQLSTATE '45000'
-        SET message_text = 'Actor does not exist in database';
-	ELSE IF @m_id IS NULL THEN
-		SIGNAL sqlstate '45000'
-        SET message_text = 'Movie does not exist in database';
-    ELSE
-		insert into stars_in_movies(starId,movieId) VALUES(@a_id,@m_id);
+	-- set @m_id = (select id from movies where movies.id = movie_id);
+--     set @a_id = (select id from stars where stars.name = actor_name limit 1);
+--     IF @a_id IS NULL THEN
+-- 		SIGNAL SQLSTATE '45000'
+--         SET message_text = 'Actor does not exist in database';
+-- 	ELSE IF @m_id IS NULL THEN
+-- 		SIGNAL sqlstate '45000'
+--         SET message_text = 'Movie does not exist in database';
+--     ELSE
+		insert into stars_in_movies(starId,movieId) VALUES(actor_id,movie_id);
         
-	END IF; 
-    END IF;
+-- 	END IF; 
+--     END IF;
 END$$
 DELIMITER ;
 
 
 DELIMITER $$
-CREATE DEFINER=`mytestuser`@`localhost` PROCEDURE `add_actor`(IN actor_name VARCHAR(10), IN birth_year INT(11))
+CREATE DEFINER=`mytestuser`@`localhost` PROCEDURE `add_actor`(IN actor_name VARCHAR(100), IN birth_year INT(11))
 BEGIN
 
 	set @a_id = (select id from stars where stars.name = actor_name limit 1);
