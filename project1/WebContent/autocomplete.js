@@ -37,5 +37,5 @@ $("#autocomplete").autocomplete({
 		handleSelectSuggestion(suggestion)
 	},
 	deferRequestBy: 300,
-	minChars: 3,
+	minChars: 4,
 });
