@@ -87,8 +87,16 @@ public class MovieServlet extends HttpServlet{
 				if(searchTitleExist || searchDirectorExist || searchYearExist || searchStarExist) {
 					search_query += "where ";
 					
-					if(searchTitleExist)
-						queryList.add("movies.title like '%" + search_title + "%'\n");
+					if(searchTitleExist) {
+						String[] words = search_title.split(" ");
+						String base_string = "";
+						for(int i = 0; i < words.length; i++) {
+							base_string += "+" +words[i];
+						}
+						base_string += "*";
+						String title_search_query = String.format("match(movies.title) against('%s' in boolean mode)\n", base_string);
+						queryList.add(title_search_query);
+					}
 					if(searchDirectorExist)
 						queryList.add("movies.director like '%" + search_director + "%'\n");
 					if(searchYearExist)
