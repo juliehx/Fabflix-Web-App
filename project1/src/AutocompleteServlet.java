@@ -55,8 +55,15 @@ public class AutocompleteServlet extends HttpServlet {
 			}
 			
 			Connection dbcon = dataSource.getConnection();
+						
+			String[] words = title.split(" ");
+			String base_search = "";
+			for(int i = 0; i < words.length;i++) {
+				base_search += "+" + words[i];
+			}
+			base_search += "*";
 			
-			String query = String.format("select movies.id, movies.title from movies where match(movies.title) against('%s' in boolean mode) limit 10\n", title);
+			String query = String.format("select movies.id, movies.title from movies where match(movies.title) against('%s' in boolean mode) limit 10\n", base_search);
 			
 			PreparedStatement statement = dbcon.prepareStatement(query);
 			

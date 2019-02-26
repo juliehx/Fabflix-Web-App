@@ -91,7 +91,7 @@ public class MovieServlet extends HttpServlet{
 						String[] words = search_title.split(" ");
 						String base_string = "";
 						for(int i = 0; i < words.length; i++) {
-							base_string += "+" +words[i];
+							base_string += "+" + words[i];
 						}
 						base_string += "*";
 						String title_search_query = String.format("match(movies.title) against('%s' in boolean mode)\n", base_string);
