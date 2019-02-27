@@ -55,7 +55,7 @@ $("#autocomplete").autocomplete({
 	minChars: 4,
 });
 
-var time = setInterval(myTimer,600000);
+var time = setInterval(myTimer,180000);
 
 function myTimer(){
 	console.log("clearing cache...")
