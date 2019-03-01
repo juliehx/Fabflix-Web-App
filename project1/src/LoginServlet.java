@@ -44,15 +44,30 @@ public class LoginServlet extends HttpServlet {
 //		System.out.println(loginType);
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+		String userAgent = request.getHeader("User-Agent");
+//        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
 
 		//get information from mysql database
 		//use query to get information 
-		
-		try {
+        
+        if (userAgent != null && !userAgent.contains("Android")) {
+            String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+            // verify recaptcha first
+            try {
+                RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+            } catch (Exception e) {
+                System.out.println("recaptcha success");
+                JsonObject responseJsonObject = new JsonObject();
+                responseJsonObject.addProperty("status", "fail");
+                responseJsonObject.addProperty("message", e.getMessage());
+                response.getWriter().write(responseJsonObject.toString());
+                return;
+           }
+        }
+    	try {
 			Connection dbcon = dataSource.getConnection();
 			
-//			Statement statement = dbcon.createStatement();
+//    			Statement statement = dbcon.createStatement();
 			
 			String query = "select email,password from customers where email = '" + username + "'";//and password = ?";
 			
@@ -61,12 +76,12 @@ public class LoginServlet extends HttpServlet {
 			}
 			
 			PreparedStatement statement = dbcon.prepareStatement(query);
-//			statement.setString(1, username);
-//			statement.setString(2, password);
+//    			statement.setString(1, username);
+//    			statement.setString(2, password);
 			
 			ResultSet rs = statement.executeQuery();
 			
-			try {
+//			try {
 				
 				boolean success = false;
 				if(rs.next()) {
@@ -102,27 +117,25 @@ public class LoginServlet extends HttpServlet {
 					
 					response.getWriter().write(responseJsonObject.toString());
 				}
-				RecaptchaVerifyUtils.verify(gRecaptchaResponse);
-			}catch(Exception e) {
-				JsonObject responseJsonObject = new JsonObject();
-				responseJsonObject.addProperty("status", "fail");
-				responseJsonObject.addProperty("message","failed recaptcha verification");
-				response.getWriter().write(responseJsonObject.toString());
-			}
+//    				RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+//			}catch(Exception e) {
+//				JsonObject responseJsonObject = new JsonObject();
+//				responseJsonObject.addProperty("status", "fail");
+//				responseJsonObject.addProperty("message","failed recaptcha verification");
+//				response.getWriter().write(responseJsonObject.toString());
+//			}
 			
 			response.setStatus(200);
 			rs.close();
 			statement.close();
 			dbcon.close();
-			
-			
+				
 		}catch(Exception e){
 			JsonObject responseJsonObject = new JsonObject();
 			responseJsonObject.addProperty("errorMessage", e.getMessage());
 			response.getWriter().write(responseJsonObject.toString());
 			response.setStatus(500);
 		}
-		
-	}
+    }
 
 }
