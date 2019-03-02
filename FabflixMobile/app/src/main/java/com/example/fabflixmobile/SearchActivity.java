@@ -35,7 +35,7 @@ public class SearchActivity extends AppCompatActivity {
 
         final RequestQueue queue = NetworkManager.sharedManager(this).queue;
 
-        final StringRequest loginRequest = new StringRequest(Request.Method.GET, url,
+        final StringRequest movieSearchRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -55,7 +55,7 @@ public class SearchActivity extends AppCompatActivity {
                         Log.d("search.error", error.toString());
                     }
                 });
-        queue.add(loginRequest);
+        queue.add(movieSearchRequest);
     }
 
 }
