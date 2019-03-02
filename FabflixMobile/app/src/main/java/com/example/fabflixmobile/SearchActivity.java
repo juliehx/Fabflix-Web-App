@@ -27,8 +27,9 @@ public class SearchActivity extends AppCompatActivity {
     public void movieSearch(View view) {
         //String username = ((EditText) findViewById(R.id.userText)).getText().toString();
         String title = ((EditText) findViewById(R.id.searchText)).getText().toString();
+        final int pageNum = 1;
         String url = "https://10.0.2.2:8443/project1/api/movies?title=" + title +
-                "&mode=search&order=rating&limit=10&page=1";
+                "&mode=search&order=rating&limit=10&page=" + pageNum;
 
         final Intent goToMovieListPage = new Intent(this, MovieListActivity.class);
 
@@ -43,6 +44,8 @@ public class SearchActivity extends AppCompatActivity {
 //                        ((TextView) findViewById(R.id.httpResponse)).setText(response);
                         // Add the request to the RequestQueue.
 //                        queue.add(afterLoginRequest);
+                        goToMovieListPage.putExtra("data",response);
+                        goToMovieListPage.putExtra("page",pageNum);
                         startActivity(goToMovieListPage);
                     }
                 },
