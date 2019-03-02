@@ -25,8 +25,8 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void movieSearch(View view) {
-        //String username = ((EditText) findViewById(R.id.userText)).getText().toString();
-        String title = ((EditText) findViewById(R.id.searchText)).getText().toString();
+
+        final String title = ((EditText) findViewById(R.id.searchText)).getText().toString();
         final int pageNum = 1;
         String url = "https://10.0.2.2:8443/project1/api/movies?title=" + title +
                 "&mode=search&order=rating&limit=10&page=" + pageNum;
@@ -41,9 +41,8 @@ public class SearchActivity extends AppCompatActivity {
                     public void onResponse(String response) {
 
                         Log.d("search.success", response);
-//                        ((TextView) findViewById(R.id.httpResponse)).setText(response);
-                        // Add the request to the RequestQueue.
-//                        queue.add(afterLoginRequest);
+
+                        goToMovieListPage.putExtra("title",title);
                         goToMovieListPage.putExtra("data",response);
                         goToMovieListPage.putExtra("page",pageNum);
                         startActivity(goToMovieListPage);
@@ -56,23 +55,6 @@ public class SearchActivity extends AppCompatActivity {
                         Log.d("search.error", error.toString());
                     }
                 });
-//        ) {
-//            @Override
-//            protected Map<String, String> getParams() {
-//                // Post request form data
-//                final Map<String, String> params = new HashMap<String, String>();
-//                String title = ((EditText) findViewById(R.id.searchText)).getText().toString();
-//
-//                params.put("title", title);
-//                params.put("mode", "search");
-//                params.put("order", "rating");
-//                params.put("limit", "10");
-//                params.put("page", "1");
-//
-//                return params;
-//            }
-//        };
-
         queue.add(loginRequest);
     }
 

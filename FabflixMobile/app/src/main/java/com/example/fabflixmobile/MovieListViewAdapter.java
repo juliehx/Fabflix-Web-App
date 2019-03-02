@@ -41,4 +41,10 @@ public class MovieListViewAdapter extends ArrayAdapter<Movie> {
 
         return view;
     }
+
+    public void updateItems(ArrayList<Movie> mList){
+        movieList.clear();
+        movieList.addAll(mList);
+        this.notifyDataSetChanged();
+    }
 }
