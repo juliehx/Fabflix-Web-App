@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Movie {
@@ -61,9 +62,22 @@ public class Movie {
         return this.stars.values().toString();
     }
 
-    public String toString(){
-        return this.title;
+    public ArrayList<String> getInfo() {
+        ArrayList<String> info = new ArrayList<String>();
+        info.add(this.title);
+        info.add(this.director);
+        info.add(this.year);
+        info.add(this.id);
+        info.add(this.getGenres());
+        info.add(this.getStars());
+
+        return info;
     }
+
+//    public String toString(){
+//
+//        return this.title;
+//    }
 
     public void setStars() throws JSONException{
         for(int i = 0; i < jsonStars.length();i++){
