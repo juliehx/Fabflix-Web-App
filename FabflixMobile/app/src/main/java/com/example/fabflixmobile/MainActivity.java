@@ -8,12 +8,17 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -47,11 +52,22 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
 
-                        Log.d("login.success", response);
-//                        ((TextView) findViewById(R.id.httpResponse)).setText(response);
-                        // Add the request to the RequestQueue.
-//                        queue.add(afterLoginRequest);
-                        startActivity(goToSearchPage);
+                        Log.d("login.info", response);
+                        try {
+                            JSONObject jsn = new JSONObject(response);
+//                            Log.d("jsn", jsn.toString());
+                            String verify = jsn.getString("status");
+                            Log.d("verify",verify);
+                            if(verify.equals("success")){
+                                startActivity(goToSearchPage);
+                            }else{
+                                Log.d("msg","wrong info");
+                                Toast.makeText(getApplicationContext(),jsn.getString("message"),Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 },
                 new Response.ErrorListener() {

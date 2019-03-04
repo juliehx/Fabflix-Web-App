@@ -117,6 +117,12 @@ public class LoginServlet extends HttpServlet {
 					
 					response.getWriter().write(responseJsonObject.toString());
 				}
+				else {
+					JsonObject responseJsonObject = new JsonObject();
+		            responseJsonObject.addProperty("status", "fail");
+		            responseJsonObject.addProperty("message", "username and password do not match");
+		            response.getWriter().write(responseJsonObject.toString());
+				}
 //    				RecaptchaVerifyUtils.verify(gRecaptchaResponse);
 //			}catch(Exception e) {
 //				JsonObject responseJsonObject = new JsonObject();
