@@ -65,7 +65,7 @@ public class MovieListActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(pageNum > 1) {
                     pageNum--;
-                    String url = "https://10.0.2.2:8443/project1/api/movies?title=" + title +
+                    String url = "https://ec2-18-191-196-56.us-east-2.compute.amazonaws.com:8443/project1/api/movies?title=" + title +
                             "&mode=search&order=rating&limit=10&page=" + pageNum;
 
                     final StringRequest previousPageRequest = new StringRequest(Request.Method.GET, url,
@@ -98,7 +98,7 @@ public class MovieListActivity extends AppCompatActivity {
 
                 ++pageNum;
 
-                String url = "https://10.0.2.2:8443/project1/api/movies?title=" + title +
+                String url = "https://ec2-18-191-196-56.us-east-2.compute.amazonaws.com:8443/project1/api/movies?title=" + title +
                         "&mode=search&order=rating&limit=10&page=" + pageNum;
 
 

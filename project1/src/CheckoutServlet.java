@@ -3,6 +3,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -55,7 +57,16 @@ public class CheckoutServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		
 		try {
-			Connection dbcon = dataSource.getConnection();
+			Context initCtx = new InitialContext();
+
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                response.getWriter().println("envCtx is NULL");
+
+            // Look up our data source
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
+            
+			Connection dbcon = ds.getConnection();
 			
 			String query = "select c.id,c.firstName,c.lastName\r\n" + 
 					"from customers c, creditcards cc\r\n" + 

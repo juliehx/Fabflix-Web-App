@@ -2,6 +2,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,7 +43,16 @@ public class SingleMovieServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		try{
-			Connection dbcon = dataSource.getConnection();
+			Context initCtx = new InitialContext();
+
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                response.getWriter().println("envCtx is NULL");
+
+            // Look up our data source
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
+            
+			Connection dbcon = ds.getConnection();
 			String query = "select movies.id, movies.title, movies.year, movies.director, r.rating, \r\n" + 
 					"		group_concat(distinct g.name) as genres, group_concat(distinct s.id, ',', s.name separator ';') as stars\r\n" + 
 					"from movies\r\n" + 

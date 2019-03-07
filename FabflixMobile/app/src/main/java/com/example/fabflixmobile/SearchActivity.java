@@ -28,7 +28,7 @@ public class SearchActivity extends AppCompatActivity {
 
         final String title = ((EditText) findViewById(R.id.searchText)).getText().toString();
         final int pageNum = 1;
-        String url = "https://10.0.2.2:8443/project1/api/movies?title=" + title +
+        String url = "https://ec2-18-191-196-56.us-east-2.compute.amazonaws.com:8443/project1/api/movies?title=" + title +
                 "&mode=search&order=rating&limit=10&page=" + pageNum;
 
         final Intent goToMovieListPage = new Intent(this, MovieListActivity.class);

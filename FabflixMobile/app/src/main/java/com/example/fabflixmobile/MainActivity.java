@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     public void userLogin(View view) {
         //String username = ((EditText) findViewById(R.id.userText)).getText().toString();
         //String password = ((EditText) findViewById(R.id.passText)).getText().toString();
-        String url = "https://10.0.2.2:8443/project1/api/login";
+        String url = "https://ec2-18-191-196-56.us-east-2.compute.amazonaws.com:8443/project1/api/login";
 
         final Intent goToSearchPage = new Intent(this, SearchActivity.class);
 

@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -45,7 +47,17 @@ public class IndexServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		try {
-			Connection dbcon = dataSource.getConnection();
+		  Context initCtx = new InitialContext();
+
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                out.println("envCtx is NULL");
+
+            // Look up our data source
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
+			
+			
+			Connection dbcon = ds.getConnection();
 			Statement statement = dbcon.createStatement();
 			
 			String query = "select genres.id, genres.name from genres";
