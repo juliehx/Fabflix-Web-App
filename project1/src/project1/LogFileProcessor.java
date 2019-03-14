@@ -9,7 +9,8 @@ import java.util.Scanner;
 public class LogFileProcessor {
 
 	public static void main(String[] args) {
-		File file = new File(System.getProperty("user.dir") + "\\test");
+		File file = new File("test");
+//		System.out.println(file);
 		long tsAverage = 0;
 		long tjAverage = 0;
 		int numLines = 0;

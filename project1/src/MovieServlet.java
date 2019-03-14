@@ -272,7 +272,7 @@ public class MovieServlet extends HttpServlet{
 		elapsedTsTime = endTsTime - startTsTime;//elapsed time in nanoseconds.
 		System.out.println("elapsedTsTime: "+ elapsedTsTime);
 		String path = getServletContext().getRealPath("/");
-		String logFilePath = path + "\\test";
+		String logFilePath = path + "test";
 		System.out.println(logFilePath);
 		File myfile = new File(logFilePath);
 		if(!myfile.exists()) {
