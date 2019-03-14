@@ -70,7 +70,7 @@ public class AddMovieServlet extends HttpServlet {
                 response.getWriter().println("envCtx is NULL");
 
             // Look up our data source
-            DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb-write");
 			
 			Connection dbcon = ds.getConnection();
 		

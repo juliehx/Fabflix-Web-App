@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -28,7 +32,10 @@ public class MovieServlet extends HttpServlet{
 	private DataSource dataSource; //variable to determine where information is being pulled from
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		//START TS Timer
+		long startTsTime = System.nanoTime();
+		long elapsedTsTime = 0;
+		long elapsedTjTime = 0;
 		response.setContentType("application/json");
 		
 		//gets number of results to display per page
@@ -38,24 +45,13 @@ public class MovieServlet extends HttpServlet{
 		
 		try {
 			
-			Context initCtx = new InitialContext();
-
-            Context envCtx = (Context) initCtx.lookup("java:comp/env");
-            if (envCtx == null)
-                response.getWriter().println("envCtx is NULL");
-
-            // Look up our data source
-            DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
-			//create a connection type to the database
-			
-			
-			Connection dbcon = ds.getConnection();
-			
 			String order = request.getParameter("order");
 			
 			//gets us the string mode 
 			String mode = request.getParameter("mode");
 			int page = (Integer.parseInt(request.getParameter("page")) - 1) * Integer.parseInt(itemLimit);
+			
+			ArrayList<String> query_items = new ArrayList<String>();
 			
 			String base_query = "select movies.id, movies.title, movies.year, movies.director, r.rating,\n" + 
 					"					group_concat(distinct g.name) as genre_name, \n" + 
@@ -72,13 +68,16 @@ public class MovieServlet extends HttpServlet{
 				String genre_id = request.getParameter("id");
 				if(genre_id != null) {//means that there is an id
 					base_query += "group by movies.id, movies.title, movies.year, movies.director, r.rating\n" + 
-								  "having find_in_set(" + genre_id + ", genre_id)\n";
-
-				}
+								  "having find_in_set(?, genre_id)\n";
+					query_items.add(genre_id);
+					}
 				else {//means that they have selected browsing by letter
 					String first_letter = request.getParameter("search");
-					base_query += "where movies.title like '" + first_letter + "%'\n" + 
+					//first_letter
+					first_letter = first_letter + '%';
+					base_query += "where movies.title like ?\n" + 
 								  "group by movies.id, movies.title, movies.year, movies.director, r.rating\n";
+					query_items.add(first_letter);
 				}
 			}
 			else if(mode.equals("search")) {
@@ -104,18 +103,31 @@ public class MovieServlet extends HttpServlet{
 						String[] words = search_title.split(" ");
 						String base_string = "";
 						for(int i = 0; i < words.length; i++) {
-							base_string += "+" + words[i];
+							base_string += "+" + words[i] + "*";
 						}
-						base_string += "*";
-						String title_search_query = String.format("match(movies.title) against('%s' in boolean mode)\n", base_string);
+						
+						String title_search_query = "match(movies.title) against(? in boolean mode)\n";
 						queryList.add(title_search_query);
+						query_items.add(base_string);
 					}
-					if(searchDirectorExist)
-						queryList.add("movies.director like '%" + search_director + "%'\n");
-					if(searchYearExist)
-						queryList.add("movies.year like '%" + search_year + "%'\n");
-					if(searchStarExist)
-						queryList.add("s.name like '%" + search_star + "%'\n");
+					if(searchDirectorExist) {
+						//search_director
+						search_director = '%' + search_director + '%';
+						queryList.add("movies.director like ?\n");
+						query_items.add(search_director);
+					}
+					if(searchYearExist) {
+						//search_year
+						search_year = '%' + search_year + '%';
+						queryList.add("movies.year like ?\n");
+						query_items.add(search_year);
+					}
+					if(searchStarExist) {
+						//search_star
+						search_star = '%' + search_star + '%';
+						queryList.add("s.name like ?\n");
+						query_items.add(search_star);
+					}
 				}
 				
 				if(queryList.size() >= 1) {
@@ -142,13 +154,40 @@ public class MovieServlet extends HttpServlet{
 			else {
 				base_query += " desc \n";
 			}
-				
+			//limit and page
 			base_query += " limit " + itemLimit + " offset " + page;
+		
+			Context initCtx = new InitialContext();
+
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                response.getWriter().println("envCtx is NULL");
+
+            // Look up our data source
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
+			//create a connection type to the database
+			
+			//start TJ Timer
+            long startTjTime = System.nanoTime();
+			Connection dbcon = ds.getConnection();
+
 			
 			PreparedStatement statement = dbcon.prepareStatement(base_query);
-									
-			ResultSet rs = statement.executeQuery();
 			
+			for(int i = 0; i <query_items.size();i++) {
+				statement.setString(i+1, query_items.get(i));
+			}
+			
+//			System.out.println(statement.toString());
+			
+			ResultSet rs = statement.executeQuery();
+			long endTjTime = System.nanoTime();
+			elapsedTjTime = endTjTime - startTjTime;
+			System.out.println("ContextPath: " + getServletContext().getContextPath());
+			System.out.println("RealPath: " + getServletContext().getRealPath("/"));
+			System.out.println("elapsedTjTime: "+ elapsedTjTime);
+			
+			//endTJ Timer here
 			JsonArray jsonArray = new JsonArray();
 			
 			while(rs.next()){
@@ -165,7 +204,7 @@ public class MovieServlet extends HttpServlet{
 				jsonObject.addProperty("title", title);
 				jsonObject.addProperty("year",year);
 				jsonObject.addProperty("director", director);
-				System.out.println(rating);
+//				System.out.println(rating);
 				jsonObject.addProperty("rating", rating);
 				
 				JsonArray genreList = new JsonArray();
@@ -203,16 +242,16 @@ public class MovieServlet extends HttpServlet{
 				
 				jsonArray.add(jsonObject);
 				
-				System.out.println(jsonArray.toString());
+//				System.out.println(jsonArray.toString());
 				
 			}
-			System.out.println("working");
+//			System.out.println("working");
 			String url = request.getHeader("referer");
 			
 			HttpSession session = request.getSession();
 			session.setAttribute("url", url);
 			
-			System.out.println("working");
+//			System.out.println("working");
 			
 			
 			out.write(jsonArray.toString());
@@ -229,5 +268,24 @@ public class MovieServlet extends HttpServlet{
 			response.setStatus(500);
 		}
 		out.close();
+		long endTsTime = System.nanoTime();
+		elapsedTsTime = endTsTime - startTsTime;//elapsed time in nanoseconds.
+		System.out.println("elapsedTsTime: "+ elapsedTsTime);
+		String path = getServletContext().getRealPath("/");
+		String logFilePath = path + "\\test";
+		System.out.println(logFilePath);
+		File myfile = new File(logFilePath);
+		if(!myfile.exists()) {
+			myfile.createNewFile();
+		}
+		
+		FileWriter logWriter = new FileWriter(myfile,true);
+		BufferedWriter bufferedWriter = new BufferedWriter(logWriter);
+		bufferedWriter.write("elapsedTsTime:" + elapsedTsTime + " elapsedTjTime:" + elapsedTjTime);
+		bufferedWriter.newLine();
+		bufferedWriter.close();
+//		logWriter.close();
+		
+		//END TS Timer
 	}
 }
