@@ -10,6 +10,11 @@ Within this folder contains the following important files that you will need to 
 
 This project repository will show the various branches that were created in order to build from the very early projects starting from project1 all the way to project5. The application we built in this course is an ImDb-esque website where users must login, search for movies, click on movies, view a movie's list of stars, and even search for stars as well. It is an implementation of features that any concurrent website would have, and we even have our own checkout functionality! It works! Below is a list of thedeliverables that can be seen the root directory.
 
+----------------
+Project 5 Report
+----------------
+This PDF contains the necessary information for the overall project containing the information of where to find the necessary directories to inspect the various parts of the project. It also contains snapshots of our code to showcase the various places where we used the required code to complete functions such as connection pooling and using PreparedStatements.
+
 ------------
 PROJECT1.WAR
 ------------
@@ -29,3 +34,8 @@ JMeter-Logs
 -----------
 The file contains 9 files that each contain 2642 requests from the various test cases as given in Task 3.3 on the website. LogFileProcessor.java
 uses these files to get the average times of TS and TJ.
+
+-------------
+JMeter-Report
+-------------
+This folder contains the necessary images and information for the 9 different test cases for JMeter. It also contains all the graph images from each test to showcase the speed and execution throughput of each varying test.
