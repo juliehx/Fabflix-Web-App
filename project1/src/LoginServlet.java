@@ -52,20 +52,20 @@ public class LoginServlet extends HttpServlet {
 		//get information from mysql database
 		//use query to get information 
         
-        if (userAgent != null && !userAgent.contains("Android")) {
-            String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
-            // verify recaptcha first
-            try {
-                RecaptchaVerifyUtils.verify(gRecaptchaResponse);
-            } catch (Exception e) {
-                System.out.println("recaptcha success");
-                JsonObject responseJsonObject = new JsonObject();
-                responseJsonObject.addProperty("status", "fail");
-                responseJsonObject.addProperty("message", e.getMessage());
-                response.getWriter().write(responseJsonObject.toString());
-                return;
-           }
-        }
+//        if (userAgent != null && !userAgent.contains("Android")) {
+//            String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+//            // verify recaptcha first
+//            try {
+//                RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+//            } catch (Exception e) {
+//                System.out.println("recaptcha success");
+//                JsonObject responseJsonObject = new JsonObject();
+//                responseJsonObject.addProperty("status", "fail");
+//                responseJsonObject.addProperty("message", e.getMessage());
+//                response.getWriter().write(responseJsonObject.toString());
+//                return;
+//           }
+//        }
     	try {
     		  Context initCtx = new InitialContext();
 
