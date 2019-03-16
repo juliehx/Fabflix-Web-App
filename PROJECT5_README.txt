@@ -2,6 +2,9 @@ Hello!
 
 Within this folder contains the following important files that you will need to know,
 
+HEAD BACK TO THE MAIN DIRECTORY PAGE TO VIEW THE FULL README FILE!!!
+MORE INFORMATION IS AVAILABLE AT THE README.MD FILE ON GITHUB!
+
 ------------
 PROJECT1.WAR
 ------------
