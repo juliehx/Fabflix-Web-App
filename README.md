@@ -8,8 +8,7 @@ Hello!
 Within this folder contains the following important files that you will need to know,
 
 
-This project repository will show the various branches that were created in order to build from the very early projects starting from project1 all the way to project5. The application we built in this course is an ImDb-esque website where users must login, search for movies, click on movies, view a movie's list of stars, and even search for stars as well. It is an implementation of features that any concurrent website would have, and we even have our own checkout functionality! It works! Below is a general jist of the deliverables that can be seen the root directory!
-
+This project repository will show the various branches that were created in order to build from the very early projects starting from project1 all the way to project5. The application we built in this course is an ImDb-esque website where users must login, search for movies, click on movies, view a movie's list of stars, and even search for stars as well. It is an implementation of features that any concurrent website would have, and we even have our own checkout functionality! It works! Below is a list of thedeliverables that can be seen the root directory.
 
 ------------
 PROJECT1.WAR
