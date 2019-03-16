@@ -1,0 +1,114 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+    background-color: linen;
+}
+
+td {
+    border-top-style: solid;
+}
+</style>
+</head>
+<body>
+
+<table style="width:100%">
+  <tr style="font-weight:bold; background-color: orange">
+    <td width="300px">Single-instance version cases</td>
+    <td>Graph Results Screenshot</td>
+    <td>Average Query Time(ms)</td>
+    <td>Average Search Servlet Time(ms)</td>
+    <td>Average JDBC Time(ms)</td>
+    <td>Analysis</td>
+  </tr>
+  <tr>
+    <td>Case 1: HTTP/1 thread</td>
+    <td><img src="single_graph_results_case1.png" alt="Graph Results Screenshot Case 1" style="width:304px;height:228px;"></td>
+    <td>151</td>
+    <td>1.319482</td>
+    <td>1.064422</td>
+    <td>This test was the fastest since it involved only one thread.</td>
+  </tr>
+  <tr>
+    <td>Case 2: HTTP/10 threads</td>
+    <td><img src="single_graph_results_case2.png" alt="Graph Results Screenshot Case 2" style="width:304px;height:228px;"></td>
+    <td>564</td>
+    <td>1.307769</td>
+    <td>1.147376</td>
+    <td>Performance decreased because having more threads means fewer resources for each thread, especially since resources are shared.</td>
+  </tr>
+  <tr>
+    <td>Case 3: HTTPS/10 threads</td>
+    <td><img src="single_graph_results_case3.png" alt="Graph Results Screenshot Case 3" style="width:304px;height:228px;"></td>
+    <td>578</td>
+    <td>1.512327</td>
+    <td>1.275827</td>
+    <td>Performance for HTTPS is much slower because of the added resources needed to be able to make secure https requests.</td>
+  </tr>
+  <tr>
+    <td>Case 4: HTTP/10 threads/No prepared statements</td>
+    <td><img src="single_graph_results_case4.png" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
+    <td>565</td>
+    <td>1.326516</td>
+    <td>1.138606</td>
+    <td>Performance was not much different for having no prepared statements because of the load balancer between for the master and slave instances.</td>
+  </tr>
+  <tr>
+    <td>Case 5: HTTP/10 threads/No connection pooling</td>
+    <td><img src="single_graph_results_case5.png" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
+    <td>682</td>
+    <td>1.543648</td>
+    <td>1.407378</td>
+    <td>Without connection pooling, performance suffers greatly.</td>
+  </tr>
+
+</table>
+
+
+<table style="width:100%">
+  <tr style="font-weight:bold; background-color: orange">
+    <td width="300px">Scaled version cases</td>
+    <td>Graph Results Screenshot</td>
+    <td>Average Query Time(ms)</td>
+    <td>Average Search Servlet Time(ms)</td>
+    <td>Average JDBC Time(ms)</td>
+    <td>Analysis</td>
+  </tr>
+  <tr>
+    <td>Case 1: HTTP/1 thread</td>
+    <td><img src="scaled_graph_results_case1.png" alt="Graph Results Screenshot Case 1" style="width:304px;height:228px;"></td>
+    <td>152</td>
+    <td>1.494194</td>
+    <td>1.190359</td>
+    <td>Because there is only one thread, all resources are spent on this one thread, resulting in fast performance.</td>
+  </tr>
+  <tr>
+    <td>Case 2: HTTP/10 threads</td>
+    <td><img src="scaled_graph_results_case2.png" alt="Graph Results Screenshot Case 2" style="width:304px;height:228px;"></td>
+    <td>645</td>
+    <td>1.74864</td>
+    <td>1.542473</td>
+    <td>Performance suffers because of the limited resources for each thread.</td>
+  </tr>
+  <tr>
+    <td>Case 3: HTTP/10 threads/No prepared statements</td>
+    <td><img src="scaled_graph_results_case3.png" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
+    <td>597</td>
+    <td>1.646415</td>
+    <td>1.450594</td>
+    <td>Not having prepared statements does not impact performance because of laod balancing on master and slave instances.</td>
+  </tr>
+  <tr>
+    <td>Case 4: HTTP/10 threads/No connection pooling</td>
+    <td><img src="scaled_graph_results_case4.png" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
+    <td>588</td>
+    <td>1.968364</td>
+    <td>1.748046</td>
+    <td>No connection pooling still has poor performance; however, the performance is noticeably better than the scaled-instance because of load balancing.</td>
+  </tr>
+
+</table>
+
+</body>
+</html>
