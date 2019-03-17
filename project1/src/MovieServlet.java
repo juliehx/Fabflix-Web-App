@@ -183,9 +183,9 @@ public class MovieServlet extends HttpServlet{
 			ResultSet rs = statement.executeQuery();
 			long endTjTime = System.nanoTime();
 			elapsedTjTime = endTjTime - startTjTime;
-			System.out.println("ContextPath: " + getServletContext().getContextPath());
-			System.out.println("RealPath: " + getServletContext().getRealPath("/"));
-			System.out.println("elapsedTjTime: "+ elapsedTjTime);
+//			System.out.println("ContextPath: " + getServletContext().getContextPath());
+//			System.out.println("RealPath: " + getServletContext().getRealPath("/"));
+//			System.out.println("elapsedTjTime: "+ elapsedTjTime);
 			
 			//endTJ Timer here
 			JsonArray jsonArray = new JsonArray();
@@ -270,10 +270,10 @@ public class MovieServlet extends HttpServlet{
 		out.close();
 		long endTsTime = System.nanoTime();
 		elapsedTsTime = endTsTime - startTsTime;//elapsed time in nanoseconds.
-		System.out.println("elapsedTsTime: "+ elapsedTsTime);
+//		System.out.println("elapsedTsTime: "+ elapsedTsTime);
 		String path = getServletContext().getRealPath("/");
 		String logFilePath = path + "test";
-		System.out.println(logFilePath);
+//		System.out.println(logFilePath);
 		File myfile = new File(logFilePath);
 		if(!myfile.exists()) {
 			myfile.createNewFile();
